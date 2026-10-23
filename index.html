@@ -1,207 +1,347 @@
 
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0b0d">
-  <title>ZOR LIFE DASHBOARD</title>
-  <style>
-    :root {
-      --bg: #0b0b0d;
-      --panel: #171719;
-      --gold: #e8bd58;
-      --text: #f5f5f5;
-      --muted: #a4a4aa;
-      --line: #303034;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    header {
-      padding: 24px 18px 18px;
-      border-bottom: 1px solid var(--line);
-      background: #101012;
-    }
-    .brand { color: var(--gold); font-size: 12px; letter-spacing: 3px; }
-    h1 { font-size: 25px; margin: 8px 0; }
-    .muted { color: var(--muted); font-size: 13px; }
-    main { max-width: 760px; margin: auto; padding: 16px; }
-    .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
-    .card {
-      background: var(--panel); border: 1px solid var(--line);
-      border-radius: 16px; padding: 16px; margin-bottom: 12px;
-    }
-    .metric { color: var(--gold); font-size: 28px; font-weight: 750; margin-top: 8px; }
-    h2 { font-size: 16px; margin: 0 0 14px; }
-    input, select, button {
-      font: inherit; border-radius: 10px; padding: 12px;
-    }
-    input, select {
-      min-width: 0; width: 100%; color: white;
-      background: #0d0d0f; border: 1px solid #39393e;
-    }
-    button {
-      border: 0; background: var(--gold); color: #17130a;
-      font-weight: 700; cursor: pointer;
-    }
-    .form { display: flex; gap: 8px; margin-bottom: 10px; }
-    .form input { flex: 1; }
-    .form button { white-space: nowrap; }
-    .task {
-      display: flex; align-items: center; gap: 10px;
-      padding: 12px 0; border-bottom: 1px solid var(--line);
-      overflow-wrap: anywhere;
-    }
-    .task input { width: 20px; height: 20px; accent-color: var(--gold); }
-    .task span { flex: 1; }
-    .done { text-decoration: line-through; color: var(--muted); }
-    .delete {
-      background: transparent; color: #ff8989; padding: 8px;
-    }
-    .money { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .money button { grid-column: 1 / -1; }
-    .wide { grid-column: 1 / -1; }
-    footer { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; }
-    @media (max-width: 390px) {
-      .form { flex-wrap: wrap; }
-      .form input { flex-basis: 100%; }
-      .money { grid-template-columns: 1fr; }
-      .money button { grid-column: auto; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0e14">
+<title>ZOR LIFE DASHBOARD</title>
+<style>
+:root{--bg:#0b0e14;--panel:#141923;--line:#293142;--gold:#e9bd62;--text:#f4f5f7;--muted:#9ba5b7;--green:#4ade80;--red:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:22px 18px;border-bottom:1px solid var(--line);background:#10141d;position:sticky;top:0;z-index:5}
+.wrap{max-width:1050px;margin:auto}
+.brand{color:var(--gold);font-weight:900;letter-spacing:2px;font-size:21px}
+.sub{color:var(--muted);font-size:12px;margin-top:5px}
+nav{display:flex;gap:8px;overflow:auto;margin-top:18px}
+button{cursor:pointer;border:1px solid var(--line);border-radius:10px;background:#202735;color:var(--text);padding:11px 14px;font-weight:650}
+button:hover{border-color:var(--gold)}
+nav button.active,.primary{background:var(--gold);color:#151515;border-color:var(--gold)}
+main{max-width:1050px;margin:auto;padding:20px 15px 50px}
+h2{font-size:20px;margin:4px 0 16px}
+h3{font-size:15px;margin:0 0 13px}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-value{font-size:clamp(19px,4vw,27px);font-weight:800;margin-top:10px;overflow-wrap:anywhere}
+.gold{color:var(--gold)}.green{color:var(--green)}.red{color:var(--red)}
+form{display:grid;gap:10px}
+input,select,textarea{width:100%;min-width:0;background:#0c111a;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:12px;font:inherit}
+label{font-size:12px;color:var(--muted);display:grid;gap:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.item{padding:13px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.itemtop{display:flex;justify-content:space-between;gap:12px;align-items:start}
+.itemtitle{font-weight:700;overflow-wrap:anywhere}
+.small{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.6}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:4px 8px;font-size:11px;margin-top:7px;color:var(--gold)}
+.empty{padding:22px 0;color:var(--muted);text-align:center}
+.hidden{display:none!important}
+.progress{height:6px;background:#293142;border-radius:8px;margin-top:10px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--gold)}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats .card:last-child{grid-column:1/-1}.two{grid-template-columns:1fr}header{padding:17px 13px}main{padding:16px 12px 35px}.card{padding:14px}}
+</style>
 </head>
 <body>
 <header>
-  <div class="brand">ZOR • PERSONAL SYSTEM</div>
-  <h1>ZOR LIFE DASHBOARD</h1>
-  <div class="muted" id="today"></div>
+<div class="wrap">
+<div class="brand">ZOR LIFE DASHBOARD</div>
+<div class="sub">Plan smarter. Manage your money. Build your future.</div>
+<nav>
+<button class="active" data-tab="dashboard">Dashboard</button>
+<button data-tab="tasks">Tasks</button>
+<button data-tab="budget">Budget</button>
+<button data-tab="settings">Settings</button>
+</nav>
+</div>
 </header>
-
 <main>
-  <div class="grid">
-    <section class="card">
-      <div class="muted">Jumlah tugasan</div>
-      <div class="metric" id="total">0</div>
-    </section>
-    <section class="card">
-      <div class="muted">Telah selesai</div>
-      <div class="metric" id="completed">0</div>
-    </section>
-    <section class="card wide">
-      <h2>📋 Tugasan Harian</h2>
-      <form class="form" id="taskForm">
-        <input id="taskInput" placeholder="Contoh: Siapkan assignment" required maxlength="120">
-        <button type="submit">Tambah +</button>
-      </form>
-      <div id="tasks"></div>
-      <p class="muted" id="empty">Belum ada tugasan. Tambah tugasan pertama kau!</p>
-    </section>
-    <section class="card wide">
-      <h2>💰 Bajet Aku (RM)</h2>
-      <div class="money">
-        <input id="income" type="number" min="0" step="0.01" placeholder="Pendapatan RM">
-        <input id="expense" type="number" min="0" step="0.01" placeholder="Perbelanjaan RM">
-        <button id="saveMoney" type="button">Simpan bajet</button>
-      </div>
-      <div class="grid" style="margin-top:14px">
-        <div>
-          <div class="muted">Pendapatan</div>
-          <div class="metric" id="incomeView">RM0.00</div>
-        </div>
-        <div>
-          <div class="muted">Baki</div>
-          <div class="metric" id="balance">RM0.00</div>
-        </div>
-      </div>
-    </section>
-    <section class="card wide">
-      <h2>🎯 Fokus Hari Ini</h2>
-      <input id="focus" maxlength="180" placeholder="Apa matlamat utama kau hari ini?">
-      <p class="muted">Matlamat kau disimpan secara automatik pada browser ini.</p>
-    </section>
-  </div>
+<section id="dashboard">
+<h2>Overview</h2>
+<div class="stats">
+<div class="card"><div class="stat-label">AVAILABLE BALANCE</div><div id="balance" class="stat-value gold">RM 0.00</div></div>
+<div class="card"><div class="stat-label">TOTAL INCOME</div><div id="income" class="stat-value green">RM 0.00</div></div>
+<div class="card"><div class="stat-label">TOTAL EXPENSES</div><div id="expense" class="stat-value red">RM 0.00</div></div>
+</div>
+<div class="grid">
+<div class="card"><h3>Today's Focus</h3>
+<label>What matters most today?
+<input id="focus" maxlength="180" placeholder="e.g. Finish my assignment"></label>
+<div class="actions"><button class="primary" id="saveFocus">Save Focus</button></div>
+<p class="small" id="focusStatus">Your focus is saved on this device.</p>
+</div>
+<div class="card"><h3>Task Summary</h3>
+<div class="item"><span class="muted">Open tasks</span><strong id="openTasks" style="float:right">0</strong></div>
+<div class="item"><span class="muted">Due today</span><strong id="dueTasks" style="float:right">0</strong></div>
+<div class="item"><span class="muted">Estimated work remaining</span><strong id="remaining" style="float:right">0 min</strong></div>
+<div class="actions"><button data-goto="tasks">Manage Tasks</button></div>
+</div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Upcoming Tasks</h3><div id="upcoming"></div></div>
+<div class="card" style="margin-top:14px"><h3>Recent Transactions</h3><div id="recent"></div><div class="actions"><button data-goto="budget">View Full Ledger</button></div></div>
+</section>
+
+<section id="tasks" class="hidden">
+<h2>Task Manager</h2>
+<div class="grid">
+<div class="card"><h3>Create a Task</h3>
+<form id="taskForm">
+<label>Task title<input id="taskTitle" required maxlength="160" placeholder="What needs to be done?"></label>
+<div class="two">
+<label>Deadline date<input type="date" id="taskDate"></label>
+<label>Deadline time<input type="time" id="taskTime"></label>
+</div>
+<div class="two">
+<label>Estimated duration (minutes)<input type="number" id="taskDuration" min="1" max="100000" value="30" required></label>
+<label>Reminder before deadline<select id="taskReminder"><option value="0">At deadline</option><option value="5">5 minutes</option><option value="15" selected>15 minutes</option><option value="30">30 minutes</option><option value="60">1 hour</option><option value="1440">1 day</option></select></label>
+</div>
+<label>Priority<select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select></label>
+<button class="primary" type="submit">+ Add Task</button>
+<p class="small">Reminders work while the app is open. Background push notifications require additional setup.</p>
+</form>
+</div>
+<div class="card"><h3>Task Filters</h3>
+<label>Show tasks<select id="taskFilter"><option value="open">Open tasks</option><option value="all">All tasks</option><option value="done">Completed tasks</option></select></label>
+<hr><p class="muted">Finish tasks to track your progress. Deadlines and estimated durations help you plan your time.</p>
+<div id="taskProgress"></div>
+</div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Your Tasks</h3><div id="taskList"></div></div>
+</section>
+
+<section id="budget" class="hidden">
+<h2>Personal Budget</h2>
+<div class="stats">
+<div class="card"><div class="stat-label">CURRENT BALANCE</div><div id="bBalance" class="stat-value gold">RM 0.00</div></div>
+<div class="card"><div class="stat-label">MONEY IN</div><div id="bIncome" class="stat-value green">RM 0.00</div></div>
+<div class="card"><div class="stat-label">MONEY OUT</div><div id="bExpense" class="stat-value red">RM 0.00</div></div>
+</div>
+<div class="grid">
+<div class="card"><h3>Add a Transaction</h3>
+<form id="moneyForm">
+<label>Transaction type<select id="moneyType"><option value="income">Money In</option><option value="expense">Money Out</option></select></label>
+<label>Amount (RM)<input type="number" id="moneyAmount" min="0.01" max="1000000000" step="0.01" required placeholder="0.00"></label>
+<label>Category<select id="moneyCategory"><option>Salary</option><option>Allowance</option><option>Savings</option><option>Food</option><option>Transport</option><option>Education</option><option>Bills</option><option>Shopping</option><option>Trading</option><option>Other</option></select></label>
+<label>Description<input id="moneyNote" maxlength="180" placeholder="What is this transaction for?"></label>
+<button class="primary" type="submit">Record Transaction</button>
+</form>
+<p class="small">Transactions are append-only in this app. Adding money creates a new entry; spending money creates a separate entry.</p>
+</div>
+<div class="card"><h3>Ledger Tools</h3>
+<p class="muted">Download a copy of your records for backup or review.</p>
+<div class="actions"><button id="exportCsv">Export Ledger CSV</button><button id="exportJson">Backup All Data</button></div>
+<hr>
+<label>Restore a JSON backup<input id="importJson" type="file" accept=".json,application/json"></label>
+<p class="small">Restoring a backup replaces the current data on this device. Export a backup first if you need to keep your current data.</p>
+</div>
+</div>
+<div class="card" style="margin-top:14px"><h3>Transaction Ledger</h3><p class="small">Newest transactions appear first. Each entry includes its balance after the transaction.</p><div id="ledger"></div></div>
+</section>
+
+<section id="settings" class="hidden">
+<h2>Settings & Data</h2>
+<div class="card">
+<h3>Reminders</h3>
+<p class="muted">Allow browser notifications for reminders while the website is active. On iPhone, web push notifications require the website to be added to the Home Screen and additional push-service setup.</p>
+<div class="actions"><button class="primary" id="enableNotifications">Enable Notifications</button><button id="testNotification">Test Notification</button></div>
+<p id="notificationStatus" class="small">Notification permission has not been requested.</p>
+</div>
+<div class="card" style="margin-top:14px">
+<h3>Data & Privacy</h3>
+<p class="muted">Your tasks, focus, and transactions are saved in this browser on this device. They are not automatically synced across devices or shared with other website visitors.</p>
+<div class="actions"><button id="settingsBackup">Download Backup</button><button id="clearTasks">Clear Completed Tasks</button></div>
+</div>
+<div class="card" style="margin-top:14px">
+<h3>About</h3>
+<p><strong>ZOR LIFE DASHBOARD</strong></p>
+<p class="muted">Personal productivity and budget management.</p>
+<p class="small">Version 2.0 · Created for everyday planning.</p>
+</div>
+</section>
+<footer>ZOR LIFE DASHBOARD · Stay consistent. Make progress.</footer>
 </main>
-<footer>ZOR LIFE • Build your day, one step at a time.</footer>
-
 <script>
-  const key = "zor-life-dashboard-v1";
-  const defaults = { tasks: [], income: 0, expense: 0, focus: "" };
-  let data;
-  try {
-    data = { ...defaults, ...JSON.parse(localStorage.getItem(key) || "{}") };
-  } catch {
-    data = { ...defaults };
+(() => {
+"use strict";
+const KEY = "zor-life-dashboard-v1";
+const $ = id => document.getElementById(id);
+const money = n => "RM " + Number(n || 0).toLocaleString("en-MY",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9);
+const now = () => new Date().toISOString();
+
+function load() {
+ try {
+  const d = JSON.parse(localStorage.getItem(KEY) || "{}");
+  const tasks = Array.isArray(d.tasks) ? d.tasks : [];
+  let transactions = Array.isArray(d.transactions) ? d.transactions : [];
+  // Migrate the older dashboard's totals into opening entries once.
+  if (!d.migrationV2 && !transactions.length) {
+   const inc = Number(d.income || 0), exp = Number(d.expense || 0);
+   if (inc > 0) transactions.push({id:uid(),type:"income",amount:inc,category:"Opening Balance",note:"Migrated opening income",createdAt:now(),legacy:true});
+   if (exp > 0) transactions.push({id:uid(),type:"expense",amount:exp,category:"Opening Balance",note:"Migrated opening expenses",createdAt:now(),legacy:true});
   }
+  return {tasks,transactions,focus:d.focus || "",migrationV2:true,reminded:Array.isArray(d.reminded)?d.reminded:[]};
+ } catch(e) { return {tasks:[],transactions:[],focus:"",migrationV2:true,reminded:[]}; }
+}
+let data = load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){alert("Unable to save data. Please export a backup and check browser storage.");}}
+function totals(){
+ return data.transactions.reduce((t,x)=>{if(x.type==="income")t.income+=Number(x.amount);else t.expense+=Number(x.amount);return t;},{income:0,expense:0});
+}
+function balanceAt(index){
+ return data.transactions.slice(0,index+1).reduce((b,x)=>b+(x.type==="income"?1:-1)*Number(x.amount),0);
+}
+function balance(){const t=totals();return t.income-t.expense;}
+function dateLabel(s){
+ if(!s)return "No deadline";
+ const d=new Date(s);
+ return isNaN(d)?"No deadline":d.toLocaleString([],{dateStyle:"medium",timeStyle:"short"});
+}
+function taskDeadline(t){return t.date ? new Date(t.date+(t.time?"T"+t.time: "T23:59")) : null;}
+function remainingText(t){
+ if(t.done)return "Completed";
+ const d=taskDeadline(t); if(!d)return t.duration+" min · No deadline";
+ const ms=d.getTime()-Date.now();
+ if(ms<0)return "Overdue · "+t.duration+" min";
+ if(ms<3600000)return "Due in "+Math.max(1,Math.round(ms/60000))+" min";
+ if(ms<86400000)return "Due in "+Math.floor(ms/3600000)+"h "+Math.floor((ms%3600000)/60000)+"m";
+ return "Due "+dateLabel(d.toISOString());
+}
+function openTab(tab){
+ document.querySelectorAll("main section").forEach(s=>s.classList.toggle("hidden",s.id!==tab));
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ render();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
+document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.goto)));
 
-  const $ = id => document.getElementById(id);
-  const save = () => localStorage.setItem(key, JSON.stringify(data));
-  const money = n => "RM" + Number(n || 0).toLocaleString("en-MY", {
-    minimumFractionDigits: 2, maximumFractionDigits: 2
-  });
-
-  function render() {
-    $("total").textContent = data.tasks.length;
-    $("completed").textContent = data.tasks.filter(t => t.done).length;
-    $("tasks").replaceChildren();
-    $("empty").hidden = data.tasks.length > 0;
-
-    data.tasks.forEach(task => {
-      const row = document.createElement("div");
-      row.className = "task";
-      const check = document.createElement("input");
-      check.type = "checkbox";
-      check.checked = task.done;
-      check.setAttribute("aria-label", "Tandakan tugasan selesai");
-      check.addEventListener("change", () => {
-        task.done = check.checked; save(); render();
-      });
-      const label = document.createElement("span");
-      label.textContent = task.text;
-      if (task.done) label.className = "done";
-      const del = document.createElement("button");
-      del.type = "button"; del.className = "delete"; del.textContent = "Padam";
-      del.addEventListener("click", () => {
-        data.tasks = data.tasks.filter(t => t.id !== task.id);
-        save(); render();
-      });
-      row.append(check, label, del);
-      $("tasks").append(row);
-    });
-
-    $("income").value = data.income || "";
-    $("expense").value = data.expense || "";
-    $("incomeView").textContent = money(data.income);
-    $("balance").textContent = money(Number(data.income) - Number(data.expense));
-    $("focus").value = data.focus || "";
+function renderStats(){
+ const t=totals(), b=balance();
+ $("balance").textContent=money(b);$("income").textContent=money(t.income);$("expense").textContent=money(t.expense);
+ $("bBalance").textContent=money(b);$("bIncome").textContent=money(t.income);$("bExpense").textContent=money(t.expense);
+}
+function renderTasks(){
+ const open=data.tasks.filter(t=>!t.done);
+ $("openTasks").textContent=open.length;
+ $("dueTasks").textContent=open.filter(t=>{const d=taskDeadline(t);return d&&d.toDateString()===new Date().toDateString();}).length;
+ $("remaining").textContent=open.reduce((n,t)=>n+Number(t.duration||0),0)+" min";
+ const done=data.tasks.filter(t=>t.done).length;
+ $("taskProgress").innerHTML=`<p>${done} of ${data.tasks.length} tasks completed</p><div class="progress"><span style="width:${data.tasks.length?done/data.tasks.length*100:0}%"></span></div>`;
+ const upcoming=open.slice().sort((a,b)=>(taskDeadline(a)?.getTime()||Infinity)-(taskDeadline(b)?.getTime()||Infinity)).slice(0,4);
+ $("upcoming").innerHTML=upcoming.length?upcoming.map(t=>taskHTML(t,false)).join(""):'<div class="empty">No open tasks. Add a task to get started.</div>';
+ const filter=$("taskFilter").value;
+ const list=data.tasks.filter(t=>filter==="all"||(filter==="done"?t.done:!t.done)).slice().sort((a,b)=>(taskDeadline(a)?.getTime()||Infinity)-(taskDeadline(b)?.getTime()||Infinity));
+ $("taskList").innerHTML=list.length?list.map(t=>taskHTML(t,true)).join(""):'<div class="empty">No tasks to show.</div>';
+}
+function taskHTML(t,controls){
+ return `<div class="item"><div class="itemtop"><div><div class="itemtitle">${esc(t.title)}</div><div class="small">${t.date?esc(dateLabel((t.date)+"T"+(t.time||"23:59"))):"No deadline set"} · Estimated ${Number(t.duration)||0} min</div><span class="tag">${esc(t.priority||"Normal")} priority</span> <span class="tag">${t.done?"Completed":esc(remainingText(t))}</span></div></div>${controls?`<div class="actions">${t.done?"":`<button data-done="${esc(t.id)}">Mark Complete</button>`}<button data-delete-task="${esc(t.id)}">Delete Task</button></div>`:""}</div>`;
+}
+function renderLedger(){
+ const tx=data.transactions.map((x,i)=>({...x,index:i})).reverse();
+ $("ledger").innerHTML=tx.length?tx.map(x=>`<div class="item"><div class="itemtop"><div><div class="itemtitle">${esc(x.category||"Other")} · ${esc(x.note||"No description")}</div><div class="small">${esc(dateLabel(x.createdAt))} · ID ${esc(x.id)}</div><div class="small">Balance after transaction: <strong>${money(balanceAt(x.index))}</strong></div></div><strong class="${x.type==="income"?"green":"red"}">${x.type==="income"?"+":"−"}${money(x.amount)}</strong></div></div>`).join(""):'<div class="empty">No transactions yet. Add your first transaction above.</div>';
+ const recent=tx.slice(0,4);
+ $("recent").innerHTML=recent.length?recent.map(x=>`<div class="item itemtop"><div><div class="itemtitle">${esc(x.category||"Other")}</div><div class="small">${esc(dateLabel(x.createdAt))}</div></div><strong class="${x.type==="income"?"green":"red"}">${x.type==="income"?"+":"−"}${money(x.amount)}</strong></div>`).join(""):'<div class="empty">No transaction history yet.</div>';
+}
+function render(){
+ renderStats();renderTasks();renderLedger();
+ $("focus").value=data.focus||"";
+}
+$("taskForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const title=$("taskTitle").value.trim(), duration=Number($("taskDuration").value);
+ if(!title||!Number.isFinite(duration)||duration<1)return;
+ data.tasks.push({id:uid(),title,date:$("taskDate").value,time:$("taskTime").value,duration,reminder:Number($("taskReminder").value),priority:$("taskPriority").value,done:false,createdAt:now()});
+ save();e.target.reset();$("taskDuration").value=30;$("taskReminder").value="15";render();
+});
+$("taskFilter").addEventListener("change",renderTasks);
+$("taskList").addEventListener("click",e=>{
+ const done=e.target.closest("[data-done]"),del=e.target.closest("[data-delete-task]");
+ if(done){const t=data.tasks.find(t=>t.id===done.dataset.done);if(t)t.done=true;save();render();}
+ if(del&&confirm("Delete this task?")){data.tasks=data.tasks.filter(t=>t.id!==del.dataset.deleteTask);save();render();}
+});
+$("saveFocus").addEventListener("click",()=>{data.focus=$("focus").value.trim();save();$("focusStatus").textContent="Focus saved successfully.";});
+$("moneyForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const amount=Math.round(Number($("moneyAmount").value)*100)/100;
+ if(!Number.isFinite(amount)||amount<=0){alert("Enter an amount greater than zero.");return;}
+ const type=$("moneyType").value;
+ if(type==="expense"&&amount>balance()&&!confirm("This expense is greater than your current balance. Record it anyway?"))return;
+ data.transactions.push({id:uid(),type,amount,category:$("moneyCategory").value,note:$("moneyNote").value.trim(),createdAt:now()});
+ save();e.target.reset();render();
+});
+function download(filename,content,type){
+ const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function csvCell(v){return '"'+String(v??"").replace(/"/g,'""')+'"';}
+function exportCsv(){
+ const rows=[["Transaction ID","Date","Type","Category","Description","Amount (RM)","Balance After (RM)"]];
+ data.transactions.forEach((x,i)=>rows.push([x.id,x.createdAt,x.type,x.category,x.note,x.amount,balanceAt(i).toFixed(2)]));
+ download("zor-life-ledger.csv","\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n"),"text/csv;charset=utf-8");
+}
+function exportJson(){download("zor-life-backup.json",JSON.stringify(data,null,2),"application/json");}
+$("exportCsv").addEventListener("click",exportCsv);
+$("exportJson").addEventListener("click",exportJson);
+$("settingsBackup").addEventListener("click",exportJson);
+$("importJson").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  const d=JSON.parse(await file.text());
+  if(!d||!Array.isArray(d.tasks)||!Array.isArray(d.transactions))throw Error("Invalid backup");
+  if(!confirm("Restore this backup? Current local data will be replaced."))return;
+  data={tasks:d.tasks,transactions:d.transactions,focus:d.focus||"",migrationV2:true,reminded:Array.isArray(d.reminded)?d.reminded:[]};
+  save();render();alert("Backup restored.");
+ }catch(err){alert("Could not restore this file. Please select a valid ZOR JSON backup.");}
+ e.target.value="";
+});
+$("clearTasks").addEventListener("click",()=>{
+ if(!confirm("Remove all completed tasks? Transaction history will not be changed."))return;
+ data.tasks=data.tasks.filter(t=>!t.done);save();render();
+});
+function notify(title,body){
+ if(!("Notification" in window)){ $("notificationStatus").textContent="Notifications are not supported in this browser context.";return;}
+ if(Notification.permission==="granted")new Notification(title,{body});
+}
+async function enableNotifications(){
+ if(!("Notification" in window)){$("notificationStatus").textContent="Notifications are unavailable in this browser. On iPhone, add the site to your Home Screen and open it there.";return;}
+ try{
+  const p=await Notification.requestPermission();
+  $("notificationStatus").textContent=p==="granted"?"Notifications enabled when the app is running.":("Notification permission: "+p+".");
+ }catch(e){$("notificationStatus").textContent="Could not request permission. Try opening the website from your Home Screen.";}
+}
+$("enableNotifications").addEventListener("click",enableNotifications);
+$("testNotification").addEventListener("click",async()=>{
+ if(!("Notification" in window)){await enableNotifications();return;}
+ if(Notification.permission!=="granted")await enableNotifications();
+ if(Notification.permission==="granted")notify("ZOR LIFE DASHBOARD","Your test notification is working.");
+});
+function checkReminders(){
+ const current=Date.now();
+ for(const t of data.tasks){
+  if(t.done||!t.date)continue;
+  const deadline=taskDeadline(t);if(!deadline||isNaN(deadline.getTime()))continue;
+  const fireAt=deadline.getTime()-(Number(t.reminder)||0)*60000;
+  const reminderKey=t.id+"-"+fireAt;
+  if(current>=fireAt&&current<=deadline.getTime()+60000&&!data.reminded.includes(reminderKey)){
+   if("Notification" in window&&Notification.permission==="granted")notify("Task reminder: "+t.title,"Deadline: "+dateLabel(deadline.toISOString()));
+   data.reminded.push(reminderKey);
+   if(data.reminded.length>1000)data.reminded=data.reminded.slice(-500);
+   save();
   }
-
-  $("taskForm").addEventListener("submit", event => {
-    event.preventDefault();
-    const text = $("taskInput").value.trim();
-    if (!text) return;
-    data.tasks.push({ id: Date.now() + Math.random(), text, done: false });
-    $("taskInput").value = "";
-    save(); render();
-  });
-
-  $("saveMoney").addEventListener("click", () => {
-    data.income = Math.max(0, Number($("income").value) || 0);
-    data.expense = Math.max(0, Number($("expense").value) || 0);
-    save(); render();
-  });
-
-  $("focus").addEventListener("input", () => {
-    data.focus = $("focus").value;
-    save();
-  });
-
-  $("today").textContent = new Date().toLocaleDateString("ms-MY", {
-    weekday: "long", day: "numeric", month: "long", year: "numeric"
-  });
-  render();
+ }
+}
+render();
+checkReminders();
+setInterval(()=>{checkReminders();renderStats();},30000);
+})();
 </script>
 </body>
 </html>
