@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>ZOR LIFE DASHBOARD</title>
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --panel: #171719;
+      --gold: #e8bd58;
+      --text: #f5f5f5;
+      --muted: #a4a4aa;
+      --line: #303034;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    header {
+      padding: 24px 18px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #101012;
+    }
+    .brand { color: var(--gold); font-size: 12px; letter-spacing: 3px; }
+    h1 { font-size: 25px; margin: 8px 0; }
+    .muted { color: var(--muted); font-size: 13px; }
+    main { max-width: 760px; margin: auto; padding: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+    .card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: 16px; padding: 16px; margin-bottom: 12px;
+    }
+    .metric { color: var(--gold); font-size: 28px; font-weight: 750; margin-top: 8px; }
+    h2 { font-size: 16px; margin: 0 0 14px; }
+    input, select, button {
+      font: inherit; border-radius: 10px; padding: 12px;
+    }
+    input, select {
+      min-width: 0; width: 100%; color: white;
+      background: #0d0d0f; border: 1px solid #39393e;
+    }
+    button {
+      border: 0; background: var(--gold); color: #17130a;
+      font-weight: 700; cursor: pointer;
+    }
+    .form { display: flex; gap: 8px; margin-bottom: 10px; }
+    .form input { flex: 1; }
+    .form button { white-space: nowrap; }
+    .task {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid var(--line);
+      overflow-wrap: anywhere;
+    }
+    .task input { width: 20px; height: 20px; accent-color: var(--gold); }
+    .task span { flex: 1; }
+    .done { text-decoration: line-through; color: var(--muted); }
+    .delete {
+      background: transparent; color: #ff8989; padding: 8px;
+    }
+    .money { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .money button { grid-column: 1 / -1; }
+    .wide { grid-column: 1 / -1; }
+    footer { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 390px) {
+      .form { flex-wrap: wrap; }
+      .form input { flex-basis: 100%; }
+      .money { grid-template-columns: 1fr; }
+      .money button { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">ZOR • PERSONAL SYSTEM</div>
+  <h1>ZOR LIFE DASHBOARD</h1>
+  <div class="muted" id="today"></div>
+</header>
+
+<main>
+  <div class="grid">
+    <section class="card">
+      <div class="muted">Jumlah tugasan</div>
+      <div class="metric" id="total">0</div>
+    </section>
+    <section class="card">
+      <div class="muted">Telah selesai</div>
+      <div class="metric" id="completed">0</div>
+    </section>
+    <section class="card wide">
+      <h2>📋 Tugasan Harian</h2>
+      <form class="form" id="taskForm">
+        <input id="taskInput" placeholder="Contoh: Siapkan assignment" required maxlength="120">
+        <button type="submit">Tambah +</button>
+      </form>
+      <div id="tasks"></div>
+      <p class="muted" id="empty">Belum ada tugasan. Tambah tugasan pertama kau!</p>
+    </section>
+    <section class="card wide">
+      <h2>💰 Bajet Aku (RM)</h2>
+      <div class="money">
+        <input id="income" type="number" min="0" step="0.01" placeholder="Pendapatan RM">
+        <input id="expense" type="number" min="0" step="0.01" placeholder="Perbelanjaan RM">
+        <button id="saveMoney" type="button">Simpan bajet</button>
+      </div>
+      <div class="grid" style="margin-top:14px">
+        <div>
+          <div class="muted">Pendapatan</div>
+          <div class="metric" id="incomeView">RM0.00</div>
+        </div>
+        <div>
+          <div class="muted">Baki</div>
+          <div class="metric" id="balance">RM0.00</div>
+        </div>
+      </div>
+    </section>
+    <section class="card wide">
+      <h2>🎯 Fokus Hari Ini</h2>
+      <input id="focus" maxlength="180" placeholder="Apa matlamat utama kau hari ini?">
+      <p class="muted">Matlamat kau disimpan secara automatik pada browser ini.</p>
+    </section>
+  </div>
+</main>
+<footer>ZOR LIFE • Build your day, one step at a time.</footer>
+
+<script>
+  const key = "zor-life-dashboard-v1";
+  const defaults = { tasks: [], income: 0, expense: 0, focus: "" };
+  let data;
+  try {
+    data = { ...defaults, ...JSON.parse(localStorage.getItem(key) || "{}") };
+  } catch {
+    data = { ...defaults };
+  }
+
+  const $ = id => document.getElementById(id);
+  const save = () => localStorage.setItem(key, JSON.stringify(data));
+  const money = n => "RM" + Number(n || 0).toLocaleString("en-MY", {
+    minimumFractionDigits: 2, maximumFractionDigits: 2
+  });
+
+  function render() {
+    $("total").textContent = data.tasks.length;
+    $("completed").textContent = data.tasks.filter(t => t.done).length;
+    $("tasks").replaceChildren();
+    $("empty").hidden = data.tasks.length > 0;
+
+    data.tasks.forEach(task => {
+      const row = document.createElement("div");
+      row.className = "task";
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = task.done;
+      check.setAttribute("aria-label", "Tandakan tugasan selesai");
+      check.addEventListener("change", () => {
+        task.done = check.checked; save(); render();
+      });
+      const label = document.createElement("span");
+      label.textContent = task.text;
+      if (task.done) label.className = "done";
+      const del = document.createElement("button");
+      del.type = "button"; del.className = "delete"; del.textContent = "Padam";
+      del.addEventListener("click", () => {
+        data.tasks = data.tasks.filter(t => t.id !== task.id);
+        save(); render();
+      });
+      row.append(check, label, del);
+      $("tasks").append(row);
+    });
+
+    $("income").value = data.income || "";
+    $("expense").value = data.expense || "";
+    $("incomeView").textContent = money(data.income);
+    $("balance").textContent = money(Number(data.income) - Number(data.expense));
+    $("focus").value = data.focus || "";
+  }
+
+  $("taskForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const text = $("taskInput").value.trim();
+    if (!text) return;
+    data.tasks.push({ id: Date.now() + Math.random(), text, done: false });
+    $("taskInput").value = "";
+    save(); render();
+  });
+
+  $("saveMoney").addEventListener("click", () => {
+    data.income = Math.max(0, Number($("income").value) || 0);
+    data.expense = Math.max(0, Number($("expense").value) || 0);
+    save(); render();
+  });
+
+  $("focus").addEventListener("input", () => {
+    data.focus = $("focus").value;
+    save();
+  });
+
+  $("today").textContent = new Date().toLocaleDateString("ms-MY", {
+    weekday: "long", day: "numeric", month: "long", year: "numeric"
+  });
+  render();
+</script>
+</body>
+</html>
