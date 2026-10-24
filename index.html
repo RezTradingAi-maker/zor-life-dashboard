@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZOR SMART PARCEL DETECTOR | Interactive IoT Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZOR SMART PARCEL DETECTOR | Mobile Control App</title>
     <style>
         :root {
-            --bg-deep: #08080a;
-            --bg-matte: #0e0e12;
-            --panel-charcoal: #141419;
-            --panel-hover: #1b1b22;
-            --border-subtle: #24242f;
-            --border-highlight: #3f3f52;
-            --silver-accent: #c0c0d0;
-            --silver-muted: #808092;
-            --text-main: #f4f4f8;
-            --text-muted: #9494a8;
+            --bg-deep: #050508;
+            --bg-matte: #0b0b10;
+            --panel-charcoal: #121218;
+            --panel-hover: #1a1a24;
+            --border-subtle: #22222e;
+            --border-highlight: #38384a;
+            --silver-accent: #b8b8c8;
+            --silver-muted: #75758a;
+            --text-main: #f0f0f5;
+            --text-muted: #8c8c9e;
             --white: #ffffff;
             --black: #000000;
         }
@@ -26,6 +26,7 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -33,444 +34,237 @@
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
-            padding: 30px 15px;
+            padding: 0;
             overflow-x: hidden;
         }
 
-        .presentation-container {
+        /* Mobile App Frame Container */
+        .mobile-app-container {
             width: 100%;
-            max-width: 1500px;
+            max-width: 430px;
+            height: 100vh;
+            max-height: 932px;
+            background-color: var(--bg-matte);
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.9), 0 0 0 1px var(--border-subtle);
+            overflow: hidden;
         }
 
-        .presentation-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 16px;
-        }
-
-        .presentation-title-group h1 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--white);
-            text-transform: uppercase;
-        }
-
-        .presentation-title-group p {
-            font-size: 12px;
-            color: var(--silver-muted);
-            letter-spacing: 1px;
-            margin-top: 4px;
-            text-transform: uppercase;
-        }
-
-        .project-badge {
-            background: var(--panel-charcoal);
-            border: 1px solid var(--border-highlight);
-            padding: 6px 14px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            color: var(--silver-accent);
-            text-transform: uppercase;
-        }
-
-        .showcase-stage {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 24px;
-            align-items: start;
-        }
-
-        @media (max-width: 1250px) {
-            .showcase-stage {
-                grid-template-columns: 1fr;
+        @media (min-width: 431px) {
+            .mobile-app-container {
+                border-radius: 40px;
+                border: 6px solid #1a1a22;
+                height: 884px;
+                margin: 20px 0;
             }
         }
 
-        .mockup-window {
-            background-color: var(--bg-matte);
-            border: 1px solid var(--border-highlight);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .window-header {
+        /* Top Header Bar */
+        .app-header {
             background-color: var(--panel-charcoal);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 10px 16px;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            z-index: 10;
         }
 
-        .window-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .control-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--border-highlight);
-        }
-
-        .window-title {
-            font-size: 11px;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        /* Navbar */
-        .nav-bar {
-            background-color: var(--panel-charcoal);
-            border-bottom: 1px solid var(--border-subtle);
-            height: 60px;
-            padding: 0 20px;
+        .brand-box {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px;
         }
 
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .z-shield-logo {
-            width: 34px;
-            height: 38px;
+        .z-shield {
+            width: 32px;
+            height: 36px;
             position: relative;
-            background: linear-gradient(135deg, #2a2a35 0%, #111116 100%);
+            background: linear-gradient(135deg, #2a2a35 0%, #101014 100%);
             border: 1px solid var(--border-highlight);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         }
 
         .z-glyph {
-            position: relative;
-            z-index: 2;
             color: var(--white);
             font-weight: 900;
-            font-size: 18px;
+            font-size: 16px;
             letter-spacing: -1px;
         }
 
-        .brand-text h2 {
-            font-size: 13px;
+        .brand-info h1 {
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: var(--white);
         }
 
-        .brand-text span {
-            font-size: 9px;
-            letter-spacing: 2px;
+        .brand-info span {
+            font-size: 8px;
+            letter-spacing: 1.5px;
             color: var(--silver-muted);
             text-transform: uppercase;
         }
 
-        .nav-status-cluster {
+        .system-pill-badge {
             display: flex;
             align-items: center;
-            gap: 16px;
-        }
-
-        .hardware-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: var(--bg-deep);
             border: 1px solid var(--border-subtle);
-            padding: 6px 12px;
-            font-size: 11px;
+            padding: 5px 10px;
+            font-size: 9px;
             letter-spacing: 1px;
             color: var(--silver-accent);
         }
 
         .pulse-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background-color: var(--white);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--white);
+            box-shadow: 0 0 6px var(--white);
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { opacity: 0.4; }
+            0% { opacity: 0.3; }
             50% { opacity: 1; }
-            100% { opacity: 0.4; }
+            100% { opacity: 0.3; }
         }
 
-        .user-profile {
-            width: 34px;
-            height: 34px;
-            background: var(--border-subtle);
-            border: 1px solid var(--border-highlight);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--white);
-        }
-
-        /* Dashboard Body Layout */
-        .dashboard-body {
-            display: grid;
-            grid-template-columns: 220px 1fr;
-            min-height: 640px;
-        }
-
-        @media (max-width: 850px) {
-            .dashboard-body {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                display: none;
-            }
-        }
-
-        /* Sidebar */
-        .sidebar {
-            background-color: var(--panel-charcoal);
-            border-right: 1px solid var(--border-subtle);
-            padding: 20px 0;
+        /* App Scrollable Content Area */
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 14px;
+            padding-bottom: 90px; /* Space for bottom nav */
         }
 
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-left: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover {
-            color: var(--white);
-            background-color: var(--panel-hover);
-        }
-
-        .nav-item.active {
-            color: var(--white);
-            background-color: var(--panel-hover);
-            border-left-color: var(--white);
-            font-weight: 600;
-        }
-
-        .nav-item svg {
-            width: 15px;
-            height: 15px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .sidebar-footer {
-            padding: 0 20px;
-            font-size: 9px;
-            color: var(--silver-muted);
-            letter-spacing: 1px;
-            border-top: 1px solid var(--border-subtle);
-            padding-top: 14px;
-        }
-
-        /* Main Content Views */
-        .main-content {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            background-color: var(--bg-matte);
-        }
-
-        .tab-view {
+        .app-view {
             display: none;
             flex-direction: column;
-            gap: 16px;
-            width: 100%;
-        }
-
-        .tab-view.active {
-            display: flex;
-        }
-
-        /* System Status Banner */
-        .system-status-card {
-            background: linear-gradient(135deg, var(--panel-charcoal) 0%, var(--bg-deep) 100%);
-            border: 1px solid var(--border-highlight);
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        }
-
-        .status-left {
-            display: flex;
-            align-items: center;
             gap: 14px;
         }
 
-        .status-icon-box {
-            width: 36px;
-            height: 36px;
-            background: var(--bg-matte);
+        .app-view.active {
+            display: flex;
+        }
+
+        /* Status Hero Banner */
+        .hero-status-card {
+            background: linear-gradient(145deg, var(--panel-charcoal) 0%, var(--bg-deep) 100%);
             border: 1px solid var(--border-highlight);
+            padding: 16px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
 
-        .status-icon-box svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--white);
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .status-text h3 {
-            font-size: 13px;
+        .hero-info h3 {
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: var(--white);
         }
 
-        .status-text p {
-            font-size: 10px;
+        .hero-info p {
+            font-size: 9px;
             color: var(--silver-muted);
-            letter-spacing: 0.5px;
             margin-top: 2px;
+            letter-spacing: 0.5px;
         }
 
-        .status-pill {
+        .status-tag {
             background: var(--white);
             color: var(--black);
-            padding: 5px 14px;
-            font-size: 10px;
+            padding: 5px 12px;
+            font-size: 9px;
             font-weight: 800;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
         }
 
-        /* Grids & Panels */
-        .dashboard-grid-top {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 16px;
-        }
-
-        @media (max-width: 1050px) {
-            .dashboard-grid-top {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .panel {
+        /* Camera Feed Simulator */
+        .camera-card {
             background-color: var(--panel-charcoal);
             border: 1px solid var(--border-subtle);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
-        .panel-header {
-            padding: 12px 16px;
+        .camera-card-header {
+            padding: 10px 14px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            font-size: 10px;
+            align-items: center;
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: var(--silver-accent);
             text-transform: uppercase;
         }
 
-        .panel-header .live-tag {
-            background: rgba(255, 255, 255, 0.1);
+        .live-tag-pill {
+            background: rgba(255,255,255,0.1);
             color: var(--white);
             padding: 2px 6px;
-            font-size: 8px;
-            letter-spacing: 1px;
+            font-size: 7px;
             border: 1px solid var(--border-highlight);
         }
 
-        .camera-viewport {
+        .camera-viewport-mob {
             position: relative;
             width: 100%;
-            height: 250px;
-            background: #060608;
+            height: 190px;
+            background: #040406;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
 
-        .camera-simulation {
+        .porch-sim {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 40%, #1c1c24 0%, #08080a 80%);
+            background: radial-gradient(circle at 50% 30%, #1a1a24 0%, #060608 85%);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-end;
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
-        .porch-floor {
+        .floor-base {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 70px;
-            background: linear-gradient(180deg, #111116 0%, #050507 100%);
+            height: 50px;
+            background: linear-gradient(180deg, #101015 0%, #030305 100%);
             border-top: 1px solid var(--border-subtle);
         }
 
-        .box-3d {
+        .parcel-box-3d {
             position: relative;
-            width: 100px;
-            height: 68px;
-            background: #282835;
+            width: 80px;
+            height: 55px;
+            background: #242430;
             border: 1px solid var(--silver-muted);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-            transform: perspective(400px) rotateX(15deg) rotateY(-10deg);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+            transform: perspective(300px) rotateX(15deg) rotateY(-10deg);
             z-index: 2;
             display: flex;
             align-items: center;
@@ -478,7 +272,7 @@
             transition: all 0.3s ease;
         }
 
-        .box-3d::before {
+        .parcel-box-3d::before {
             content: '';
             position: absolute;
             top: 0;
@@ -488,170 +282,155 @@
             background: var(--border-highlight);
         }
 
-        .box-label {
+        .box-tag {
             background: var(--white);
             color: var(--black);
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 800;
-            padding: 2px 5px;
+            padding: 1px 4px;
             letter-spacing: 1px;
             z-index: 3;
         }
 
-        .ai-bounding-box {
+        .ai-detect-box {
             position: absolute;
-            top: 45px;
+            top: 35px;
             left: 50%;
             transform: translateX(-50%);
-            width: 135px;
-            height: 100px;
+            width: 110px;
+            height: 85px;
             border: 1px dashed var(--white);
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255,255,255,0.02);
             z-index: 4;
             pointer-events: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 4px;
+            padding: 3px;
             transition: all 0.3s ease;
         }
 
-        .ai-tag-top, .ai-tag-bottom {
+        .ai-label-t {
             font-family: monospace;
-            font-size: 8px;
+            font-size: 7px;
             color: var(--white);
-            background: rgba(0,0,0,0.8);
-            padding: 1px 4px;
+            background: rgba(0,0,0,0.85);
+            padding: 1px 3px;
             align-self: flex-start;
-            letter-spacing: 1px;
             border: 1px solid var(--border-highlight);
         }
 
-        .camera-hud-overlay {
+        .cam-hud-mob {
             position: absolute;
-            top: 10px;
+            top: 8px;
             left: 10px;
             right: 10px;
             display: flex;
             justify-content: space-between;
             font-family: monospace;
-            font-size: 9px;
+            font-size: 8px;
             color: var(--silver-accent);
             z-index: 5;
             pointer-events: none;
         }
 
-        /* Sensors Stack */
-        .sensors-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .sensor-card {
-            background-color: var(--panel-charcoal);
-            border: 1px solid var(--border-subtle);
-            padding: 14px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .sensor-info label {
-            font-size: 9px;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-            display: block;
-        }
-
-        .sensor-info .sensor-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--white);
-            letter-spacing: 1px;
-            margin-top: 3px;
-        }
-
-        .sensor-status-badge {
-            background: var(--bg-deep);
-            border: 1px solid var(--border-highlight);
-            padding: 5px 10px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--white);
-            text-transform: uppercase;
-        }
-
-        .sensor-status-badge.active {
-            background: var(--white);
-            color: var(--black);
-            border-color: var(--white);
-        }
-
-        /* Bottom Row */
-        .dashboard-grid-bottom {
+        /* Sensors Grid */
+        .sensors-grid-mob {
             display: grid;
-            grid-template-columns: repeat(3, 1fr) 2fr;
-            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
-        @media (max-width: 1150px) {
-            .dashboard-grid-bottom {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 750px) {
-            .dashboard-grid-bottom {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .metric-card {
+        .sensor-tile {
             background-color: var(--panel-charcoal);
             border: 1px solid var(--border-subtle);
-            padding: 16px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .metric-card span {
-            font-size: 9px;
-            letter-spacing: 1.5px;
+        .sensor-tile label {
+            font-size: 8px;
+            letter-spacing: 1.2px;
             color: var(--silver-muted);
             text-transform: uppercase;
             font-weight: 600;
         }
 
-        .metric-card .metric-number {
-            font-size: 28px;
+        .sensor-tile .sensor-val {
+            font-size: 15px;
             font-weight: 700;
             color: var(--white);
-            letter-spacing: 1px;
-            margin: 8px 0 2px 0;
-        }
-
-        .metric-card .metric-sub {
-            font-size: 10px;
-            color: var(--silver-accent);
             letter-spacing: 0.5px;
+            margin-top: 6px;
         }
 
-        .activity-panel {
+        .sensor-tile .tile-status {
+            font-size: 8px;
+            color: var(--silver-accent);
+            margin-top: 4px;
+            font-family: monospace;
+        }
+
+        /* Quick Action Controls Card */
+        .actions-card {
             background-color: var(--panel-charcoal);
             border: 1px solid var(--border-subtle);
-            padding: 16px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .activity-header {
-            font-size: 10px;
+        .actions-card h4 {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: var(--silver-accent);
+            text-transform: uppercase;
+        }
+
+        .action-button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn-mob {
+            background: var(--bg-deep);
+            border: 1px solid var(--border-highlight);
+            color: var(--white);
+            padding: 10px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .btn-mob:hover, .btn-mob.primary {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+
+        /* Activity Feed / History */
+        .timeline-mob {
+            background-color: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .timeline-header {
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: var(--silver-accent);
@@ -660,645 +439,322 @@
             padding-bottom: 6px;
         }
 
-        .activity-list {
+        .timeline-item {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             background: var(--bg-deep);
             border: 1px solid var(--border-subtle);
-            padding: 8px 12px;
+            padding: 8px 10px;
+            font-size: 10px;
         }
 
-        .activity-desc {
+        .timeline-desc {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 11px;
             color: var(--white);
         }
 
-        .activity-dot {
+        .t-dot {
             width: 5px;
             height: 5px;
-            background-color: var(--silver-accent);
+            background: var(--silver-accent);
             border-radius: 50%;
         }
 
-        .activity-time {
+        .timeline-time {
             font-family: monospace;
-            font-size: 10px;
+            font-size: 9px;
             color: var(--silver-muted);
         }
 
-        /* Generic Panels for other Tabs */
-        .generic-card {
+        /* Generic Views for Tabs */
+        .card-view-box {
             background-color: var(--panel-charcoal);
             border: 1px solid var(--border-subtle);
-            padding: 24px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
-        .generic-card h3 {
-            font-size: 13px;
+        .card-view-box h3 {
+            font-size: 11px;
             letter-spacing: 1.5px;
             color: var(--white);
             text-transform: uppercase;
         }
 
-        .generic-card p {
-            font-size: 11px;
+        .card-view-box p {
+            font-size: 10px;
             color: var(--silver-muted);
             line-height: 1.5;
         }
 
-        .action-btn {
-            background: var(--white);
-            color: var(--black);
-            border: none;
-            padding: 10px 20px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            text-transform: uppercase;
-            align-self: flex-start;
-            transition: opacity 0.2s;
-        }
-
-        .action-btn:hover {
-            opacity: 0.85;
-        }
-
-        /* Footer */
-        .dashboard-footer {
-            background-color: var(--panel-charcoal);
-            border-top: 1px solid var(--border-subtle);
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-        }
-
-        .footer-system-info {
-            display: flex;
-            gap: 16px;
-        }
-
-        /* Smartphone Preview */
-        .smartphone-mockup-wrapper {
-            width: 340px;
-            background: var(--panel-charcoal);
-            border: 1px solid var(--border-highlight);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            align-self: flex-start;
-        }
-
-        @media (max-width: 1250px) {
-            .smartphone-mockup-wrapper {
-                align-self: center;
-                width: 100%;
-                max-width: 380px;
-            }
-        }
-
-        .phone-screen {
-            background-color: var(--bg-deep);
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            min-height: 600px;
-        }
-
-        .phone-top-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 8px;
-        }
-
-        .phone-brand {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .phone-brand span {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--white);
-            text-transform: uppercase;
-        }
-
-        .phone-status-card {
-            background: var(--panel-charcoal);
-            border: 1px solid var(--border-subtle);
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .phone-status-card h4 {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--white);
-        }
-
-        .phone-status-card p {
-            font-size: 8px;
-            color: var(--silver-muted);
-            margin-top: 2px;
-        }
-
-        .phone-camera-box {
+        /* Floating Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            height: 140px;
-            background: #060608;
-            border: 1px solid var(--border-subtle);
-            position: relative;
+            background-color: rgba(18, 18, 24, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-subtle);
+            height: 68px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            justify-content: space-around;
+            padding: 0 10px;
+            z-index: 100;
         }
 
-        .phone-sensors-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .phone-sensor-card {
-            background: var(--panel-charcoal);
-            border: 1px solid var(--border-subtle);
-            padding: 8px;
+        .nav-tab {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            padding: 6px;
         }
 
-        .phone-sensor-card label {
-            font-size: 8px;
+        .nav-tab svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-tab span {
+            font-size: 7px;
             letter-spacing: 1px;
-            color: var(--silver-muted);
             text-transform: uppercase;
+            font-weight: 600;
         }
 
-        .phone-sensor-card .val {
-            font-size: 12px;
-            font-weight: 700;
+        .nav-tab.active {
             color: var(--white);
-            margin-top: 3px;
         }
     </style>
 </head>
 <body>
 
-    <div class="presentation-container">
-        <!-- Header -->
-        <div class="presentation-header">
-            <div class="presentation-title-group">
-                <h1>ZOR SMART PARCEL DETECTOR</h1>
-                <p>Diploma Final-Year Project UI Presentation &bull; Fully Interactive IoT SaaS</p>
+    <div class="mobile-app-container">
+        <!-- Top App Header -->
+        <header class="app-header">
+            <div class="brand-box">
+                <div class="z-shield">
+                    <div class="z-glyph">Z</div>
+                </div>
+                <div class="brand-info">
+                    <h1>ZOR MOBILE</h1>
+                    <span>ESP32 SECURE LINK</span>
+                </div>
             </div>
-            <div class="project-badge">Live Simulation Mode</div>
-        </div>
+            <div class="system-pill-badge">
+                <div class="pulse-dot"></div>
+                <span id="header-conn-status">ONLINE</span>
+            </div>
+        </header>
 
-        <!-- Stage: Desktop + Mobile -->
-        <div class="showcase-stage">
+        <!-- Main Scrollable App Container -->
+        <div class="app-content">
 
-            <!-- DESKTOP DASHBOARD -->
-            <div class="mockup-window desktop-dashboard">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <div class="control-dot"></div>
-                        <div class="control-dot"></div>
-                        <div class="control-dot"></div>
+            <!-- TAB 1: OVERVIEW / DASHBOARD -->
+            <div id="view-home" class="app-view active">
+                <div class="hero-status-card" id="hero-card">
+                    <div class="hero-info">
+                        <h3 id="hero-title">SYSTEM PROTECTED</h3>
+                        <p id="hero-desc">Ultrasonic & PIR sensors armed</p>
                     </div>
-                    <div class="window-title">ZOR_OS // INTERACTIVE DASHBOARD - V2.5</div>
-                    <div style="width: 40px;"></div>
+                    <div class="status-tag" id="hero-tag">SECURE</div>
                 </div>
 
-                <!-- Navbar -->
-                <div class="nav-bar">
-                    <div class="brand-container">
-                        <div class="z-shield-logo">
-                            <div class="z-glyph">Z</div>
-                        </div>
-                        <div class="brand-text">
-                            <h2>ZOR SMART PARCEL DETECTOR</h2>
-                            <span>Embedded Security Ecosystem</span>
-                        </div>
+                <div class="camera-card">
+                    <div class="camera-card-header">
+                        <span>Porch Camera View</span>
+                        <span class="live-tag-pill">AI ACTIVE</span>
                     </div>
-                    <div class="nav-status-cluster">
-                        <div class="hardware-badge">
-                            <div class="pulse-dot" id="esp-pulse"></div>
-                            <span id="esp-status-text">ESP32 // CONNECTED</span>
-                        </div>
-                        <div class="user-profile" title="Muhammad Zulkhairy">MZ</div>
-                    </div>
-                </div>
-
-                <!-- Body -->
-                <div class="dashboard-body">
-                    <!-- Sidebar -->
-                    <div class="sidebar">
-                        <div class="nav-menu">
-                            <div class="nav-item active" onclick="switchTab('overview', this)">
-                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                                Overview
-                            </div>
-                            <div class="nav-item" onclick="switchTab('live', this)">
-                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                Live Detection
-                            </div>
-                            <div class="nav-item" onclick="switchTab('camera', this)">
-                                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                Camera Monitoring
-                            </div>
-                            <div class="nav-item" onclick="switchTab('history', this)">
-                                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                                Parcel History
-                            </div>
-                            <div class="nav-item" onclick="switchTab('alerts', this)">
-                                <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                Security Alerts
-                            </div>
-                            <div class="nav-item" onclick="switchTab('analytics', this)">
-                                <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                                Analytics
-                            </div>
-                            <div class="nav-item" onclick="switchTab('settings', this)">
-                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                                Settings
+                    <div class="camera-viewport-mob">
+                        <div class="porch-sim">
+                            <div class="floor-base"></div>
+                            <div class="parcel-box-3d" id="mob-parcel-box">
+                                <div class="box-tag">ZOR</div>
                             </div>
                         </div>
-                        <div class="sidebar-footer">
-                            POLISAS // DTK3C
+                        <div class="ai-detect-box" id="mob-ai-box">
+                            <div class="ai-label-t">PARCEL // 98%</div>
+                            <div class="ai-label-t" style="align-self:flex-end;">ZONE-01</div>
                         </div>
-                    </div>
-
-                    <!-- Main Dynamic Content Container -->
-                    <div class="main-content">
-
-                        <!-- TAB 1: OVERVIEW -->
-                        <div id="tab-overview" class="tab-view active">
-                            <div class="system-status-card" id="status-card-box">
-                                <div class="status-left">
-                                    <div class="status-icon-box">
-                                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                    </div>
-                                    <div class="status-text">
-                                        <h3 id="sys-title">SYSTEM PROTECTED</h3>
-                                        <p id="sys-desc">Ultrasonic & PIR defense grid fully operational. Anti-theft buzzer armed.</p>
-                                    </div>
-                                </div>
-                                <div class="status-pill" id="sys-pill">SECURE</div>
-                            </div>
-
-                            <div class="dashboard-grid-top">
-                                <div class="panel">
-                                    <div class="panel-header">
-                                        <span>Camera Feed & AI Detection</span>
-                                        <span class="live-tag">LIVE OPTIONAL</span>
-                                    </div>
-                                    <div class="camera-viewport">
-                                        <div class="camera-simulation">
-                                            <div class="porch-floor"></div>
-                                            <div class="box-3d" id="parcel-box-ui">
-                                                <div class="box-label">ZOR PARCEL</div>
-                                            </div>
-                                        </div>
-                                        <div class="ai-bounding-box" id="ai-box-ui">
-                                            <div class="ai-tag-top" id="ai-conf-text">PARCEL // CONF: 98.4%</div>
-                                            <div class="ai-tag-bottom">ZONE: PORCH-01</div>
-                                        </div>
-                                        <div class="camera-hud-overlay">
-                                            <span>CAM_01 // 1080P_30FPS</span>
-                                            <span id="live-clock">00:00:00</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="sensors-stack">
-                                    <div class="sensor-card">
-                                        <div class="sensor-info">
-                                            <label>Parcel Status</label>
-                                            <div class="sensor-value" id="val-parcel">PARCEL DETECTED</div>
-                                        </div>
-                                        <div class="sensor-status-badge active" id="badge-parcel">DETECTED</div>
-                                    </div>
-
-                                    <div class="sensor-card">
-                                        <div class="sensor-info">
-                                            <label>Ultrasonic Distance</label>
-                                            <div class="sensor-value" id="val-distance">14.2 cm</div>
-                                        </div>
-                                        <div class="sensor-status-badge" id="badge-distance">OPTIMAL</div>
-                                    </div>
-
-                                    <div class="sensor-card">
-                                        <div class="sensor-info">
-                                            <label>PIR Motion Detector</label>
-                                            <div class="sensor-value" id="val-motion">NO MOTION</div>
-                                        </div>
-                                        <div class="sensor-status-badge" id="badge-motion">CLEAR</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="dashboard-grid-bottom">
-                                <div class="metric-card">
-                                    <span>Total Detections</span>
-                                    <div class="metric-number" id="metric-total">48</div>
-                                    <div class="metric-sub">+12 today</div>
-                                </div>
-
-                                <div class="metric-card">
-                                    <span>Security Alerts</span>
-                                    <div class="metric-number" id="metric-alerts">03</div>
-                                    <div class="metric-sub">All cleared</div>
-                                </div>
-
-                                <div class="metric-card">
-                                    <span>System Uptime</span>
-                                    <div class="metric-number">99.8%</div>
-                                    <div class="metric-sub">14d 6h active</div>
-                                </div>
-
-                                <div class="activity-panel">
-                                    <div class="activity-header">Parcel Activity Timeline</div>
-                                    <div class="activity-list" id="activity-log-container">
-                                        <div class="activity-item">
-                                            <div class="activity-desc">
-                                                <div class="activity-dot"></div>
-                                                <span>Parcel secured in drop zone</span>
-                                            </div>
-                                            <span class="activity-time">00:18:42</span>
-                                        </div>
-                                        <div class="activity-item">
-                                            <div class="activity-desc">
-                                                <div class="activity-dot"></div>
-                                                <span>Ultrasonic proximity trigger</span>
-                                            </div>
-                                            <span class="activity-time">00:18:39</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="cam-hud-mob">
+                            <span>CAM_01 // ESP32-CAM</span>
+                            <span id="mob-clock">00:00:00</span>
                         </div>
-
-                        <!-- TAB 2: LIVE DETECTION -->
-                        <div id="tab-live" class="tab-view">
-                            <div class="generic-card">
-                                <h3>Live Sensor Telemetry Stream</h3>
-                                <p>Real-time polling data direct from ESP32 micro-controller unit via Wi-Fi/MQTT protocol.</p>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
-                                    <div class="sensor-card">
-                                        <div class="sensor-info"><label>Raw Distance</label><div class="sensor-value" id="live-dist-raw">14.2 cm</div></div>
-                                    </div>
-                                    <div class="sensor-card">
-                                        <div class="sensor-info"><label>Buzzer State</label><div class="sensor-value" id="live-buzzer">STANDBY</div></div>
-                                    </div>
-                                </div>
-                                <button class="action-btn" onclick="triggerTestAlarm()">Test System Alarm & Buzzer</button>
-                            </div>
-                        </div>
-
-                        <!-- TAB 3: CAMERA MONITORING -->
-                        <div id="tab-camera" class="tab-view">
-                            <div class="generic-card">
-                                <h3>High-Resolution Camera Surveillance</h3>
-                                <p>Optional ESP32-CAM video stream integration module. Configurable motion bounding zones.</p>
-                                <div style="background:#000; height: 260px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border-highlight); font-family:monospace; color:var(--silver-accent);">
-                                    [STREAM ACTIVE: 1080P RTSP FEED]
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 4: PARCEL HISTORY -->
-                        <div id="tab-history" class="tab-view">
-                            <div class="generic-card">
-                                <h3>Historical Delivery Records</h3>
-                                <p>Log of all package drop-offs recorded over the past 30 days.</p>
-                                <div class="activity-list" style="max-height: 250px;">
-                                    <div class="activity-item"><div class="activity-desc"><div class="activity-dot"></div><span>PosLaju Courier Drop</span></div><span class="activity-time">Yesterday, 14:20</span></div>
-                                    <div class="activity-item"><div class="activity-desc"><div class="activity-dot"></div><span>J&T Express Drop</span></div><span class="activity-time">Oct 23, 11:05</span></div>
-                                    <div class="activity-item"><div class="activity-desc"><div class="activity-dot"></div><span>Shopee Xpress Drop</span></div><span class="activity-time">Oct 21, 09:40</span></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 5: SECURITY ALERTS -->
-                        <div id="tab-alerts" class="tab-view">
-                            <div class="generic-card">
-                                <h3>Intrusion & Anti-Theft Logs</h3>
-                                <p>All motion warnings triggered outside normal delivery windows.</p>
-                                <div class="sensor-card" style="border-left: 3px solid var(--white);">
-                                    <div class="sensor-info"><label>No suspicious activity detected</label><div class="sensor-value" style="font-size: 13px;">System Integrity 100%</div></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 6: ANALYTICS -->
-                        <div id="tab-analytics" class="tab-view">
-                            <div class="generic-card">
-                                <h3>Performance & Delivery Analytics</h3>
-                                <p>Peak delivery hours occur between 10:00 AM and 2:00 PM.</p>
-                                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
-                                    <div class="metric-card"><span>Weekly Total</span><div class="metric-number">34</div></div>
-                                    <div class="metric-card"><span>Monthly Total</span><div class="metric-number">142</div></div>
-                                    <div class="metric-card"><span>Success Rate</span><div class="metric-number">100%</div></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 7: SETTINGS -->
-                        <div id="tab-settings" class="tab-view">
-                            <div class="generic-card">
-                                <h3>System Configuration</h3>
-                                <p>Adjust ultrasonic threshold distance for parcel recognition.</p>
-                                <div style="display:flex; flex-direction:column; gap:8px;">
-                                    <label style="font-size:10px; color:var(--silver-accent);">Trigger Distance (cm): <span id="thresh-val">20</span>cm</label>
-                                    <input type="range" min="5" max="50" value="20" oninput="updateThreshold(this.value)" style="accent-color:var(--white);">
-                                </div>
-                                <button class="action-btn" onclick="alert('Settings saved successfully to ESP32 EEPROM!')">Save to ESP32</button>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
-                <!-- Footer -->
-                <div class="dashboard-footer">
-                    <span>ZOR TECHNOLOGY | SMART DELIVERY SECURITY</span>
-                    <div class="footer-system-info">
-                        <span>FIRMWARE: V1.0.4</span>
-                        <span>HARDWARE: ESP32 DEVKIT V1</span>
+                <div class="sensors-grid-mob">
+                    <div class="sensor-tile">
+                        <label>Distance Sensor</label>
+                        <div class="sensor-val" id="mob-dist-val">14.2 cm</div>
+                        <div class="tile-status" id="mob-dist-status">Proximity OK</div>
+                    </div>
+                    <div class="sensor-tile">
+                        <label>PIR Motion</label>
+                        <div class="sensor-val" id="mob-motion-val">NO MOTION</div>
+                        <div class="tile-status">Area Clear</div>
+                    </div>
+                </div>
+
+                <div class="actions-card">
+                    <h4>Quick System Controls</h4>
+                    <div class="action-button-grid">
+                        <button class="btn-mob primary" onclick="toggleTestState()">Toggle State</button>
+                        <button class="btn-mob" onclick="triggerBuzzerPulse()">Test Buzzer</button>
+                    </div>
+                </div>
+
+                <div class="timeline-mob">
+                    <div class="timeline-header">Recent Activity Log</div>
+                    <div class="timeline-item">
+                        <div class="timeline-desc">
+                            <div class="t-dot"></div>
+                            <span>Parcel secured in drop zone</span>
+                        </div>
+                        <span class="timeline-time">00:18</span>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-desc">
+                            <div class="t-dot"></div>
+                            <span>ESP32 system armed successfully</span>
+                        </div>
+                        <span class="timeline-time">00:00</span>
                     </div>
                 </div>
             </div>
 
-            <!-- SMARTPHONE PREVIEW -->
-            <div class="smartphone-mockup-wrapper">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <div class="control-dot"></div>
-                        <div class="control-dot"></div>
-                        <div class="control-dot"></div>
+            <!-- TAB 2: LIVE SENSORS -->
+            <div id="view-sensors" class="app-view">
+                <div class="card-view-box">
+                    <h3>ESP32 Live Telemetry</h3>
+                    <p>Direct pin status and analog readings transmitted over local Wi-Fi network.</p>
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-top:6px;">
+                        <div class="sensor-tile"><label>TRIG Pin (GPIO 5)</label><div class="sensor-val">HIGH (Active)</div></div>
+                        <div class="sensor-tile"><label>ECHO Pin (GPIO 18)</label><div class="sensor-val">480 µs</div></div>
+                        <div class="sensor-tile"><label>PIR Sensor (GPIO 19)</label><div class="sensor-val">LOW (0V)</div></div>
+                        <div class="sensor-tile"><label>Buzzer Relay (GPIO 21)</label><div class="sensor-val">ARMED</div></div>
                     </div>
-                    <div class="window-title">MOBILE APP VIEW</div>
-                    <div style="width: 40px;"></div>
                 </div>
+            </div>
 
-                <div class="phone-screen">
-                    <div class="phone-top-bar">
-                        <div class="phone-brand">
-                            <div class="z-shield-logo" style="width: 22px; height: 26px;">
-                                <div class="z-glyph" style="font-size: 13px;">Z</div>
-                            </div>
-                            <span>ZOR MOBILE</span>
-                        </div>
-                        <div class="hardware-badge" style="padding: 3px 6px; font-size: 8px;">
-                            <div class="pulse-dot" style="width: 5px; height: 5px;"></div>
-                            <span>ONLINE</span>
-                        </div>
+            <!-- TAB 3: ALERTS -->
+            <div id="view-alerts" class="app-view">
+                <div class="card-view-box">
+                    <h3>Security & Theft Warning Log</h3>
+                    <p>Monitors unauthorized movement during non-delivery hours.</p>
+                    <div class="timeline-item" style="border-left:3px solid var(--white);">
+                        <div class="timeline-desc"><div class="t-dot"></div><span>No security intrusions recorded</span></div>
+                        <span class="timeline-time">STATUS OK</span>
                     </div>
+                </div>
+            </div>
 
-                    <div class="phone-status-card">
-                        <div>
-                            <h4 id="phone-sys-title">SYSTEM PROTECTED</h4>
-                            <p>Anti-theft defense active</p>
-                        </div>
-                        <div class="status-pill" id="phone-sys-pill" style="padding: 3px 6px; font-size: 8px;">SECURE</div>
-                    </div>
-
-                    <div class="phone-camera-box">
-                        <div class="camera-simulation">
-                            <div class="porch-floor" style="height: 35px;"></div>
-                            <div class="box-3d" id="phone-box-ui" style="width: 60px; height: 40px;">
-                                <div class="box-label" style="font-size: 5px;">ZOR</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="phone-sensors-grid">
-                        <div class="phone-sensor-card">
-                            <label>Distance</label>
-                            <div class="val" id="phone-val-dist">14.2 cm</div>
-                        </div>
-                        <div class="phone-sensor-card">
-                            <label>Motion</label>
-                            <div class="val" id="phone-val-motion" style="font-size: 10px;">NO MOTION</div>
-                        </div>
-                    </div>
-
-                    <div class="activity-panel" style="padding: 10px;">
-                        <div class="activity-header" style="font-size: 9px;">Recent Events</div>
-                        <div class="activity-list" style="max-height: 80px;">
-                            <div class="activity-item" style="padding: 4px 8px; font-size: 9px;">
-                                <span>Parcel Arrived</span>
-                                <span class="activity-time">00:18</span>
-                            </div>
-                        </div>
+            <!-- TAB 4: SETTINGS -->
+            <div id="view-settings" class="app-view">
+                <div class="card-view-box">
+                    <h3>App & Device Config</h3>
+                    <p>Customize sensor sensitivity and alert preferences.</p>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <label style="font-size:9px; color:var(--silver-accent);">Detection Distance Threshold: <span id="mob-range-val">20</span> cm</label>
+                        <input type="range" min="5" max="50" value="20" oninput="document.getElementById('mob-range-val').innerText=this.value" style="accent-color:var(--white);">
+                        <button class="btn-mob primary" style="margin-top:10px;" onclick="alert('Configuration successfully synced with ESP32 EEPROM!')">Sync with ESP32</button>
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <!-- Floating Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-tab active" onclick="switchAppTab('home', this)">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+            </button>
+            <button class="nav-tab" onclick="switchAppTab('sensors', this)">
+                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                <span>Sensors</span>
+            </button>
+            <button class="nav-tab" onclick="switchAppTab('alerts', this)">
+                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span>Alerts</span>
+            </button>
+            <button class="nav-tab" onclick="switchAppTab('settings', this)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Settings</span>
+            </button>
+        </nav>
     </div>
 
     <script>
-        // Tab switching logic
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.tab-view').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        // Tab switching logic for mobile app
+        function switchAppTab(tabName, element) {
+            document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             
-            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('view-' + tabName).classList.add('active');
             element.classList.add('active');
         }
 
-        // Live clock
+        // Clock timer
         setInterval(() => {
             const now = new Date();
-            const timeString = now.toTimeString().split(' ')[0];
-            const clockEl = document.getElementById('live-clock');
-            if (clockEl) clockEl.innerText = timeString;
+            const timeStr = now.toTimeString().split(' ')[0];
+            const clockEl = document.getElementById('mob-clock');
+            if(clockEl) clockEl.innerText = timeStr;
         }, 1000);
 
-        // Simulated real-time sensor updates & interactive state
-        let hasParcel = true;
-        let detectionCount = 48;
+        // Interactive simulation toggle
+        let isProtected = true;
+        function toggleTestState() {
+            isProtected = !isProtected;
+            const heroTitle = document.getElementById('hero-title');
+            const heroDesc = document.getElementById('hero-desc');
+            const heroTag = document.getElementById('hero-tag');
+            const heroCard = document.getElementById('hero-card');
+            const parcelBox = document.getElementById('mob-parcel-box');
+            const aiBox = document.getElementById('mob-ai-box');
+            const distVal = document.getElementById('mob-dist-val');
+            const distStatus = document.getElementById('mob-dist-status');
+            const motionVal = document.getElementById('mob-motion-val');
 
-        function updateThreshold(val) {
-            document.getElementById('thresh-val').innerText = val;
+            if(!isProtected) {
+                heroTitle.innerText = "NO PARCEL DETECTED";
+                heroDesc.innerText = "Drop zone is currently empty";
+                heroTag.innerText = "WAITING";
+                parcelBox.style.opacity = "0.15";
+                aiBox.style.opacity = "0.15";
+                distVal.innerText = "42.0 cm";
+                distStatus.innerText = "Out of range";
+                motionVal.innerText = "NO MOTION";
+            } else {
+                heroTitle.innerText = "SYSTEM PROTECTED";
+                heroDesc.innerText = "Ultrasonic & PIR sensors armed";
+                heroTag.innerText = "SECURE";
+                parcelBox.style.opacity = "1";
+                aiBox.style.opacity = "1";
+                distVal.innerText = "14.2 cm";
+                distStatus.innerText = "Proximity OK";
+                motionVal.innerText = "NO MOTION";
+            }
         }
 
-        function triggerTestAlarm() {
-            hasParcel = !hasParcel;
-            const titleEl = document.getElementById('sys-title');
-            const descEl = document.getElementById('sys-desc');
-            const pillEl = document.getElementById('sys-pill');
-            const cardBox = document.getElementById('status-card-box');
-            const valParcel = document.getElementById('val-parcel');
-            const badgeParcel = document.getElementById('badge-parcel');
-            const boxUi = document.getElementById('parcel-box-ui');
-            const aiBox = document.getElementById('ai-box-ui');
-            const phoneTitle = document.getElementById('phone-sys-title');
-            const phonePill = document.getElementById('phone-sys-pill');
-            const phoneBox = document.getElementById('phone-box-ui');
-            const phoneDist = document.getElementById('phone-val-dist');
-
-            if (!hasParcel) {
-                titleEl.innerText = "NO PARCEL DETECTED";
-                descEl.innerText = "Drop zone is clear. Waiting for next delivery arrival.";
-                pillEl.innerText = "WAITING";
-                phoneTitle.innerText = "ZONE CLEAR";
-                phonePill.innerText = "IDLE";
-                valParcel.innerText = "NO PARCEL";
-                badgeParcel.innerText = "EMPTY";
-                badgeParcel.classList.remove('active');
-                boxUi.style.opacity = "0.1";
-                aiBox.style.opacity = "0.1";
-                if(phoneBox) phoneBox.style.opacity = "0.1";
-                phoneDist.innerText = "45.0 cm";
-            } else {
-                titleEl.innerText = "SYSTEM PROTECTED";
-                descEl.innerText = "Ultrasonic & PIR defense grid fully operational. Anti-theft buzzer armed.";
-                pillEl.innerText = "SECURE";
-                phoneTitle.innerText = "SYSTEM PROTECTED";
-                phonePill.innerText = "SECURE";
-                valParcel.innerText = "PARCEL DETECTED";
-                badgeParcel.innerText = "DETECTED";
-                badgeParcel.classList.add('active');
-                boxUi.style.opacity = "1";
-                aiBox.style.opacity = "1";
-                if(phoneBox) phoneBox.style.opacity = "1";
-                phoneDist.innerText = "14.2 cm";
-                detectionCount++;
-                document.getElementById('metric-total').innerText = detectionCount;
-            }
+        function triggerBuzzerPulse() {
+            alert('ESP32 Command Sent: Buzzer Test Pulse Triggered (ON for 1.5s)');
         }
     </script>
 </body>
