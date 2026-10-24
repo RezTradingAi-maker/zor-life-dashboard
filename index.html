@@ -3,498 +3,601 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#08090b">
-<title>ZOR | Smart Parcel Detector</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090c11">
+<title>ZOR | Smart Parcel Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#08090b;--panel:#111317;--line:#292b31;
-  --text:#f5f6f8;--muted:#9297a1;--silver:#dfe2e7;
-}
+:root{--bg:#090c11;--panel:#111720;--panel2:#151e29;--line:#293747;--text:#edf2f8;--muted:#8d9bad;--blue:#a9c9f4;--green:#8fe0b2;--amber:#e9ca8c;--red:#f28a94}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button{font:inherit;cursor:pointer}
-button:focus-visible{outline:2px solid white;outline-offset:3px}
-button,a{-webkit-tap-highlight-color:transparent}
-.intro{position:fixed;inset:0;z-index:1000;background:#08090b;display:grid;place-items:center;transition:opacity .7s,visibility .7s;overflow:hidden}
-.intro.done{opacity:0;visibility:hidden;pointer-events:none}
-.intro:before{content:"";position:absolute;width:300px;height:300px;border:1px solid #24262c;border-radius:50%;box-shadow:0 0 0 45px #111216,0 0 0 90px #0c0d10}
-.intro-content{position:relative;text-align:center}
-.intro-logo{width:100px;height:115px;opacity:0;transform:translateX(-45vw);animation:logoIn 1.4s cubic-bezier(.16,1,.3,1) .2s forwards}
-.intro-title{font-size:31px;font-weight:900;letter-spacing:9px;margin-top:20px;opacity:0;animation:fadeIn .6s 1s forwards}
-.intro-sub{font-size:9px;color:#8e939d;letter-spacing:4px;margin-top:10px;opacity:0;animation:fadeIn .6s 1.25s forwards}
-.intro-line{height:1px;width:0;background:white;margin:23px auto 0;animation:lineIn .6s 1.4s forwards}
-.intro-loading{font-size:9px;color:#777d87;letter-spacing:2px;margin-top:14px;opacity:0;animation:fadeIn .5s 1.55s forwards}
-.skip{position:absolute;bottom:25px;right:20px;background:none;border:1px solid #303239;color:#aaaeb6;padding:10px 13px;border-radius:8px;font-size:10px}
-@keyframes logoIn{0%{transform:translateX(-45vw);opacity:0}65%{opacity:1}82%{transform:translateX(8px) scale(1.04)}100%{transform:translateX(0);opacity:1}}
-@keyframes fadeIn{to{opacity:1}}
-@keyframes lineIn{to{width:170px}}
-.topbar{height:72px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;background:#08090beF;backdrop-filter:blur(15px);z-index:10}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-logo{width:36px;height:42px}
-.brand-name{font-size:12px;font-weight:850;letter-spacing:2px}
-.brand-sub{font-size:9px;color:#858b95;letter-spacing:2px;margin-top:4px}
-.top-right{display:flex;align-items:center;gap:10px}
-.live{border:1px solid #34363d;border-radius:30px;padding:9px 12px;font-size:9px;letter-spacing:1px;color:#d8dce2}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e5e8ec;margin-right:7px;box-shadow:0 0 10px #aeb5c0}
-.icon-btn{width:38px;height:38px;border:1px solid var(--line);background:#111317;color:white;border-radius:11px}
-.layout{display:grid;grid-template-columns:215px 1fr;min-height:calc(100vh - 72px)}
-aside{padding:26px 15px;border-right:1px solid var(--line)}
-.nav-label{font-size:9px;letter-spacing:2px;color:#6e737d;padding:0 10px;margin:0 0 12px}
+body{margin:0;background:radial-gradient(ellipse at 75% 0%,#192536,transparent 40%),var(--bg);color:var(--text);font:13px "DM Sans",sans-serif}
+button,input{font:inherit}button{cursor:pointer}svg{display:block}
+.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* WELCOME SCREEN */
+.welcome-screen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at center,#1b2b40 0%,#0b1019 48%,#07090e 100%);transition:opacity .7s,visibility .7s}
+.welcome-screen.leaving{opacity:0;visibility:hidden;pointer-events:none}
+.welcome-grid{position:absolute;inset:0;opacity:.14;background-image:linear-gradient(#a9c9f420 1px,transparent 1px),linear-gradient(90deg,#a9c9f420 1px,transparent 1px);background-size:42px 42px;animation:gridMove 15s linear infinite;mask-image:radial-gradient(ellipse,#000,transparent 75%)}
+.welcome-content{position:relative;padding:20px;text-align:center;animation:welcomeRise .9s ease both}
+.welcome-logo-wrap{position:relative;width:190px;height:190px;margin:0 auto 20px;display:grid;place-items:center;isolation:isolate}
+.logo-aura{position:absolute;inset:30px;border-radius:50%;background:#77b8ff0c;box-shadow:0 0 35px #4d9cff30,0 0 80px #4d9cff18;animation:auraPulse 2s infinite alternate}
+.logo-ring{position:absolute;inset:17px;border:1px solid #8abfff3c;border-radius:50%;box-shadow:0 0 22px #4f9eff12,inset 0 0 20px #4f9eff0b}
+.logo-ring.ring-two{inset:5px;border-style:dashed;opacity:.5;animation:ringRotate 24s linear infinite}
+.logo-ring.ring-three{inset:25px;border-color:#e4f2ff35;animation:ringRotate 18s linear infinite reverse}
+.brand-shield{position:relative;z-index:2;width:100px;height:112px;filter:drop-shadow(0 0 10px #86bdff40)}
+.brand-shield .shield-outline{fill:url(#shieldGradient);stroke:#d9ebff;stroke-width:1.4}
+.brand-shield .shield-inner{fill:none;stroke:#8bb9f1;stroke-width:.8;opacity:.65}
+.brand-shield .shield-z{fill:#f2f7ff}
+.bolt{position:absolute;z-index:3;width:48px;height:62px;fill:#f3f9ff;stroke:#91caff;stroke-width:1.2;filter:drop-shadow(0 0 5px #5aa8ff) drop-shadow(0 0 13px #4b9dff);opacity:0;pointer-events:none}
+.bolt.b1{top:0;left:30px;transform:rotate(-14deg);animation:lightning 3.2s infinite}
+.bolt.b2{top:20px;right:0;width:40px;animation:lightning 3.7s 1.1s infinite}
+.bolt.b3{bottom:1px;left:10px;width:38px;transform:rotate(20deg);animation:lightning 4.1s 2s infinite}
+.bolt.b4{bottom:12px;right:12px;width:46px;transform:rotate(180deg);animation:lightning 3.5s .5s infinite}
+.electric-arc{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:4}
+.arc{fill:none;stroke:#dceeff;stroke-width:1.8;stroke-linecap:round;stroke-dasharray:7 19;opacity:0;filter:drop-shadow(0 0 5px #63afff) drop-shadow(0 0 12px #63afff)}
+.arc.a1{animation:arcFlash 2.8s .3s infinite}
+.arc.a2{animation:arcFlash 3.4s 1.6s infinite;stroke:#8cc6ff}
+.arc.a3{animation:arcFlash 3.1s 2.2s infinite}
+
+/* NEW: LIGHTNING THAT ORBITS THE SHIELD */
+.lightning-orbit{position:absolute;inset:0;width:100%;height:100%;z-index:5;overflow:visible;pointer-events:none;animation:orbitRotate 5s linear infinite}
+.orbit-bolt{fill:#fff;stroke:#8bcaff;stroke-width:1;opacity:0;filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 12px #58adff)}
+.orbit-bolt.o1{animation:orbitFlash 2.8s .1s infinite}
+.orbit-bolt.o2{animation:orbitFlash 3.3s 1.1s infinite}
+.orbit-bolt.o3{animation:orbitFlash 3.1s 2s infinite}
+.orbit-bolt.o4{animation:orbitFlash 3.6s 2.5s infinite}
+.welcome-logo-wrap.strike .brand-shield{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 22px #51aaff) drop-shadow(0 0 40px #287bff)}
+.welcome-logo-wrap.strike .logo-aura{background:#83c5ff35;box-shadow:0 0 35px #4d9cff80,0 0 75px #4d9cff60,0 0 110px #fff2}
+.welcome-logo-wrap.strike .bolt,.welcome-logo-wrap.strike .arc,.welcome-logo-wrap.strike .orbit-bolt{opacity:1}
+.welcome-logo-wrap.strike .electric-arc{filter:drop-shadow(0 0 7px #fff)}
+.welcome-logo-wrap.strike:after{content:"";position:absolute;inset:0;border-radius:50%;background:#8bcaff18;pointer-events:none;animation:screenFlash .24s ease-out}
+.welcome-tag{color:var(--blue);font-size:10px;letter-spacing:4px;margin-bottom:15px}
+.welcome-content h1{margin:0;color:#f5f8ff;font:700 clamp(32px,7vw,62px)/1.1 "Space Grotesk";letter-spacing:-2px}
+.welcome-content h1 span{color:var(--blue)}
+.welcome-content h2{margin:12px 0 16px;color:#b8c5d6;font:500 clamp(10px,2.4vw,16px) "Space Grotesk";letter-spacing:clamp(2px,.8vw,5px)}
+.welcome-content p{color:var(--muted);font-size:12px;margin-bottom:28px}
+.enter-button{min-width:225px;display:flex;align-items:center;justify-content:space-between;gap:22px;margin:auto;padding:15px 20px;color:#101722;background:linear-gradient(135deg,#f0f5fc,#b7c9df);border:1px solid #fff;border-radius:9px;font-size:10px;font-weight:700;letter-spacing:2px;box-shadow:0 0 28px #a9c9f414;transition:.2s}
+.enter-button:hover{background:#fff;transform:translateY(-2px)}
+.enter-button svg{width:17px;height:17px}
+.welcome-status{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:22px;color:#858f9e;font-size:9px;letter-spacing:1.5px}
+.status-light{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.5s infinite}
+.welcome-footer{position:absolute;bottom:22px;left:0;right:0;color:#667184;text-align:center;font-size:9px;letter-spacing:2px}
+
+/* APP LAYOUT */
+.app{min-height:100vh;opacity:0;visibility:hidden;transition:opacity .6s}
+.app.entered{opacity:1;visibility:visible}
+.sidebar{position:fixed;inset:0 auto 0 0;z-index:20;display:flex;flex-direction:column;width:245px;padding:24px 16px;background:#0b0e13f7;border-right:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px;padding:0 5px 25px;border-bottom:1px solid var(--line)}
+.brand-logo{width:42px;height:46px;flex-shrink:0}
+.brand strong{display:block;font:700 17px "Space Grotesk";letter-spacing:3px}
+.brand small{display:block;margin-top:3px;color:var(--muted);font-size:8px;letter-spacing:1px}
+.nav-label{margin:25px 10px 11px;color:#718096;font-size:9px;letter-spacing:1.8px}
 .nav{display:grid;gap:5px}
-.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;background:transparent;color:#9a9faa;border:1px solid transparent;border-radius:11px;text-align:left;font-size:12px}
-.nav button:hover,.nav button.active{background:#1a1c21;color:white;border-color:#303239}
-.nav button.active{box-shadow:inset 2px 0 white}
-.nav svg{width:17px;height:17px;flex-shrink:0}
-.side-card{margin-top:55px;border:1px solid var(--line);border-radius:15px;padding:15px;background:#101216}
-.side-card small{color:#858b95;font-size:9px;letter-spacing:1px}
-.side-card strong{display:block;font-size:12px;margin:12px 0}
-.progress{height:4px;background:#2b2d33;border-radius:5px;overflow:hidden}
-.progress span{display:block;width:99%;height:100%;background:#e8eaf0}
-.side-card p{font-size:10px;color:#888e98;line-height:1.6}
-main{padding:30px clamp(16px,3vw,42px);max-width:1600px;width:100%;margin:auto}
-.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:25px}
-.eyebrow{font-size:10px;color:#a7acb5;letter-spacing:2px}
-h1{font-size:clamp(28px,3vw,39px);letter-spacing:-1.7px;margin:12px 0 8px}
-.subtitle{font-size:12px;color:var(--muted);line-height:1.7}
-.actions{display:flex;gap:9px}
-.btn{padding:11px 14px;border:1px solid #34363d;border-radius:10px;background:#17191e;color:#e7e9ed;font-size:11px}
-.btn:hover{background:#292c32}
-.btn.primary{background:#f1f2f4;color:#111216;font-weight:800;border-color:#f1f2f4}
-.banner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 21px;border:1px solid #36383e;border-radius:17px;background:linear-gradient(110deg,#1b1d22,#101114);margin-bottom:16px}
-.banner-left{display:flex;align-items:center;gap:14px}
-.shield-box{width:43px;height:47px;border:1px solid #3d4047;border-radius:12px;display:grid;place-items:center}
-.shield-box svg{width:25px}
-.banner-title{font-size:13px;font-weight:800}
-.banner-desc{font-size:11px;color:#969ba5;margin-top:5px;line-height:1.5}
-.banner-right{text-align:right;font-size:10px;letter-spacing:1px}
-.banner-right small{display:block;color:#8e949e;margin-top:7px;letter-spacing:0}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
-.metric{padding:17px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#14161a,#0e0f12);min-width:0}
-.metric-label{display:flex;justify-content:space-between;align-items:center;color:#a0a5ae;font-size:10px;gap:5px}
-.metric-icon{width:29px;height:29px;border:1px solid #303239;border-radius:9px;display:grid;place-items:center;font-size:15px}
-.metric-value{font-size:30px;letter-spacing:-1.5px;font-weight:700;margin:16px 0 7px}
-.metric-foot{font-size:10px;color:#9297a1;line-height:1.5}
-.metric-foot b{color:#e2e5e9}
-.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(275px,.85fr);gap:15px}
-.panel{border:1px solid var(--line);border-radius:17px;background:#0f1013;overflow:hidden;min-width:0}
-.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:17px 18px;border-bottom:1px solid var(--line)}
-.panel-title{font-size:12px;font-weight:750}
-.panel-sub{font-size:10px;color:#9297a1;margin-top:5px}
-.tag{font-size:9px;color:#c7cbd2;border:1px solid #34363d;padding:6px 8px;border-radius:6px;white-space:nowrap}
-.camera{height:275px;position:relative;overflow:hidden;background:linear-gradient(#27292e 0%,#17191d 58%,#111216 58%)}
-.wall{position:absolute;inset:0 0 37%;background:linear-gradient(110deg,#292b30,#1b1d21 60%,#303238);border-bottom:2px solid #454850}
-.door{position:absolute;right:12%;top:9%;width:23%;height:57%;background:linear-gradient(90deg,#202227,#303238);border:5px solid #484b52}
-.door:after{content:"";position:absolute;right:12%;top:48%;width:5px;height:5px;background:#b4b7bc;border-radius:50%}
-.floor{position:absolute;bottom:0;left:0;right:0;height:39%;background:repeating-linear-gradient(172deg,#17191d 0,#17191d 18px,#202227 19px,#202227 20px)}
-.parcel{position:absolute;left:29%;bottom:17%;width:120px;height:83px;filter:drop-shadow(0 13px 10px #0008);animation:float 5s ease-in-out infinite}
-.parcel-front{position:absolute;bottom:0;left:0;width:92px;height:63px;background:linear-gradient(135deg,#c6b9a5,#82776a);clip-path:polygon(0 0,75% 0,100% 20%,100% 100%,0 100%)}
-.parcel-side{position:absolute;right:0;bottom:0;width:28px;height:63px;background:#70665c;clip-path:polygon(0 0,100% -18%,100% 80%,0 100%)}
-.parcel-top{position:absolute;top:0;left:0;width:100%;height:21px;background:#d5c8b3;clip-path:polygon(0 0,77% 0,100% 32%,25% 100%)}
-.parcel-tape{position:absolute;left:39px;top:2px;width:14px;height:73px;background:#403b343f;z-index:2}
-.scan-frame{position:absolute;left:24%;bottom:12%;width:35%;height:49%;border:1px solid #fff;pointer-events:none}
-.scan-frame:before,.scan-frame:after{content:"";position:absolute;width:13px;height:13px;border-color:white;border-style:solid}
-.scan-frame:before{top:-2px;left:-2px;border-width:2px 0 0 2px}
-.scan-frame:after{right:-2px;bottom:-2px;border-width:0 2px 2px 0}
-.scan-line{position:absolute;left:24%;bottom:12%;width:35%;height:2px;background:white;box-shadow:0 0 12px #fff;animation:scan 3s ease-in-out infinite alternate}
-.camera-overlay{position:absolute;inset:0;padding:13px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
-.camera-row{display:flex;justify-content:space-between;gap:8px}
-.cam-label{padding:7px 9px;border-radius:6px;background:#08090bc9;border:1px solid #ffffff20;font-size:9px;letter-spacing:.6px}
-.camera-bottom{align-items:flex-end}
-.camera-note{display:flex;justify-content:space-between;gap:8px;padding:13px 16px;color:#999faa;font-size:10px}
-.camera-note b{color:#e6e8ec}
-.sensor-list{padding:2px 17px 6px}
-.sensor{display:flex;align-items:center;gap:11px;padding:15px 0;border-bottom:1px solid var(--line)}
-.sensor:last-child{border:0}
-.sensor-icon{width:36px;height:36px;display:grid;place-items:center;border:1px solid #303239;border-radius:11px;flex-shrink:0;font-size:16px}
-.sensor-info{flex:1;min-width:0}
-.sensor-name{font-size:11px;font-weight:700}
-.sensor-desc{font-size:9px;color:#8f95a0;margin-top:5px}
-.sensor-reading{text-align:right;white-space:nowrap}
-.sensor-reading strong{font-size:12px}
-.sensor-reading small{display:block;font-size:9px;color:#8f95a0;margin-top:4px}
-.state{display:inline-block;border:1px solid #3b3e45;border-radius:5px;padding:5px 7px;font-size:9px;color:#e3e5e9}
-.sensor-actions{display:flex;gap:8px;padding:0 17px 16px}
-.sensor-actions button{flex:1;font-size:10px;padding:10px 7px}
-.lower-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}
-.activity-list{padding:5px 18px 10px}
-.activity{display:grid;grid-template-columns:33px 1fr auto;align-items:start;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}
-.activity:last-child{border:0}
-.activity-icon{height:32px;width:32px;display:grid;place-items:center;border:1px solid #303239;border-radius:10px}
-.activity-title{font-size:11px;font-weight:700}
-.activity-desc{font-size:10px;color:#9297a1;line-height:1.5;margin-top:5px}
-.activity-time{font-size:9px;color:#858b95;white-space:nowrap}
-.chart-content{padding:19px}
-.chart-number{font-size:27px;font-weight:800;letter-spacing:-1px;margin-top:8px}
-.chart-number small{font-size:10px;color:#9ca1aa;font-weight:400;letter-spacing:0}
-.bars{height:115px;display:flex;align-items:flex-end;gap:9px;margin-top:18px;border-bottom:1px solid #303239;padding-bottom:17px;position:relative}
-.bars:before,.bars:after{content:"";position:absolute;left:0;right:0;border-top:1px dashed #ffffff14}
-.bars:before{top:30%}.bars:after{top:60%}
-.bar{flex:1;min-width:4px;border-radius:4px 4px 0 0;background:linear-gradient(#f1f2f4,#666d77);position:relative;z-index:1}
-.chart-labels{display:flex;justify-content:space-between;color:#7f858e;font-size:9px;margin-top:9px}
-.chart-foot{display:flex;justify-content:space-between;gap:8px;color:#9297a1;font-size:10px;margin-top:17px}
-.chart-foot b{color:#dfe2e7}
-footer{margin:25px 0 0;border-top:1px solid var(--line);padding-top:16px;display:flex;justify-content:space-between;gap:10px;color:#707680;font-size:9px;letter-spacing:1px;line-height:1.7}
-footer b{color:#b7bbc2}
-.toast{position:fixed;bottom:20px;right:20px;z-index:1200;padding:14px 17px;background:#1a1c21;border:1px solid #41444b;border-radius:12px;font-size:12px;box-shadow:0 15px 45px #0008;opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;max-width:calc(100vw - 35px)}
-.toast.show{opacity:1;transform:translateY(0)}
-.modal-backdrop{position:fixed;inset:0;z-index:100;background:#000b;backdrop-filter:blur(7px);display:none;place-items:center;padding:18px}
-.modal-backdrop.show{display:grid}
-.modal{width:min(430px,100%);background:#111317;border:1px solid #35383f;border-radius:18px;padding:23px}
-.modal h2{font-size:20px;margin:0 0 8px}
-.modal p{font-size:12px;color:#969ba5;line-height:1.6}
-.modal-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292b31;padding:13px 0;font-size:12px}
-.switch{width:39px;height:23px;background:#454951;border:0;border-radius:20px;padding:3px}
-.switch:after{content:"";display:block;width:17px;height:17px;background:white;border-radius:50%;transition:.2s}
-.switch.on{background:#e5e7eb}.switch.on:after{transform:translateX(16px);background:#111317}
-.modal-actions{text-align:right;margin-top:18px}
-.exit-screen{position:fixed;inset:0;z-index:900;background:#08090b;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .35s}
-.exit-screen.show{opacity:1;pointer-events:auto}
-.exit-logo{width:95px;animation:exitMove .8s ease both}
-.exit-text{text-align:center;font-size:11px;letter-spacing:4px;margin-top:17px}
-@keyframes scan{from{transform:translateY(0)}to{transform:translateY(-110px)}}
-@keyframes float{50%{transform:translateY(-4px)}}
-@keyframes exitMove{to{transform:translateX(40vw) scale(.7);opacity:0}}
-@media(max-width:1050px){
-.layout{grid-template-columns:70px 1fr}
-aside{padding:23px 8px}
-.nav-label,.nav button span,.side-card{display:none}
-.nav button{justify-content:center;padding:13px 5px}
-.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-.grid{grid-template-columns:1.1fr .9fr}
-}
-@media(max-width:720px){
-.topbar{height:64px;padding:0 13px}
-.brand-logo{width:30px;height:36px}
-.brand-name{font-size:10px;letter-spacing:1px}
-.brand-sub{font-size:8px;letter-spacing:1px}
-.top-right{gap:6px}
-.live{font-size:8px;padding:8px}
-.layout{display:block;min-height:calc(100vh - 64px)}
-aside{position:fixed;bottom:0;left:0;right:0;z-index:30;height:66px;padding:6px 7px calc(6px + env(safe-area-inset-bottom));background:#090a0cf5;backdrop-filter:blur(15px);border-right:0;border-top:1px solid var(--line)}
-.nav{height:100%;display:flex;justify-content:space-around;gap:2px}
-.nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:5px 1px;font-size:8px}
-.nav button span{display:block;font-size:8px;white-space:nowrap}
-.nav svg{width:17px;height:17px}
-main{padding:23px 13px 95px}
-.page-head{display:block}
-h1{font-size:29px}
-.actions{margin-top:15px}
-.actions .btn{flex:1;justify-content:center;padding:10px 8px;font-size:10px}
-.banner{padding:14px}
-.shield-box{width:37px;height:41px}
-.banner-title{font-size:12px}
-.banner-desc{font-size:10px}
-.banner-right{display:none}
-.metrics{gap:9px}
-.metric{padding:13px;border-radius:14px}
-.metric-label{font-size:9px}
-.metric-icon{width:25px;height:25px}
-.metric-value{font-size:26px;margin:13px 0 6px}
-.metric-foot{font-size:9px}
-.grid,.lower-grid{grid-template-columns:1fr;gap:13px}
-.camera{height:245px}
-.parcel{left:28%;transform:scale(.9);transform-origin:bottom left}
-.panel-head{padding:15px}
-.sensor-list{padding:2px 14px 5px}
-.sensor-actions{padding:0 14px 14px}
-.activity-list{padding:3px 14px 8px}
-.chart-content{padding:16px}
-footer{font-size:8px;flex-direction:column}
-.toast{bottom:80px;right:12px}
-.intro-logo{width:82px;height:95px}
-.intro:before{width:230px;height:230px}
-}
-@media(prefers-reduced-motion:reduce){
-*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
-}
+.nav button{min-height:45px;display:flex;align-items:center;gap:12px;padding:11px 12px;color:#9ba8b8;background:transparent;border:1px solid transparent;border-radius:10px;text-align:left;font-size:12px}
+.nav button:hover,.nav button.active{color:#f5f8ff;background:linear-gradient(100deg,#202d3d,#141c26);border-color:#3a4a60}
+.nav button.active{box-shadow:inset 3px 0 var(--blue)}
+.nav-count{margin-left:auto;color:var(--blue);font-size:10px}
+.side-bottom{margin-top:auto}
+.device{padding:15px;background:linear-gradient(145deg,#151e29,#0e131a);border:1px solid #344254;border-radius:12px}
+.device-heading{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:700}
+.device-heading .icon{color:var(--blue)}
+.device p{margin:12px 0 0;color:var(--muted);font-size:10px;line-height:2}
+main{max-width:1750px;margin-left:245px;padding:28px 30px 24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
+.eyebrow{margin-bottom:5px;color:var(--muted);font-size:9px;letter-spacing:1.8px}
+h1.page-title{margin:0 0 5px;font:600 25px "Space Grotesk";letter-spacing:-.7px}
+.subtitle{color:var(--muted);font-size:11px}
+.actions{display:flex;align-items:center;gap:8px}
+.pill{display:flex;align-items:center;gap:8px;padding:9px 11px;color:#cbd5e2;background:#121923;border:1px solid #344254;border-radius:8px;font-size:9px;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.icon-btn{width:39px;height:39px;display:grid;place-items:center;color:#d5dfec;background:#131b26;border:1px solid #344254;border-radius:10px}
+.icon-btn:hover{background:#202d3d}
+.mobile-menu{display:none}
+.page{display:none}
+.page.active{display:block;animation:enterPage .3s ease}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.card{min-width:0;padding:17px;background:linear-gradient(145deg,#141b25,#0e131b);border:1px solid #293747;border-radius:13px;box-shadow:0 12px 35px #0002}
+.metric-label{color:#a4b0bf;font-size:10px;letter-spacing:.7px}
+.metric-value{margin:14px 0 5px;overflow-wrap:anywhere;color:#f1f5fb;font:600 26px "Space Grotesk";letter-spacing:-.7px}
+.metric-value small{color:var(--muted);font:500 10px "DM Sans"}
+.foot{color:var(--muted);font-size:10px}
+.green{color:var(--green)!important}.amber{color:var(--amber)!important}.red{color:var(--red)!important}.blue{color:var(--blue)!important}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);gap:14px}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.heading h2{margin:0;font:600 13px "Space Grotesk"}
+.heading p{margin:4px 0 0;color:var(--muted);font-size:10px}
+.primary,.secondary,.stop-alarm{padding:10px 13px;border-radius:9px;font-size:10px;font-weight:700;transition:.2s}
+.primary{color:#111a26;background:linear-gradient(135deg,#edf3fc,#b6c9e1);border:1px solid #edf4ff}
+.primary:hover{background:#fff;transform:translateY(-1px)}
+.secondary{color:#dce6f4;background:#171f2b;border:1px solid #354456}
+.secondary:hover{background:#222e3d}
+.buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:16px}
+.detection{position:relative;overflow:hidden;padding:23px 14px 19px;background:radial-gradient(ellipse at 50% 35%,#202d3d,#0c1118 72%);border:1px solid #354456;border-radius:13px;text-align:center}
+.detection:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px);background-size:28px 28px}
+.radar{position:relative;width:158px;height:158px;overflow:hidden;margin:13px auto;background:repeating-radial-gradient(circle,transparent 0 20px,#405066 21px 22px);border:1px solid #52647b;border-radius:50%}
+.radar:before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(transparent 0deg,transparent 245deg,#a9c9f414 310deg,#a9c9f45c 359deg,transparent 360deg);animation:rotateRadar 4s linear infinite}
+.radar:after{content:"";position:absolute;top:50%;left:50%;width:5px;height:5px;background:#e5efff;border-radius:50%;box-shadow:0 0 12px var(--blue);transform:translate(-50%,-50%)}
+.radar-center{position:absolute;z-index:1;top:50%;left:50%;width:30px;height:30px;color:#e0ebfa;transform:translate(-50%,-50%)}
+.target{position:absolute;top:30%;left:68%;width:8px;height:8px;background:var(--blue);border-radius:50%;box-shadow:0 0 14px var(--blue);opacity:0}
+.radar.has-target .target{opacity:1;animation:targetPulse 1s infinite alternate}
+.distance{margin:5px 0;color:#f1f6fd;font:600 35px "Space Grotesk"}
+.distance small{color:var(--muted);font:500 12px "DM Sans"}
+.hint{color:var(--muted);font-size:10px}
+.sensor-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px}
+.sensor{padding:11px 8px;background:#111923;border:1px solid #293747;border-radius:10px}
+.sensor span{display:block;margin-bottom:5px;color:var(--muted);font-size:8px;letter-spacing:.6px}
+.sensor strong{font-size:10px}
+.alarm-banner{display:flex;align-items:center;gap:12px;margin:-7px 0 18px;padding:14px;background:linear-gradient(110deg,#2b1217,#171013);border:1px solid #803b45;border-radius:11px;animation:alarmPulse 1.2s infinite}
+.alarm-banner[hidden]{display:none}
+.alarm-dot{width:10px;height:10px;flex-shrink:0;background:#ff6575;border-radius:50%;box-shadow:0 0 14px #ff657599;animation:blink .6s infinite alternate}
+.alarm-copy{flex:1;display:grid;gap:3px}.alarm-copy strong{color:#ff9ba4;font-size:11px}.alarm-copy span{color:#d5afb4;font-size:10px}
+.stop-alarm{color:white;background:#c84050;border:1px solid #ff7884}
+.security{display:flex;gap:11px;margin-bottom:18px;padding:14px;background:#141c27;border:1px solid #344254;border-radius:11px}
+.security-symbol{width:36px;height:36px;display:grid;place-items:center;flex-shrink:0;color:var(--blue);background:#192434;border:1px solid #3b4c62;border-radius:10px}
+.security h3{margin:1px 0 5px;font:600 13px "Space Grotesk"}.security p{margin:0;color:var(--muted);font-size:10px;line-height:1.8}
+.activity{display:flex;align-items:flex-start;gap:11px;padding:13px 0;border-bottom:1px solid #252f3b}
+.activity:last-child{border-bottom:0}
+.activity-icon{width:34px;height:34px;display:grid;place-items:center;flex-shrink:0;color:#cbdcf2;background:#151e29;border:1px solid #344254;border-radius:10px}
+.activity-body{flex:1;min-width:0}.activity-body strong{display:block;margin:1px 0 4px;font-size:11px}.activity-body span{color:var(--muted);font-size:10px;line-height:1.8}
+.activity-time{color:var(--muted);font-size:9px;white-space:nowrap}
+.empty{padding:22px 0;color:var(--muted);text-align:center;font-size:11px}
+.note{color:var(--muted);font-size:11px;line-height:1.8}
+.field{display:grid;gap:7px;margin:15px 0}.field label{color:#c8d3e1;font-size:11px}
+.field input{width:100%;padding:12px;color:white;background:#0b1017;border:1px solid #344254;border-radius:9px}
+.field input:focus{border-color:var(--blue);outline:none}
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.hardware-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:11px}
+.hardware-row span{color:var(--muted)}.hardware-row strong{color:#dce7f5;text-align:right;font-size:10px}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);font-size:9px;letter-spacing:.7px}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:24px;padding-top:15px;color:#758195;border-top:1px solid var(--line);font-size:9px;letter-spacing:.8px}
+
+/* FLOATING NAVIGATION */
+.bubble-launcher{position:fixed;right:21px;bottom:22px;z-index:500;width:56px;height:56px;display:grid;place-items:center;color:#101722;background:linear-gradient(145deg,#f0f5fc,#a9bfdc);border:1px solid #eaf2ff;border-radius:50%;box-shadow:0 6px 30px #9dc6ff25;transition:transform .25s}
+.bubble-launcher:hover{transform:scale(1.06)}
+.launcher-icon{transition:transform .25s}.bubble-launcher.open .launcher-icon{transform:rotate(45deg)}
+.bubble-menu{position:fixed;right:20px;bottom:91px;z-index:499;width:min(275px,calc(100vw - 30px));padding:11px;background:#0d121afc;border:1px solid #344254;border-radius:16px;box-shadow:0 20px 65px #0009;backdrop-filter:blur(18px);opacity:0;visibility:hidden;transform:translateY(12px) scale(.96);transform-origin:bottom right;transition:.22s}
+.bubble-menu.open{opacity:1;visibility:visible;transform:none}
+.bubble-heading{padding:9px 10px 12px;color:#94a5ba;border-bottom:1px solid #293442;font-size:9px;letter-spacing:1.8px}
+.bubble-menu button{width:100%;min-height:48px;display:flex;align-items:center;gap:12px;margin-top:5px;padding:9px 10px;color:#b9c5d5;background:transparent;border:1px solid transparent;border-radius:10px;text-align:left}
+.bubble-menu button:hover,.bubble-menu button.active{color:white;background:#1c2837;border-color:#40546d}
+.bubble-icon{width:33px;height:33px;display:grid;place-items:center;flex-shrink:0;color:#c6dbf8;background:#151e29;border:1px solid #3b4c62;border-radius:9px}
+.bubble-label{flex:1;font-size:12px}
+.toast{position:fixed;right:18px;bottom:18px;z-index:10001;max-width:calc(100vw - 36px);padding:13px 16px;color:white;background:#1a222e;border:1px solid #40516a;border-radius:10px;box-shadow:0 12px 45px #0008;font-size:11px;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}
+.toast.show{opacity:1;transform:none}
+
+@keyframes rotateRadar{to{transform:rotate(360deg)}}
+@keyframes targetPulse{to{transform:scale(1.8);opacity:.5}}
+@keyframes blink{50%{opacity:.35}}
+@keyframes alarmPulse{50%{border-color:#b24a58}}
+@keyframes gridMove{to{background-position:42px 42px}}
+@keyframes welcomeRise{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes enterPage{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes auraPulse{from{opacity:.45;transform:scale(.88)}to{opacity:1;transform:scale(1.1)}}
+@keyframes ringRotate{to{transform:rotate(360deg)}}
+@keyframes lightning{0%,5%,9%,13%,100%{opacity:0}2%,7%,11%{opacity:1}}
+@keyframes arcFlash{0%,4%,10%,100%{opacity:0;stroke-dashoffset:0}2%,7%{opacity:1;stroke-dashoffset:15}}
+@keyframes orbitRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes orbitFlash{0%,8%,16%,30%,100%{opacity:0}3%,6%,12%,14%{opacity:1}}
+@keyframes screenFlash{0%{opacity:.9}100%{opacity:0}}
+@media(max-width:1100px){.sidebar{width:215px}main{margin-left:215px;padding:23px 18px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.settings-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.sidebar{position:relative;width:100%;height:auto;padding:12px 14px;border-right:0;border-bottom:1px solid var(--line)}.brand{padding:0;border-bottom:0}.brand-logo{width:35px;height:39px}.brand strong{font-size:14px}.nav-label,.nav,.side-bottom{display:none}.sidebar.open .nav-label{display:block;margin-top:15px}.sidebar.open .nav{display:grid}.sidebar.open .side-bottom{display:block;margin-top:14px}main{margin:0;padding:18px 12px}.topbar{align-items:flex-start;gap:8px;margin-bottom:18px}h1.page-title{font-size:20px}.subtitle{max-width:230px;font-size:10px}.pill{display:none}.metrics{gap:8px}.card{padding:13px;border-radius:12px}.metric-value{font-size:22px}.grid{gap:10px}.sensor-stats{gap:5px}.sensor{padding:9px 6px}.sensor span{font-size:7px}.sensor strong{font-size:9px}.settings-grid{grid-template-columns:1fr}.alarm-banner{flex-wrap:wrap}.alarm-copy{min-width:0}.stop-alarm{width:100%}.mobile-menu{display:grid}.bubble-launcher{right:15px;bottom:16px;width:53px;height:53px}.bubble-menu{right:12px;bottom:79px}.welcome-content{padding:18px}.welcome-content h1{letter-spacing:-1px}.welcome-logo-wrap{transform:scale(.9);margin-bottom:10px}footer{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.welcome-grid,.logo-aura,.logo-ring,.bolt,.arc,.lightning-orbit,.orbit-bolt{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<section class="welcome-screen" id="welcomeScreen">
+<div class="welcome-grid"></div>
+<div class="welcome-content">
+<div class="welcome-logo-wrap" id="welcomeLogo">
+<div class="logo-aura"></div><div class="logo-ring"></div><div class="logo-ring ring-two"></div><div class="logo-ring ring-three"></div>
+<svg class="bolt b1" viewBox="0 0 48 64"><path d="M28 1 8 34h13l-5 29 25-38H27Z"/></svg>
+<svg class="bolt b2" viewBox="0 0 48 64"><path d="M28 1 8 34h13l-5 29 25-38H27Z"/></svg>
+<svg class="bolt b3" viewBox="0 0 48 64"><path d="M28 1 8 34h13l-5 29 25-38H27Z"/></svg>
+<svg class="bolt b4" viewBox="0 0 48 64"><path d="M28 1 8 34h13l-5 29 25-38H27Z"/></svg>
 
-<!-- INTRO LOGO -->
-<div class="intro" id="intro">
-  <div class="intro-content">
-    <div class="intro-logo">
-      <svg viewBox="0 0 100 116" fill="none">
-        <path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="#f5f6f8" stroke-width="2.5"/>
-        <path d="M28 31h45L39 75h34" stroke="#f5f6f8" stroke-width="8" stroke-linecap="square"/>
-      </svg>
-    </div>
-    <div class="intro-title">ZOR</div>
-    <div class="intro-sub">SMART PARCEL DETECTOR</div>
-    <div class="intro-line"></div>
-    <div class="intro-loading">SECURE SYSTEM INITIALIZING</div>
-  </div>
-  <button class="skip" id="skipIntro">SKIP INTRO ↗</button>
+<!-- Lightning bolts travelling around the shield -->
+<svg class="lightning-orbit" viewBox="0 0 190 190" aria-hidden="true">
+<path class="orbit-bolt o1" d="M94 4 82 24h9l-5 18 17-25h-9Z"/>
+<path class="orbit-bolt o2" d="M177 80 157 88l6 7-18 10 29-3-6-7Z"/>
+<path class="orbit-bolt o3" d="M91 183 102 163h-9l5-18-17 25h9Z"/>
+<path class="orbit-bolt o4" d="M9 100 29 92l-6-7 18-10-29 3 6 7Z"/>
+</svg>
+
+<svg class="electric-arc" viewBox="0 0 190 190" preserveAspectRatio="none">
+<path class="arc a1" d="M32 48 45 56 39 67 55 72 46 86"/>
+<path class="arc a2" d="M145 28 137 45 151 52 139 67 150 77"/>
+<path class="arc a3" d="M33 130 48 121 44 109 58 104"/>
+<path class="arc a1" d="M151 126 137 119 145 105 132 97"/>
+<path class="arc a2" d="M78 8 84 20 76 29"/>
+<path class="arc a3" d="M109 170 103 157 113 147"/>
+</svg>
+<svg class="brand-shield" viewBox="0 0 100 112" aria-label="ZOR shield logo">
+<defs><linearGradient id="shieldGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#344861"/><stop offset="100%" stop-color="#101721"/></linearGradient></defs>
+<path class="shield-outline" d="M50 3 91 19V48C91 75 72 96 50 108 28 96 9 75 9 48V19Z"/>
+<path class="shield-inner" d="M50 12 82 24V48C82 70 67 87 50 97 33 87 18 70 18 48V24Z"/>
+<path class="shield-z" d="M29 34H71V43L43 68H71V78H29V69L57 44H29Z"/>
+</svg>
 </div>
+<div class="welcome-tag">ZOR SECURITY SYSTEM</div>
+<h1>WELCOME TO <span>ZOR</span></h1>
+<h2>SMART PARCEL INTELLIGENCE</h2>
+<p>Smarter detection. Safer deliveries. Stronger evidence.</p>
+<button id="enterSystem" class="enter-button"><span>ENTER SYSTEM</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+<div class="welcome-status"><span class="status-light"></span> ELECTRICAL SYSTEM STANDBY</div>
+</div>
+<div class="welcome-footer">ZOR INTELLIGENT PARCEL SECURITY</div>
+</section>
 
-<header class="topbar">
-  <div class="brand">
-    <svg class="brand-logo" viewBox="0 0 100 116" fill="none">
-      <path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="white" stroke-width="5"/>
-      <path d="M28 31h45L39 75h34" stroke="white" stroke-width="9" stroke-linecap="square"/>
-    </svg>
-    <div><div class="brand-name">ZOR SMART PARCEL</div><div class="brand-sub">DETECTOR SYSTEM</div></div>
-  </div>
-  <div class="top-right">
-    <div class="live"><span class="dot"></span>DEMO MODE</div>
-    <button class="icon-btn" id="soundToggle" title="Toggle sound" aria-label="Toggle sound">♫</button>
-    <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings">⚙</button>
-  </div>
-</header>
-
-<div class="layout">
-<aside>
-  <div class="nav-label">WORKSPACE</div>
-  <nav class="nav" id="nav">
-    <button class="active" data-target="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span>Overview</span></button>
-    <button data-target="liveDetection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg><span>Detection</span></button>
-    <button data-target="cameraPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="m7 6 1.5-2h7L17 6"/></svg><span>Camera</span></button>
-    <button data-target="activityPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v17H5zM9 4V2h6v2M8 9h8M8 13h8M8 17h5"/></svg><span>History</span></button>
-    <button data-target="analyticsPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Analytics</span></button>
-    <button id="settingsNav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="m19 13 1 1-2 3-2-.6-2 1-.3 1.6h-3.5L10 17l-2-1-1.5.6-2-3 1.3-1a7 7 0 0 1 0-2l-1.3-1 2-3L8 7l2-1 .3-1.6h3.5L14 6l2 1 2-.6 2 3-1 1a7 7 0 0 1 0 2Z"/></svg><span>Settings</span></button>
-  </nav>
-  <div class="side-card"><small>SYSTEM HEALTH</small><strong>● All systems nominal</strong><div class="progress"><span></span></div><p>Local demo interface. Connect ESP32 for real readings.</p></div>
+<div class="app" id="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand">
+<svg class="brand-logo" viewBox="0 0 100 112" aria-label="ZOR logo"><path d="M50 3 91 19V48C91 75 72 96 50 108 28 96 9 75 9 48V19Z" fill="#172334" stroke="#d9ebff" stroke-width="2"/><path d="M50 12 82 24V48C82 70 67 87 50 97 33 87 18 70 18 48V24Z" fill="none" stroke="#8bb9f1"/><path d="M29 34H71V43L43 68H71V78H29V69L57 44H29Z" fill="#f2f7ff"/></svg>
+<div><strong>ZOR</strong><small>SMART PARCEL INTELLIGENCE</small></div>
+</div>
+<div class="nav-label">PLATFORM</div>
+<nav class="nav">
+<button class="active" data-page="overview"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</button>
+<button data-page="monitor"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v4M23 12h-4"/></svg>Live Monitoring</button>
+<button data-page="notifications"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>Notifications <span class="nav-count" id="navCount">0</span></button>
+<button data-page="history"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Activity History</button>
+<button data-page="settings"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19 15 2 1-2 4-3-1-2 1v3h-4v-3l-2-1-3 1-2-4 2-2v-2l-2-2 2-4 3 1 2-1V3h4v3l2 1 3-1 2 4-2 2Z"/></svg>Settings and API</button>
+</nav>
+<div class="side-bottom"><div class="device"><div class="device-heading"><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4"/></svg>ESP32 CONTROLLER</div><p>HC-SR04 Ultrasonic<br>PIR Motion Sensor<br>SSD1306 OLED Display<br><span id="sideMode">DEMO MODE</span></p></div></div>
 </aside>
+<main>
+<header class="topbar"><div><div class="eyebrow">ZOR / SECURITY PLATFORM</div><h1 class="page-title" id="pageTitle">System Overview</h1><div class="subtitle" id="pageSubtitle">Real-time visibility for smarter parcel security.</div></div>
+<div class="actions"><div class="pill"><span class="dot" id="headerDot"></span><span id="connectionLabel">DEMO ENVIRONMENT</span></div><button class="icon-btn" id="soundBtn" aria-label="Toggle sound"><svg class="icon" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg></button><button class="icon-btn" id="bellBtn" aria-label="Notifications"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button><button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open sidebar"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+</header>
+<div class="alarm-banner" id="alarmBanner" role="alert" hidden><div class="alarm-dot"></div><div class="alarm-copy"><strong>SECURITY ALERT — OBJECT DETECTED</strong><span>An object is within the configured detection zone.</span></div><button class="stop-alarm" id="stopAlarmBtn">STOP ALARM</button></div>
 
-<main id="overview">
-  <div class="page-head">
-    <div><div class="eyebrow">SECURITY COMMAND CENTER</div><h1>Parcel intelligence<span style="color:#777d87">.</span></h1><div class="subtitle">Monitor deliveries. Detect movement. Protect what matters.</div></div>
-    <div class="actions"><button class="btn" id="testSound">♫ Test sound</button><button class="btn primary" id="simulate">＋ Simulate event</button></div>
-  </div>
+<section class="page active" id="page-overview">
+<div class="metrics">
+<div class="card"><div class="metric-label">PARCEL STATUS</div><div class="metric-value amber" id="parcelMetric">UNKNOWN</div><div class="foot" id="parcelFoot">Awaiting sensor data</div></div>
+<div class="card"><div class="metric-label">DETECTION DISTANCE</div><div class="metric-value" id="distanceMetric">-- <small>cm</small></div><div class="foot">Ultrasonic sensor reading</div></div>
+<div class="card"><div class="metric-label">MOTION ACTIVITY</div><div class="metric-value amber" id="motionMetric">WAITING</div><div class="foot">PIR sensor activity</div></div>
+<div class="card"><div class="metric-label">SECURITY EVENTS</div><div class="metric-value" id="eventMetric">0</div><div class="foot">Events recorded in browser</div></div>
+</div>
+<div class="grid">
+<div class="card"><div class="heading"><div><h2>Live Detection Intelligence</h2><p>Ultrasonic proximity monitoring</p></div><span class="foot" id="monitorModeTag">DEMO MODE</span></div>
+<div class="detection"><div class="foot">SENSOR VISUALIZATION</div><div class="radar" id="radar"><svg class="radar-center" viewBox="0 0 24 24"><path d="M3 9a13 13 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 15a5 5 0 0 1 6 0" stroke="currentColor" fill="none"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg><span class="target"></span></div>
+<div class="foot">CURRENT DISTANCE</div><div class="distance" id="bigDistance">-- <small>cm</small></div><div class="hint" id="detectionText">Waiting for sensor data.</div>
+<div class="buttons"><button class="primary" id="simulateBtn">Run Detection Simulation</button><button class="secondary" id="testBtn">Test Alert</button></div></div>
+<div class="sensor-stats"><div class="sensor"><span>ULTRASONIC</span><strong class="amber" id="ultraStatus">Waiting</strong></div><div class="sensor"><span>MOTION SENSOR</span><strong class="amber" id="pirStatus">Waiting</strong></div><div class="sensor"><span>TELEGRAM</span><strong class="amber" id="telegramStatus">Not linked</strong></div></div>
+</div>
+<div class="card"><div class="heading"><div><h2>Security Intelligence</h2><p>System status and recent events</p></div></div>
+<div class="security"><div class="security-symbol" id="securityIcon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="M12 8v4m0 4h.01"/></svg></div><div><h3 id="securityTitle">System Initialised</h3><p id="securityText">Connect your ESP32 backend or run a simulation to begin monitoring.</p></div></div>
+<div class="heading"><h2>Recent Activity</h2><button class="secondary" id="viewAllBtn">View All</button></div><div id="recentEvents"><div class="empty">No events recorded yet.</div></div></div>
+</div>
+</section>
 
-  <section class="banner">
-    <div class="banner-left"><div class="shield-box"><svg viewBox="0 0 100 116" fill="none"><path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="white" stroke-width="5"/><path d="M28 31h45L39 75h34" stroke="white" stroke-width="8" stroke-linecap="square"/></svg></div><div><div class="banner-title" id="bannerTitle">SYSTEM PROTECTED</div><div class="banner-desc" id="bannerDesc">Security monitoring is active in demonstration mode.</div></div></div>
-    <div class="banner-right"><span class="dot"></span> SECURITY STATUS<small id="updated">Updated just now</small></div>
-  </section>
+<section class="page" id="page-monitor"><div class="card"><div class="heading"><div><h2>Live Monitoring</h2><p>Sensor readings and device activity</p></div></div><p class="note">Demo values are simulated. Connect a backend API to receive actual ESP32 readings.</p>
+<div class="metrics"><div class="card"><div class="metric-label">DISTANCE</div><div class="metric-value blue" id="monitorDistance">-- cm</div></div><div class="card"><div class="metric-label">PARCEL STATUS</div><div class="metric-value amber" id="monitorParcel">UNKNOWN</div></div><div class="card"><div class="metric-label">MOTION</div><div class="metric-value amber" id="monitorMotion">WAITING</div></div><div class="card"><div class="metric-label">LAST UPDATE</div><div class="metric-value" style="font-size:15px" id="monitorTime">--</div></div></div>
+<div class="buttons" style="justify-content:flex-start"><button class="primary" id="monitorSim">Simulate Detection</button><button class="secondary" id="refreshBtn">Refresh API</button><button class="secondary" id="monitorTest">Test Alert</button></div></div></section>
 
-  <section class="metrics">
-    <article class="metric"><div class="metric-label">DETECTIONS TODAY <span class="metric-icon">◎</span></div><div class="metric-value" id="detections">12</div><div class="metric-foot"><b>+3 events</b> compared to yesterday</div></article>
-    <article class="metric"><div class="metric-label">SECURITY ALERTS <span class="metric-icon">♧</span></div><div class="metric-value" id="alerts">03</div><div class="metric-foot"><b>All recorded</b> in demo activity log</div></article>
-    <article class="metric"><div class="metric-label">SYSTEM UPTIME <span class="metric-icon">◴</span></div><div class="metric-value">99.8<span style="font-size:15px">%</span></div><div class="metric-foot"><b>Stable</b> interface demonstration</div></article>
-    <article class="metric"><div class="metric-label">DEVICE STATUS <span class="metric-icon">▦</span></div><div class="metric-value" style="font-size:24px">DEMO</div><div class="metric-foot"><b>ESP32</b> not connected</div></article>
-  </section>
+<section class="page" id="page-notifications"><div class="card"><div class="heading"><div><h2>Notifications Centre</h2><p>Security alerts and system messages</p></div><button class="secondary" id="clearEvents">Clear History</button></div><p class="note">Browser notifications require permission. Actual Telegram delivery requires a connected backend.</p><div id="allEvents"><div class="empty">No notifications available.</div></div></div></section>
 
-  <section class="grid">
-    <article class="panel" id="cameraPanel">
-      <div class="panel-head"><div><div class="panel-title">Camera monitoring</div><div class="panel-sub">Front entrance · visual preview</div></div><span class="tag">DEMO FEED</span></div>
-      <div class="camera">
-        <div class="wall"></div><div class="door"></div><div class="floor"></div>
-        <div class="parcel" id="parcel"><div class="parcel-front"></div><div class="parcel-side"></div><div class="parcel-top"></div><div class="parcel-tape"></div></div>
-        <div class="scan-frame" id="scanFrame"></div><div class="scan-line" id="scanLine"></div>
-        <div class="camera-overlay"><div class="camera-row"><span class="cam-label">CAM 01 / FRONT DOOR</span><span class="cam-label">● REC SIMULATION</span></div><div class="camera-row camera-bottom"><span class="cam-label" id="camTime">LOCAL PREVIEW</span><span class="cam-label" id="camObject">OBJECT: PARCEL</span></div></div>
-      </div>
-      <div class="camera-note"><span><b id="cameraNote">Parcel-like object shown</b> · simulated preview</span><span>VISUAL DEMO</span></div>
-    </article>
+<section class="page" id="page-history"><div class="card"><div class="heading"><div><h2>Activity History</h2><p>Recorded parcel security events</p></div><button class="primary" id="exportBtn">Export CSV</button></div><p class="note">History is stored in this browser. Use a backend for centralised, permanent evidence storage.</p><div class="table-wrap"><table><thead><tr><th>TIME</th><th>EVENT</th><th>DISTANCE</th><th>MOTION</th><th>SOURCE</th></tr></thead><tbody id="historyTable"><tr><td colspan="5">No records available.</td></tr></tbody></table></div></div></section>
 
-    <article class="panel" id="liveDetection">
-      <div class="panel-head"><div><div class="panel-title">Live sensor status</div><div class="panel-sub">Simulated hardware telemetry</div></div><span class="tag">LOCAL DEMO</span></div>
-      <div class="sensor-list">
-        <div class="sensor"><div class="sensor-icon">⌁</div><div class="sensor-info"><div class="sensor-name">Ultrasonic sensor</div><div class="sensor-desc">HC-SR04 · distance measurement</div></div><div class="sensor-reading"><strong><span id="distance">18</span> cm</strong><small id="distanceState">Within threshold</small></div></div>
-        <div class="sensor"><div class="sensor-icon">⌁</div><div class="sensor-info"><div class="sensor-name">Motion detection</div><div class="sensor-desc">PIR HC-SR501 · movement</div></div><div class="sensor-reading"><span class="state" id="motionState">DETECTED</span><small>Demo event</small></div></div>
-        <div class="sensor"><div class="sensor-icon">⚠</div><div class="sensor-info"><div class="sensor-name">Security alert</div><div class="sensor-desc">Event notification status</div></div><div class="sensor-reading"><span class="state" id="alertState">REVIEW</span><small id="alertSub">Simulated event</small></div></div>
-        <div class="sensor"><div class="sensor-icon">▦</div><div class="sensor-info"><div class="sensor-name">ESP32 controller</div><div class="sensor-desc">Hardware connection</div></div><div class="sensor-reading"><strong>OFFLINE</strong><small>Demo interface only</small></div></div>
-      </div>
-      <div class="sensor-actions"><button class="btn" id="toggleMotion">Toggle motion</button><button class="btn" id="toggleParcel">Toggle parcel</button></div>
-    </article>
-  </section>
-
-  <section class="lower-grid">
-    <article class="panel" id="activityPanel">
-      <div class="panel-head"><div><div class="panel-title">Recent activity</div><div class="panel-sub">Local demonstration activity log</div></div><button class="btn" id="clearLog" style="padding:8px 10px">Clear log</button></div>
-      <div class="activity-list" id="activityList">
-        <div class="activity"><div class="activity-icon">▣</div><div><div class="activity-title">Parcel detected</div><div class="activity-desc">Object within the configured detection range.</div></div><div class="activity-time">NOW</div></div>
-        <div class="activity"><div class="activity-icon">⌁</div><div><div class="activity-title">Motion sensor active</div><div class="activity-desc">PIR event simulated for interface preview.</div></div><div class="activity-time">2 MIN</div></div>
-        <div class="activity"><div class="activity-icon">⚙</div><div><div class="activity-title">System initialized</div><div class="activity-desc">Dashboard loaded in demonstration mode.</div></div><div class="activity-time">5 MIN</div></div>
-      </div>
-    </article>
-    <article class="panel" id="analyticsPanel">
-      <div class="panel-head"><div><div class="panel-title">Detection analytics</div><div class="panel-sub">Activity overview · sample values</div></div><span class="tag">7 DAYS</span></div>
-      <div class="chart-content"><div style="font-size:9px;color:#9297a1;letter-spacing:1px">TOTAL EVENTS</div><div class="chart-number" id="chartTotal">48 <small>events</small></div>
-        <div class="bars" id="bars"><div class="bar" style="height:32%"></div><div class="bar" style="height:52%"></div><div class="bar" style="height:42%"></div><div class="bar" style="height:76%"></div><div class="bar" style="height:58%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:66%"></div></div>
-        <div class="chart-labels"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
-        <div class="chart-foot"><span>Sensor event activity</span><b>Illustrative only</b></div>
-      </div>
-    </article>
-  </section>
-  <footer><span>© <span id="year"></span> <b>ZOR TECHNOLOGY</b> · SMART DELIVERY SECURITY</span><span>BUILD 1.0.0 · FRONT-END DEMO · <span id="clock">--:--:--</span></span></footer>
+<section class="page" id="page-settings"><div class="settings-grid">
+<div class="card"><div class="heading"><div><h2>Backend Connection</h2><p>Connect the dashboard to your IoT service</p></div></div><p class="note">Expected JSON: {"distance":18,"motion":true,"parcel":true}. Configure CORS on your server.</p>
+<div class="field"><label for="apiUrl">API Endpoint URL</label><input id="apiUrl" type="url" placeholder="https://your-server.example/api/status"></div>
+<div class="field"><label for="apiInterval">Refresh Interval (seconds)</label><input id="apiInterval" type="number" min="5" max="300" value="10"></div>
+<div class="buttons" style="justify-content:flex-start"><button class="primary" id="connectApi">Connect Backend</button><button class="secondary" id="disconnectApi">Disconnect</button></div><p class="note" id="apiMessage">No backend connected. Demo mode is active.</p></div>
+<div class="card"><div class="heading"><div><h2>System Preferences</h2><p>Sound and hardware configuration</p></div></div>
+<div class="hardware-row"><span>Alert Sound</span><strong id="soundState">Enabled</strong></div><div class="buttons" style="justify-content:flex-start"><button class="secondary" id="toggleSoundSettings">Disable Sound</button><button class="secondary" id="previewSound">Preview Sound</button></div>
+<div style="height:15px"></div><div class="hardware-row"><span>Controller</span><strong>ESP32 DOIT DevKit V1</strong></div><div class="hardware-row"><span>HC-SR04 TRIG / ECHO</span><strong>GPIO 5 / 18</strong></div><div class="hardware-row"><span>PIR Sensor</span><strong>GPIO 27</strong></div><div class="hardware-row"><span>OLED SSD1306</span><strong>GPIO 21 / 22, Address 0x3C</strong></div><div class="hardware-row"><span>Active Buzzer</span><strong>GPIO 23</strong></div><div class="hardware-row"><span>Push Button</span><strong>GPIO 26</strong></div><p class="note">Use a voltage divider on HC-SR04 ECHO before connecting it to the ESP32.</p></div>
+</div></section>
+<footer><span>ZOR SMART PARCEL INTELLIGENCE</span><span>IOT SECURITY PLATFORM</span><span id="clock">SYSTEM READY</span></footer>
 </main>
 </div>
 
-<div class="toast" id="toast">Action completed.</div>
-<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal"><h2 id="modalTitle">System preferences</h2><p>These settings affect this dashboard demonstration only.</p>
-    <div class="modal-row"><span>Interface sound effects</span><button class="switch on" id="soundSwitch" aria-label="Toggle sound"></button></div>
-    <div class="modal-row"><span>Camera scan animation</span><button class="switch on" id="scanSwitch" aria-label="Toggle scan"></button></div>
-    <div class="modal-actions"><button class="btn primary" id="closeModal">Done</button></div>
-  </div>
+<div class="bubble-menu" id="bubbleMenu"><div class="bubble-heading">ZOR NAVIGATION</div>
+<button data-page="overview"><span class="bubble-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="bubble-label">Overview</span></button>
+<button data-page="monitor"><span class="bubble-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 1v4M23 12h-4"/></svg></span><span class="bubble-label">Live Monitoring</span></button>
+<button data-page="notifications"><span class="bubble-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span><span class="bubble-label">Notifications</span></button>
+<button data-page="history"><span class="bubble-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="bubble-label">Activity History</span></button>
+<button data-page="settings"><span class="bubble-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19 15 2 1-2 4-3-1-2 1v3h-4v-3l-2-1-3 1-2-4 2-2v-2l-2-2 2-4 3 1 2-1V3h4v3l2 1 3-1 2 4-2 2Z"/></svg></span><span class="bubble-label">Settings and API</span></button>
 </div>
-<div class="exit-screen" id="exitScreen"><div><div class="exit-logo"><svg viewBox="0 0 100 116" fill="none"><path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="white" stroke-width="3"/><path d="M28 31h45L39 75h34" stroke="white" stroke-width="8"/></svg></div><div class="exit-text">SESSION SECURED</div></div></div>
+<button class="bubble-launcher" id="bubbleLauncher" aria-label="Open navigation" aria-expanded="false"><svg class="icon launcher-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-(() => {
-  const $ = s => document.querySelector(s);
-  let soundOn=true, scanOn=true, parcelOn=true, motionOn=true;
-  let detectionCount=12, alertCount=3, audio=null, toastTimer;
+"use strict";
+const $=id=>document.getElementById(id);
+const STORAGE_KEY="zorParcelEvents";
+let events=[];
+try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");if(Array.isArray(saved))events=saved.slice(0,150)}catch(e){}
 
-  function getAudio(){
-    if(!soundOn)return null;
-    try{
-      const AC=window.AudioContext||window.webkitAudioContext;
-      if(!AC)return null;
-      if(!audio)audio=new AC();
-      if(audio.state==='suspended')audio.resume().catch(()=>{});
-      return audio;
-    }catch(e){return null}
-  }
-  function tone(freq,delay,duration,type='sine',volume=.035,endFreq=null){
-    const ctx=getAudio();if(!ctx)return;
-    try{
-      const osc=ctx.createOscillator(),gain=ctx.createGain();
-      osc.type=type;osc.frequency.setValueAtTime(freq,ctx.currentTime+delay);
-      if(endFreq)osc.frequency.exponentialRampToValueAtTime(endFreq,ctx.currentTime+delay+duration);
-      gain.gain.setValueAtTime(.0001,ctx.currentTime+delay);
-      gain.gain.exponentialRampToValueAtTime(volume,ctx.currentTime+delay+.02);
-      gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+delay+duration);
-      osc.connect(gain);gain.connect(ctx.destination);
-      osc.start(ctx.currentTime+delay);osc.stop(ctx.currentTime+delay+duration+.03);
-    }catch(e){}
-  }
-  function startupSound(){
-    if(!soundOn)return;
-    tone(440,0,.12,'sine',.025,660);
-    tone(660,.13,.14,'sine',.03,880);
-    tone(880,.29,.22,'triangle',.035,1175);
-    tone(587,.54,.18,'sine',.02,784);
-  }
-  function chime(){tone(700,0,.09,'sine',.025);tone(950,.1,.14,'sine',.025)}
-  function alarm(){tone(740,0,.1,'square',.018);tone(520,.14,.12,'square',.018);tone(740,.3,.18,'triangle',.025,980)}
-  function showToast(text){
-    $('#toast').textContent=text;$('#toast').classList.add('show');
-    clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),2600);
-  }
-  function timeNow(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
-  function updateTime(){
-    $('#clock').textContent=timeNow();$('#camTime').textContent=timeNow()+' · LOCAL';
-  }
-  $('#year').textContent=new Date().getFullYear();updateTime();setInterval(updateTime,1000);
+let audioCtx=null,soundOn=true,alarmActive=false,alarmTimer=null;
+let apiTimer=null,apiUrl="",toastTimer=null;
+let currentDistance=null,currentMotion=false,currentParcel=null,lastAlertState=null;
+let previousApiEvents=new Set();
+let strikeTimer=null,strikeStopTimer=null;
 
-  function closeIntro(){
-    const el=$('#intro');if(el.classList.contains('done'))return;
-    el.classList.add('done');chime();
-  }
-  window.addEventListener('load',()=>{
-    setTimeout(startupSound,300);
-    setTimeout(closeIntro,window.matchMedia('(prefers-reduced-motion: reduce)').matches?400:2800);
-  });
-  $('#skipIntro').addEventListener('click',closeIntro);
-  document.addEventListener('pointerdown',function unlock(){
-    getAudio();document.removeEventListener('pointerdown',unlock);
-  },{once:true});
+const pageInfo={
+ overview:["System Overview","Real-time visibility for smarter parcel security."],
+ monitor:["Live Monitoring","Sensor readings and device activity."],
+ notifications:["Notifications Centre","Security alerts and system messages."],
+ history:["Activity History","Recorded parcel security events."],
+ settings:["Settings and API","Configure connectivity and system preferences."]
+};
 
-  function addLog(title,description,icon='▣'){
-    const row=document.createElement('div');row.className='activity';
-    const ico=document.createElement('div');ico.className='activity-icon';ico.textContent=icon;
-    const body=document.createElement('div');
-    const t=document.createElement('div');t.className='activity-title';t.textContent=title;
-    const d=document.createElement('div');d.className='activity-desc';d.textContent=description;
-    body.append(t,d);
-    const tm=document.createElement('div');tm.className='activity-time';tm.textContent='NOW';
-    row.append(ico,body,tm);$('#activityList').prepend(row);
-    while($('#activityList').children.length>7)$('#activityList').lastElementChild.remove();
-    $('#updated').textContent='Updated '+timeNow();
-  }
-  function render(){
-    $('#distance').textContent=parcelOn?(motionOn?'18':'24'):'86';
-    $('#distanceState').textContent=parcelOn?'Within threshold':'Outside threshold';
-    $('#motionState').textContent=motionOn?'DETECTED':'CLEAR';
-    $('#alertState').textContent=(parcelOn&&motionOn)?'REVIEW':'STANDBY';
-    $('#alertSub').textContent=(parcelOn&&motionOn)?'Simulated event':'No active alert';
-    $('#parcel').style.display=parcelOn?'block':'none';
-    $('#scanFrame').style.display=parcelOn&&scanOn?'block':'none';
-    $('#scanLine').style.display=parcelOn&&scanOn?'block':'none';
-    $('#camObject').textContent=parcelOn?'OBJECT: PARCEL':'OBJECT: NONE';
-    $('#cameraNote').textContent=parcelOn?'Parcel-like object shown':'No parcel in preview';
-    $('#bannerTitle').textContent=parcelOn&&motionOn?'ACTIVITY DETECTED':'SYSTEM PROTECTED';
-    $('#bannerDesc').textContent=parcelOn&&motionOn?'A simulated parcel and motion event is present. Review the activity log.':'Monitoring interface is active in demonstration mode.';
-  }
-  function simulate(){
-    const type=Math.floor(Math.random()*4);
-    if(type===0){
-      parcelOn=true;motionOn=true;detectionCount++;alertCount++;
-      addLog('Parcel and motion detected','Simulated object inside threshold; review the event.','⚠');
-      showToast('Simulated security event created.');alarm();
-    }else if(type===1){
-      parcelOn=true;motionOn=false;detectionCount++;
-      addLog('Parcel presence detected','Parcel-like object shown in demo preview.','▣');
-      showToast('Parcel detection simulated.');chime();
-    }else if(type===2){
-      parcelOn=false;motionOn=true;alertCount++;
-      addLog('Motion near delivery zone','PIR motion event simulated; parcel is not present.','⌁');
-      showToast('Motion event simulated.');alarm();
-    }else{
-      parcelOn=false;motionOn=false;
-      addLog('Delivery zone clear','No parcel or motion shown in this demo state.','✓');
-      showToast('Zone marked clear in demo.');chime();
-    }
-    $('#detections').textContent=detectionCount;
-    $('#alerts').textContent=String(alertCount).padStart(2,'0');
-    $('#chartTotal').innerHTML=(48+detectionCount-12)+' <small>events</small>';
-    render();
-  }
-  $('#simulate').addEventListener('click',simulate);
-  $('#toggleMotion').addEventListener('click',()=>{
-    motionOn=!motionOn;render();
-    addLog(motionOn?'Motion sensor triggered':'Motion sensor cleared',motionOn?'Motion switched on by user.':'Motion switched off by user.','⌁');
-    showToast('Motion state: '+(motionOn?'DETECTED':'CLEAR'));motionOn?alarm():chime();
-  });
-  $('#toggleParcel').addEventListener('click',()=>{
-    parcelOn=!parcelOn;render();
-    addLog(parcelOn?'Parcel detected':'Parcel removed from preview',parcelOn?'Parcel state switched on by user.':'Parcel state switched off by user.','▣');
-    showToast('Parcel state: '+(parcelOn?'DETECTED':'NOT DETECTED'));chime();
-  });
-  $('#testSound').addEventListener('click',()=>{
-    if(!soundOn){showToast('Enable sound effects first.');return}
-    alarm();showToast('Security sound test played.');
-  });
-  $('#soundToggle').addEventListener('click',()=>{
-    soundOn=!soundOn;$('#soundSwitch').classList.toggle('on',soundOn);
-    $('#soundToggle').style.opacity=soundOn?'1':'.45';
-    showToast('Sound effects '+(soundOn?'enabled':'muted'));if(soundOn)chime();
-  });
-  $('#clearLog').addEventListener('click',()=>{
-    $('#activityList').innerHTML='';showToast('Activity log cleared.');chime();
-  });
+/* SOUND ENGINE */
+function initAudio(){
+ const AC=window.AudioContext||window.webkitAudioContext;
+ if(!AC)return;
+ if(!audioCtx)audioCtx=new AC();
+ if(audioCtx.state==="suspended")audioCtx.resume();
+}
+function electricZzz(){
+ if(!soundOn)return;
+ initAudio();if(!audioCtx)return;
+ const ctx=audioCtx,start=ctx.currentTime;
+ [0,.34].forEach((offset,index)=>{
+  const osc=ctx.createOscillator(),gain=ctx.createGain(),filter=ctx.createBiquadFilter();
+  filter.type="lowpass";
+  filter.frequency.setValueAtTime(1900,start+offset);
+  filter.frequency.exponentialRampToValueAtTime(350,start+offset+.17);
+  osc.type="sawtooth";
+  osc.frequency.setValueAtTime(index?1050:1500,start+offset);
+  osc.frequency.exponentialRampToValueAtTime(170,start+offset+.19);
+  gain.gain.setValueAtTime(.0001,start+offset);
+  gain.gain.exponentialRampToValueAtTime(.065,start+offset+.018);
+  gain.gain.exponentialRampToValueAtTime(.0001,start+offset+.21);
+  osc.connect(filter);filter.connect(gain);gain.connect(ctx.destination);
+  osc.start(start+offset);osc.stop(start+offset+.23);
+ });
+}
+function tone(freq=600,duration=.12,volume=.045,force=false){
+ if(!soundOn&&!force)return;
+ initAudio();if(!audioCtx)return;
+ const o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
+ o.type="sine";o.frequency.setValueAtTime(freq,t);
+ g.gain.setValueAtTime(volume,t);g.gain.exponentialRampToValueAtTime(.001,t+duration);
+ o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration);
+}
+function successSound(){tone(523,.1);setTimeout(()=>tone(659,.1),110);setTimeout(()=>tone(784,.13),230)}
+function clickSound(){tone(550,.04,.012)}
+function alarmBeep(){if(!alarmActive)return;tone(880,.22,.055,true);setTimeout(()=>{if(alarmActive)tone(660,.22,.055,true)},260)}
 
-  const modal=$('#modal');
-  function openModal(){modal.classList.add('show')}
-  function closeModal(){modal.classList.remove('show')}
-  $('#settingsBtn').addEventListener('click',openModal);
-  $('#settingsNav').addEventListener('click',openModal);
-  $('#closeModal').addEventListener('click',closeModal);
-  modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+function triggerLightningStrike(){
+ const logo=$("welcomeLogo");
+ if(!logo||$("welcomeScreen").classList.contains("leaving"))return;
+ logo.classList.remove("strike");
+ void logo.offsetWidth;
+ logo.classList.add("strike");
+ clearTimeout(strikeStopTimer);
+ strikeStopTimer=setTimeout(()=>logo.classList.remove("strike"),260);
+ electricZzz();
+ setTimeout(()=>{
+  if(!$("welcomeScreen").classList.contains("leaving")){
+   logo.classList.add("strike");
+   setTimeout(()=>logo.classList.remove("strike"),100);
+  }
+ },100);
+}
+function startLightningSequence(){
+ if(strikeTimer!==null)return;
+ triggerLightningStrike();
+ const nextStrike=()=>{
+  if($("welcomeScreen").classList.contains("leaving")){
+   clearInterval(strikeTimer);strikeTimer=null;return;
+  }
+  triggerLightningStrike();
+ };
+ strikeTimer=setInterval(nextStrike,2900);
+}
+function stopLightningSequence(){
+ if(strikeTimer!==null){clearInterval(strikeTimer);strikeTimer=null}
+ clearTimeout(strikeStopTimer);
+ $("welcomeLogo").classList.remove("strike");
+}
 
-  $('#soundSwitch').addEventListener('click',()=>{
-    soundOn=!soundOn;$('#soundSwitch').classList.toggle('on',soundOn);
-    $('#soundToggle').style.opacity=soundOn?'1':'.45';if(soundOn)chime();
-  });
-  $('#scanSwitch').addEventListener('click',()=>{
-    scanOn=!scanOn;$('#scanSwitch').classList.toggle('on',scanOn);render();
-    showToast('Camera scan animation '+(scanOn?'enabled':'disabled'));
-  });
-  $('#nav').querySelectorAll('button[data-target]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      $('#nav').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      const target=document.getElementById(btn.dataset.target);
-      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
-      if(innerWidth<=720)setTimeout(()=>window.scrollBy({top:-72,behavior:'smooth'}),100);
-    });
-  });
-  render();
-})();
+function toast(message){
+ $("toast").textContent=message;$("toast").classList.add("show");
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),3200);
+}
+function startAlarm(){
+ if(alarmActive)return;
+ alarmActive=true;$("alarmBanner").hidden=false;alarmBeep();
+ alarmTimer=setInterval(alarmBeep,700);toast("Security alert: object detected");
+ if("Notification"in window&&Notification.permission==="granted"){
+  try{new Notification("ZOR Security Alert",{body:"An object has been detected in the configured zone.",tag:"zor-parcel-alert"})}catch(e){}
+ }
+}
+function stopAlarm(showMessage=true){
+ if(alarmTimer!==null)clearInterval(alarmTimer);
+ alarmTimer=null;alarmActive=false;$("alarmBanner").hidden=true;
+ if(showMessage)toast("Alarm stopped");
+}
+$("stopAlarmBtn").addEventListener("click",()=>{initAudio();stopAlarm()});
+async function requestNotifications(){
+ if(!("Notification"in window))return;
+ if(Notification.permission==="default"){try{await Notification.requestPermission()}catch(e){}}
+}
+
+/* ENTER SYSTEM */
+$("enterSystem").addEventListener("click",()=>{
+ initAudio();
+ triggerLightningStrike();
+ stopLightningSequence();
+ $("welcomeScreen").classList.add("leaving");
+ $("app").classList.add("entered");
+ setTimeout(()=>{
+  $("welcomeScreen").style.display="none";
+  setPage("overview");
+ },650);
+});
+
+/* Start visual lightning when page opens. Sound plays after browser permits audio. */
+window.addEventListener("load",()=>{
+ startLightningSequence();
+});
+document.addEventListener("pointerdown",function unlockAudio(){
+ initAudio();
+ document.removeEventListener("pointerdown",unlockAudio);
+},{once:true});
+
+function now(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function setPage(name){
+ if(!pageInfo[name]||!$("page-"+name))return;
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+ $("page-"+name).classList.add("active");
+ $("pageTitle").textContent=pageInfo[name][0];$("pageSubtitle").textContent=pageInfo[name][1];
+ $("sidebar").classList.remove("open");$("bubbleMenu").classList.remove("open");
+ $("bubbleLauncher").classList.remove("open");$("bubbleLauncher").setAttribute("aria-expanded","false");
+ clickSound();window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
+$("bubbleLauncher").addEventListener("click",()=>{
+ initAudio();const open=$("bubbleMenu").classList.toggle("open");
+ $("bubbleLauncher").classList.toggle("open",open);$("bubbleLauncher").setAttribute("aria-expanded",String(open));clickSound();
+});
+$("menuBtn").addEventListener("click",()=>{$("sidebar").classList.toggle("open");clickSound()});
+$("bellBtn").addEventListener("click",()=>setPage("notifications"));
+document.addEventListener("click",e=>{
+ if(!$("bubbleMenu").contains(e.target)&&!$("bubbleLauncher").contains(e.target)){
+  $("bubbleMenu").classList.remove("open");$("bubbleLauncher").classList.remove("open");$("bubbleLauncher").setAttribute("aria-expanded","false");
+ }
+});
+
+function updateSoundUI(){
+ $("soundBtn").innerHTML=soundOn
+ ?'<svg class="icon" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>'
+ :'<svg class="icon" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="m17 9 5 6m0-6-5 6"/></svg>';
+ $("soundState").textContent=soundOn?"Enabled":"Disabled";
+ $("toggleSoundSettings").textContent=soundOn?"Disable Sound":"Enable Sound";
+}
+function toggleSound(){
+ soundOn=!soundOn;updateSoundUI();
+ if(soundOn){initAudio();electricZzz();toast("Sound enabled")}else toast("Sound disabled");
+}
+$("soundBtn").addEventListener("click",toggleSound);
+$("toggleSoundSettings").addEventListener("click",toggleSound);
+$("previewSound").addEventListener("click",()=>{initAudio();electricZzz();toast("Electrical sound preview")});
+
+function saveEvents(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(events.slice(0,150)))}catch(e){}}
+function activityIcon(alert){
+ return alert?'<svg class="icon" viewBox="0 0 24 24"><path d="M12 3 22 20H2L12 3Z"/><path d="M12 9v4m0 3h.01"/></svg>':'<svg class="icon" viewBox="0 0 24 24"><path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="m9 12 2 2 4-4"/></svg>';
+}
+function renderEvents(){
+ saveEvents();$("eventMetric").textContent=events.length;$("navCount").textContent=events.length;
+ const row=e=>`<div class="activity"><div class="activity-icon">${activityIcon(e.alert)}</div><div class="activity-body"><strong>${esc(e.title)}</strong><span>${esc(e.detail)}<br>${esc(e.source)}</span></div><div class="activity-time">${esc(e.time)}</div></div>`;
+ $("recentEvents").innerHTML=events.length?events.slice(0,5).map(row).join(""):'<div class="empty">No events recorded yet.</div>';
+ $("allEvents").innerHTML=events.length?events.map(row).join(""):'<div class="empty">No notifications available.</div>';
+ $("historyTable").innerHTML=events.length?events.map(e=>`<tr><td>${esc(e.time)}</td><td>${esc(e.title)}</td><td>${e.distance==null?"--":Number(e.distance).toFixed(1)+" cm"}</td><td>${e.motion?"Motion detected":"No motion"}</td><td>${esc(e.source)}</td></tr>`).join(""):'<tr><td colspan="5">No records available.</td></tr>';
+}
+function addEvent(title,detail,source="Demo",alert=false){
+ events.unshift({title,detail,source,time:new Date().toLocaleString(),distance:currentDistance,motion:currentMotion,alert});
+ if(events.length>150)events.length=150;renderEvents();
+}
+function updateSensor(data,source="API",record=true){
+ const distance=Number(data.distance);
+ const valid=data.distance!==null&&data.distance!==undefined&&data.distance!==""&&Number.isFinite(distance)&&distance>=0;
+ currentDistance=valid?distance:null;
+ currentMotion=data.motion===true||data.motion===1||data.motion==="true";
+ currentParcel=typeof data.parcel==="boolean"?data.parcel:(valid?distance<=30:null);
+ const state=currentParcel===null?"unknown":currentParcel?"detected":"clear";
+ const dt=valid?distance.toFixed(1):"--",pt=currentParcel===null?"UNKNOWN":currentParcel?"DETECTED":"CLEAR";
+ $("parcelMetric").textContent=pt;
+ $("parcelMetric").className="metric-value "+(currentParcel?"red":currentParcel===false?"green":"amber");
+ $("parcelFoot").textContent=currentParcel?"Object within detection range":currentParcel===false?"No object within 30 cm":"Awaiting sensor data";
+ $("distanceMetric").innerHTML=dt+" <small>cm</small>";$("bigDistance").innerHTML=dt+" <small>cm</small>";
+ $("motionMetric").textContent=currentMotion?"MOTION":"NO MOTION";$("motionMetric").className="metric-value "+(currentMotion?"amber":"");
+ $("monitorDistance").textContent=dt+" cm";$("monitorParcel").textContent=pt;$("monitorMotion").textContent=currentMotion?"DETECTED":"NO MOTION";$("monitorTime").textContent=now();
+ $("ultraStatus").textContent=valid?"Online":"No reading";$("ultraStatus").className=valid?"green":"amber";
+ $("pirStatus").textContent=currentMotion?"Motion detected":"No motion";$("pirStatus").className=currentMotion?"amber":"green";
+ $("radar").classList.toggle("has-target",currentParcel===true);
+ $("detectionText").textContent=currentParcel?"Object detected within the configured 30 cm range.":currentParcel===false?"Area clear. No object detected within range.":"Waiting for a valid sensor reading.";
+ if(currentParcel===true){$("securityTitle").textContent="Object Detected";$("securityText").textContent="An object is within detection range. Distance alone cannot confirm that it is a parcel.";$("securityIcon").style.color="var(--red)"}
+ else if(currentParcel===false){$("securityTitle").textContent="Area Clear";$("securityText").textContent="No object detected within the configured range.";$("securityIcon").style.color="var(--green)"}
+ else{$("securityTitle").textContent="Awaiting Sensor Data";$("securityText").textContent="Connect your ESP32 backend or run a simulation.";$("securityIcon").style.color="var(--amber)"}
+ const live=source==="API";
+ $("connectionLabel").textContent=live?"BACKEND CONNECTED":"DEMO ENVIRONMENT";
+ $("monitorModeTag").textContent=live?"LIVE API":"DEMO MODE";$("sideMode").textContent=live?"CONNECTED":"DEMO MODE";
+ $("headerDot").style.background=live?"var(--green)":"var(--amber)";$("telegramStatus").textContent="Not linked";
+ if(record&&state!=="unknown"&&state!==lastAlertState){
+  if(state==="detected"){startAlarm();addEvent("Object detected","Distance: "+dt+" cm",source,true)}
+  else if(lastAlertState==="detected"){stopAlarm(false);addEvent("Detection zone clear","Object is no longer within detection range.",source)}
+  else addEvent("Area clear","Distance: "+dt+" cm",source);
+  lastAlertState=state;
+ }
+}
+function simulateDetection(){
+ initAudio();requestNotifications();
+ const found=Math.random()>.4;
+ const distance=found?+(8+Math.random()*20).toFixed(1):+(35+Math.random()*65).toFixed(1);
+ updateSensor({distance,motion:Math.random()>.5,parcel:found},"Simulation",true);
+ toast(found?"Simulation: object detected":"Simulation: area clear");
+}
+$("simulateBtn").addEventListener("click",simulateDetection);
+$("monitorSim").addEventListener("click",simulateDetection);
+function testAlert(){initAudio();electricZzz();setTimeout(()=>tone(660,.2,.05,true),300);toast("Alert sound test")}
+$("testBtn").addEventListener("click",testAlert);$("monitorTest").addEventListener("click",testAlert);
+$("viewAllBtn").addEventListener("click",()=>setPage("notifications"));
+$("clearEvents").addEventListener("click",()=>{
+ if(!confirm("Clear all locally saved history?"))return;
+ events.length=0;renderEvents();toast("Local history cleared");
+});
+$("exportBtn").addEventListener("click",()=>{
+ if(!events.length){toast("No records to export");return}
+ const rows=[["Time","Event","Distance cm","Motion","Source"]];
+ events.forEach(e=>rows.push([e.time,e.title,e.distance??"",e.motion?"Detected":"No motion",e.source]));
+ const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ const url=URL.createObjectURL(new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"}));
+ const a=document.createElement("a");a.href=url;a.download="zor-parcel-history.csv";document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);toast("CSV exported");
+});
+async function refreshAPI(){
+ if(!apiUrl)return;
+ try{
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),10000);
+  let response;
+  try{response=await fetch(apiUrl,{cache:"no-store",signal:controller.signal})}finally{clearTimeout(timeout)}
+  if(!response.ok)throw new Error("HTTP "+response.status);
+  const json=await response.json();if(json.ok===false)throw new Error(json.message||"API error");
+  const sensor=json.sensor||json.data||json;
+  if(sensor.distance===undefined&&sensor.parcel===undefined)throw new Error("Sensor fields missing");
+  updateSensor(sensor,"API",true);$("apiMessage").textContent="Backend connected. Last update: "+now();
+  $("telegramStatus").textContent=json.telegramConnected===true?"Connected":"Not verified";
+  if(Array.isArray(json.events)){
+   json.events.slice(0,20).reverse().forEach(e=>{
+    if(!e||!(e.title||e.message))return;
+    const sig=String(e.title||e.message)+"|"+String(e.time||"");
+    if(previousApiEvents.has(sig))return;previousApiEvents.add(sig);
+    events.unshift({title:String(e.title||e.message),detail:String(e.detail||e.message||"Backend event"),source:"API",time:String(e.time||new Date().toLocaleString()),distance:e.distance??sensor.distance??null,motion:Boolean(e.motion??sensor.motion),alert:Boolean(e.alert)});
+   });
+   if(previousApiEvents.size>300)previousApiEvents.clear();
+   if(events.length>150)events.length=150;renderEvents();
+  }
+ }catch(e){
+  $("apiMessage").textContent="Connection failed: "+e.message+". Check URL, server and CORS.";
+  $("connectionLabel").textContent="CONNECTION ERROR";$("headerDot").style.background="var(--red)";
+ }
+}
+$("connectApi").addEventListener("click",()=>{
+ initAudio();requestNotifications();apiUrl=$("apiUrl").value.trim();
+ if(!/^https?:\/\//i.test(apiUrl)){toast("Enter a valid API URL");return}
+ if(apiTimer)clearInterval(apiTimer);refreshAPI();
+ let seconds=Number($("apiInterval").value);if(!Number.isFinite(seconds))seconds=10;
+ seconds=Math.max(5,Math.min(300,seconds));$("apiInterval").value=seconds;
+ apiTimer=setInterval(refreshAPI,seconds*1000);
+});
+$("refreshBtn").addEventListener("click",()=>{if(!apiUrl){toast("Connect a backend URL in Settings first");return}refreshAPI()});
+$("disconnectApi").addEventListener("click",()=>{
+ if(apiTimer)clearInterval(apiTimer);apiTimer=null;apiUrl="";
+ $("connectionLabel").textContent="DEMO ENVIRONMENT";$("headerDot").style.background="var(--amber)";
+ $("apiMessage").textContent="Backend disconnected. Demo mode is active.";
+ $("telegramStatus").textContent="Not linked";$("sideMode").textContent="DEMO MODE";$("monitorModeTag").textContent="DEMO MODE";
+ stopAlarm(false);toast("Backend disconnected");
+});
+function updateClock(){$("clock").textContent="LOCAL TIME "+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}
+updateSoundUI();renderEvents();updateClock();setInterval(updateClock,15000);
 </script>
 </body>
 </html>
