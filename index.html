@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZOR SMART PARCEL DETECTOR | Enterprise AI Security Demo</title>
+    <title>ZOR SMART PARCEL DETECTOR | Enterprise AI IoT Suite</title>
     <style>
         :root {
-            --bg-base: #030305;
-            --bg-surface: #0a0a0f;
-            --panel-glass: rgba(16, 16, 24, 0.85);
-            --border-line: rgba(255, 255, 255, 0.1);
-            --border-glow: rgba(255, 255, 255, 0.3);
-            --silver-light: #ececf4;
-            --silver-muted: #88889c;
+            --bg-base: #020205;
+            --bg-surface: #08080e;
+            --panel-glass: rgba(14, 14, 22, 0.85);
+            --border-line: rgba(255, 255, 255, 0.09);
+            --border-glow: rgba(255, 255, 255, 0.28);
+            --silver-light: #f0f0f6;
+            --silver-muted: #828296;
             --accent-white: #ffffff;
             --accent-dark: #000000;
             --alert-red: #ff3b3b;
+            --success-green: #00e676;
         }
 
         * {
@@ -37,37 +38,37 @@
             padding: 0;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(35, 35, 55, 0.35) 0%, transparent 60%),
-                radial-gradient(circle at 10% 90%, rgba(15, 15, 25, 0.6) 0%, transparent 50%);
+                radial-gradient(circle at 50% 0%, rgba(30, 30, 50, 0.4) 0%, transparent 60%),
+                radial-gradient(circle at 10% 90%, rgba(10, 10, 20, 0.7) 0%, transparent 50%);
         }
 
-        /* App Frame Container */
+        /* App Container Frame */
         .app-frame {
             width: 100%;
-            max-width: 414px;
+            max-width: 430px;
             height: 100vh;
-            max-height: 896px;
+            max-height: 920px;
             background-color: var(--bg-surface);
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.95), 0 0 0 1px var(--border-line);
+            box-shadow: 0 35px 80px rgba(0,0,0,0.95), 0 0 0 1px var(--border-line);
             overflow: hidden;
         }
 
-        @media (min-width: 415px) {
+        @media (min-width: 431px) {
             .app-frame {
-                border-radius: 44px;
-                border: 6px solid #1a1a26;
-                height: 850px;
+                border-radius: 46px;
+                border: 6px solid #181822;
+                height: 880px;
                 margin: 20px 0;
             }
         }
 
         /* Top Header */
         .app-header {
-            background: rgba(10, 10, 15, 0.9);
-            backdrop-filter: blur(14px);
+            background: rgba(8, 8, 14, 0.92);
+            backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-line);
             padding: 16px 20px;
             display: flex;
@@ -83,22 +84,22 @@
         }
 
         .z-shield-logo {
-            width: 34px;
-            height: 38px;
+            width: 36px;
+            height: 40px;
             position: relative;
-            background: linear-gradient(135deg, #2a2a38 0%, #0d0d12 100%);
+            background: linear-gradient(135deg, #2c2c3c 0%, #0c0c10 100%);
             border: 1px solid var(--border-glow);
             display: flex;
             align-items: center;
             justify-content: center;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.8);
         }
 
         .z-glyph {
             color: var(--accent-white);
             font-weight: 900;
-            font-size: 16px;
+            font-size: 17px;
             letter-spacing: -1px;
         }
 
@@ -131,19 +132,19 @@
         .pulse-light {
             width: 6px;
             height: 6px;
-            background-color: var(--accent-white);
+            background-color: var(--success-green);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-white);
+            box-shadow: 0 0 8px var(--success-green);
             animation: pulseGlow 2s infinite;
         }
 
         @keyframes pulseGlow {
-            0% { opacity: 0.3; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px #fff; }
-            100% { opacity: 0.3; transform: scale(0.9); }
+            0% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px var(--success-green); }
+            100% { opacity: 0.4; transform: scale(0.9); }
         }
 
-        /* App Body Content */
+        /* App Body Area */
         .app-body {
             flex: 1;
             overflow-y: auto;
@@ -160,7 +161,7 @@
             display: none;
             flex-direction: column;
             gap: 16px;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .view-panel.active {
@@ -168,19 +169,19 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* Hero Status Banner */
         .hero-banner {
-            background: linear-gradient(135deg, rgba(25, 25, 40, 0.7) 0%, rgba(10, 10, 15, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(22, 22, 36, 0.8) 0%, rgba(8, 8, 14, 0.95) 100%);
             border: 1px solid var(--border-glow);
             padding: 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -196,16 +197,14 @@
 
         .hero-banner.alarm-active {
             border-color: var(--alert-red);
-            background: linear-gradient(135deg, rgba(50, 15, 15, 0.8) 0%, rgba(15, 5, 5, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(50, 12, 12, 0.85) 0%, rgba(15, 4, 4, 0.95) 100%);
             animation: flashAlarmBg 0.5s infinite alternate;
         }
-        .hero-banner.alarm-active::before {
-            background: var(--alert-red);
-        }
+        .hero-banner.alarm-active::before { background: var(--alert-red); }
 
         @keyframes flashAlarmBg {
             from { box-shadow: 0 0 15px rgba(255, 59, 59, 0.2); }
-            to { box-shadow: 0 0 30px rgba(255, 59, 59, 0.6); }
+            to { box-shadow: 0 0 35px rgba(255, 59, 59, 0.7); }
         }
 
         .hero-text h3 {
@@ -236,21 +235,21 @@
         .hero-pill.alarm-pill {
             background: var(--alert-red);
             color: #fff;
-            box-shadow: 0 0 15px rgba(255, 59, 59, 0.8);
+            box-shadow: 0 0 20px rgba(255, 59, 59, 0.9);
             animation: pulseAlarm 0.4s infinite;
         }
 
         @keyframes pulseAlarm {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.06); }
             100% { transform: scale(1); }
         }
 
-        /* Advanced Realistic AI Camera Viewport */
+        /* Camera Viewport with AI Tracker */
         .camera-card {
             background: var(--panel-glass);
             border: 1px solid var(--border-line);
-            border-radius: 4px;
+            border-radius: 6px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -280,12 +279,6 @@
             align-items: center;
             gap: 4px;
         }
-        .tag-live::before {
-            content: '';
-            width: 5px; height: 5px; background: #00ff66; border-radius: 50%;
-            box-shadow: 0 0 6px #00ff66;
-            animation: pulse 1s infinite;
-        }
 
         .camera-viewport {
             position: relative;
@@ -298,27 +291,26 @@
             overflow: hidden;
         }
 
-        /* Optical Scanning Laser Line */
         .scanner-beam {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 2px;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 12px rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 14px rgba(255,255,255,1);
             z-index: 6;
             pointer-events: none;
             animation: scanBeam 3s ease-in-out infinite alternate;
         }
 
         @keyframes scanBeam {
-            0% { top: 15%; opacity: 0.3; }
+            0% { top: 12%; opacity: 0.2; }
             50% { opacity: 1; }
-            100% { top: 85%; opacity: 0.3; }
+            100% { top: 88%; opacity: 0.2; }
         }
 
         .porch-scene {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 35%, #1a1a28 0%, #040407 90%);
+            background: radial-gradient(circle at 50% 35%, #181826 0%, #030306 90%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -328,19 +320,16 @@
 
         .ground-floor {
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 50px;
-            background: linear-gradient(180deg, #0d0d14 0%, #010103 100%);
+            bottom: 0; width: 100%; height: 50px;
+            background: linear-gradient(180deg, #0c0c14 0%, #010103 100%);
             border-top: 1px solid var(--border-line);
         }
 
         .parcel-box {
             position: relative;
-            width: 85px;
-            height: 58px;
-            background: #242433;
-            border: 1px solid rgba(255,255,255,0.25);
+            width: 85px; height: 58px;
+            background: #222230;
+            border: 1px solid rgba(255,255,255,0.3);
             box-shadow: 0 12px 30px rgba(0,0,0,0.95);
             transform: perspective(300px) rotateX(15deg) rotateY(-10deg);
             z-index: 2;
@@ -353,8 +342,7 @@
         .parcel-box::before {
             content: '';
             position: absolute;
-            top: 0; left: 50%;
-            width: 2px; height: 100%;
+            top: 0; left: 50%; width: 2px; height: 100%;
             background: rgba(255,255,255,0.2);
         }
 
@@ -368,16 +356,13 @@
             z-index: 3;
         }
 
-        /* Realistic AI Bounding Box Tracker */
         .ai-bounding {
             position: absolute;
-            top: 30px;
-            left: 50%;
+            top: 28px; left: 50%;
             transform: translateX(-50%);
-            width: 120px;
-            height: 95px;
+            width: 125px; height: 98px;
             border: 1px dashed rgba(255,255,255,0.7);
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.02);
             z-index: 5;
             pointer-events: none;
             display: flex;
@@ -388,13 +373,13 @@
         }
         .ai-bounding.alert-mode {
             border-color: var(--alert-red);
-            background: rgba(255, 59, 59, 0.08);
+            background: rgba(255, 59, 59, 0.1);
             animation: pulseBox 0.5s infinite alternate;
         }
 
         @keyframes pulseBox {
-            from { border-color: rgba(255,59,59,0.4); }
-            to { border-color: #ff3b3b; box-shadow: 0 0 15px rgba(255,59,59,0.5) inset; }
+            from { border-color: rgba(255,59,59,0.5); }
+            to { border-color: #ff3b3b; box-shadow: 0 0 18px rgba(255,59,59,0.6) inset; }
         }
 
         .ai-tag-txt {
@@ -407,10 +392,7 @@
             border: 1px solid var(--border-line);
             letter-spacing: 0.5px;
         }
-        .ai-bounding.alert-mode .ai-tag-txt {
-            background: var(--alert-red);
-            color: #fff;
-        }
+        .ai-bounding.alert-mode .ai-tag-txt { background: var(--alert-red); color: #fff; }
 
         .cam-hud-overlay {
             position: absolute;
@@ -424,7 +406,7 @@
             pointer-events: none;
         }
 
-        /* Telemetry Sensor Grid */
+        /* Grid Metrics */
         .sensor-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -438,8 +420,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
-            overflow: hidden;
         }
 
         .sensor-card-mob label {
@@ -465,7 +445,7 @@
             font-family: monospace;
         }
 
-        /* Action Control Hub */
+        /* Control Hub */
         .control-hub {
             background: var(--panel-glass);
             border: 1px solid var(--border-line);
@@ -509,7 +489,7 @@
             background: var(--accent-white);
             color: var(--accent-dark);
             border-color: var(--accent-white);
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+            box-shadow: 0 0 15px rgba(255,255,255,0.25);
         }
 
         .interactive-btn.danger {
@@ -517,12 +497,12 @@
             color: #ff6b6b;
         }
         .interactive-btn.danger:hover {
-            background: #ff3b3b;
+            background: var(--alert-red);
             color: #fff;
-            box-shadow: 0 0 20px rgba(255,59,59,0.5);
+            box-shadow: 0 0 20px rgba(255,59,59,0.6);
         }
 
-        /* Activity Timeline */
+        /* Timeline Logs */
         .activity-timeline {
             background: var(--panel-glass);
             border: 1px solid var(--border-line);
@@ -571,7 +551,7 @@
             color: var(--silver-muted);
         }
 
-        /* Generic Views Styling */
+        /* Generic Views Cards */
         .content-card {
             background: var(--panel-glass);
             border: 1px solid var(--border-line);
@@ -594,18 +574,29 @@
             line-height: 1.5;
         }
 
-        /* Floating Bottom Dock Navigation */
+        /* Toggle Switches */
+        .setting-toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-line);
+            padding: 10px 12px;
+            font-size: 10px;
+        }
+
+        /* Floating Bottom Dock Navigation (6 Tabs) */
         .bottom-dock {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 10, 15, 0.92);
-            backdrop-filter: blur(16px);
+            background: rgba(8, 8, 14, 0.94);
+            backdrop-filter: blur(18px);
             border-top: 1px solid var(--border-line);
             height: 72px;
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 0 10px;
+            padding: 0 4px;
             z-index: 100;
         }
 
@@ -613,25 +604,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             background: none;
             border: none;
             cursor: pointer;
             color: var(--silver-muted);
             transition: color 0.2s;
-            padding: 6px 12px;
+            padding: 4px 6px;
         }
 
         .dock-item svg {
-            width: 18px; height: 18px;
+            width: 17px; height: 17px;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
         }
 
         .dock-item span {
-            font-size: 7px;
-            letter-spacing: 1px;
+            font-size: 6.5px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
             font-weight: 600;
         }
@@ -662,10 +653,10 @@
             </div>
         </header>
 
-        <!-- Scrollable Content Views -->
+        <!-- Scrollable Content Views (6 Tabs) -->
         <div class="app-body">
 
-            <!-- VIEW 1: HOME DASHBOARD -->
+            <!-- TAB 1: DASHBOARD -->
             <div id="view-home" class="view-panel active">
                 <div class="hero-banner" id="hero-banner-box">
                     <div class="hero-text">
@@ -723,56 +714,94 @@
                 <div class="activity-timeline">
                     <div class="timeline-title">Recent System Events</div>
                     <div class="log-row">
-                        <div class="log-info">
-                            <div class="log-dot"></div>
-                            <span>Parcel secured in drop zone</span>
-                        </div>
+                        <div class="log-info"><div class="log-dot"></div><span>Parcel secured in drop zone</span></div>
                         <span class="log-time">00:18</span>
                     </div>
                     <div class="log-row">
-                        <div class="log-info">
-                            <div class="log-dot"></div>
-                            <span>ESP32 hardware booted & armed</span>
-                        </div>
+                        <div class="log-info"><div class="log-dot"></div><span>ESP32 hardware booted & armed</span></div>
                         <span class="log-time">00:00</span>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 2: TELEMETRY -->
+            <!-- TAB 2: AI VISION -->
+            <div id="view-vision" class="view-panel">
+                <div class="content-card">
+                    <h3>AI Object Recognition Suite</h3>
+                    <p>Powered by Edge-AI neural network running on ESP32-CAM module.</p>
+                    <div class="sensor-grid" style="margin-top: 4px;">
+                        <div class="sensor-card-mob"><label>Model Engine</label><div class="metric-val">YOLOv8-Nano</div><div class="metric-sub">Quantized INT8</div></div>
+                        <div class="sensor-card-mob"><label>Inference Time</label><div class="metric-val">42 ms</div><div class="metric-sub">24.5 FPS</div></div>
+                        <div class="sensor-card-mob"><label>Confidence</label><div class="metric-val">98.9%</div><div class="metric-sub">High Precision</div></div>
+                        <div class="sensor-card-mob"><label>Target Class</label><div class="metric-val">Cardboard Box</div><div class="metric-sub">Class ID #04</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: TELEMETRY -->
             <div id="view-telemetry" class="view-panel">
                 <div class="content-card">
-                    <h3>ESP32 Live Pin Telemetry</h3>
-                    <p>Direct register reads and pin state monitoring over MQTT protocol.</p>
+                    <h3>ESP32 Hardware Telemetry</h3>
+                    <p>Live pin states and micro-controller diagnostic registers.</p>
                     <div class="sensor-grid" style="margin-top: 4px;">
-                        <div class="sensor-card-mob"><label>TRIG Pin (IO5)</label><div class="metric-val">HIGH</div><div class="metric-sub">10µs Pulse</div></div>
-                        <div class="sensor-card-mob"><label>ECHO Pin (IO18)</label><div class="metric-val">820 µs</div><div class="metric-sub">Echo Return</div></div>
-                        <div class="sensor-card-mob"><label>PIR Sensor (IO19)</label><div class="metric-val">0.02 V</div><div class="metric-sub">Low State</div></div>
-                        <div class="sensor-card-mob"><label>Buzzer (IO21)</label><div class="metric-val" id="telemetry-buzzer-state">STANDBY</div><div class="metric-sub">Relay Open</div></div>
+                        <div class="sensor-card-mob"><label>TRIG Pin (IO5)</label><div class="metric-val">HIGH</div><div class="metric-sub">10µs Pulse Active</div></div>
+                        <div class="sensor-card-mob"><label>ECHO Pin (IO18)</label><div class="metric-val">820 µs</div><div class="metric-sub">Return Echo Valid</div></div>
+                        <div class="sensor-card-mob"><label>PIR Sensor (IO19)</label><div class="metric-val">0.02 V</div><div class="metric-sub">Normal Low State</div></div>
+                        <div class="sensor-card-mob"><label>Buzzer Relay (IO21)</label><div class="metric-val" id="telemetry-buzzer-state">STANDBY</div><div class="metric-sub">Relay Open</div></div>
+                        <div class="sensor-card-mob"><label>MCU Temperature</label><div class="metric-val">41.2 °C</div><div class="metric-sub">Optimal Range</div></div>
+                        <div class="sensor-card-mob"><label>Wi-Fi RSSI</label><div class="metric-val">-64 dBm</div><div class="metric-sub">Signal Strong</div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 3: ALERTS -->
-            <div id="view-alerts" class="view-panel">
+            <!-- TAB 4: HISTORY -->
+            <div id="view-history" class="view-panel">
                 <div class="content-card">
-                    <h3>Anti-Theft Warning Logs</h3>
-                    <p>Tracks unauthorized tampering or removal attempts during non-delivery hours.</p>
-                    <div class="log-row" style="border-left: 3px solid var(--accent-white);">
-                        <div class="log-info"><div class="log-dot"></div><span>No security intrusions recorded today</span></div>
-                        <span class="log-time">SECURE</span>
+                    <h3>Delivery Activity Logs</h3>
+                    <p>Chronological record of all registered drop-offs and events.</p>
+                    <div class="activity-timeline" style="background:transparent; padding:0; border:none;">
+                        <div class="log-row"><div class="log-info"><div class="log-dot"></div><span>PosLaju Courier Drop</span></div><span class="log-time">Today, 14:20</span></div>
+                        <div class="log-row"><div class="log-info"><div class="log-dot"></div><span>J&T Express Drop</span></div><span class="log-time">Yesterday, 11:05</span></div>
+                        <div class="log-row"><div class="log-info"><div class="log-dot"></div><span>Shopee Xpress Drop</span></div><span class="log-time">Oct 23, 09:40</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW 4: SETTINGS -->
+            <!-- TAB 5: SECURITY & SIREN -->
+            <div id="view-security" class="view-panel">
+                <div class="content-card">
+                    <h3>Anti-Theft Security Guard</h3>
+                    <p>Advanced perimeter protection and automated panic response settings.</p>
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+                        <div class="setting-toggle-row">
+                            <span>Night Guard Mode</span>
+                            <span style="color:var(--success-green); font-weight:700;">ENABLED</span>
+                        </div>
+                        <div class="setting-toggle-row">
+                            <span>Telegram Instant Alert</span>
+                            <span style="color:var(--success-green); font-weight:700;">ACTIVE</span>
+                        </div>
+                        <div class="setting-toggle-row">
+                            <span>Auto Siren Trigger (10s)</span>
+                            <span style="color:var(--success-green); font-weight:700;">ARMED</span>
+                        </div>
+                        <button class="interactive-btn danger" style="margin-top:10px; padding:14px;" onclick="triggerAlarmTest()">EMERGENCY PANIC SIREN</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: SETTINGS -->
             <div id="view-settings" class="view-panel">
                 <div class="content-card">
-                    <h3>System Parameters</h3>
-                    <p>Calibrate detection distance threshold and buzzer duration.</p>
+                    <h3>System Configuration</h3>
+                    <p>Calibrate ultrasonic sensor distance threshold and firmware settings.</p>
                     <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
                         <label style="font-size:9px; color:var(--silver-muted); text-transform:uppercase; letter-spacing:1px;">Threshold Distance: <span id="thresh-display" style="color:#fff;">20</span> cm</label>
                         <input type="range" min="5" max="50" value="20" oninput="playClickSound(); document.getElementById('thresh-display').innerText=this.value" style="accent-color:#fff;">
+                        <div class="setting-toggle-row" style="margin-top:4px;">
+                            <span>OTA Firmware Update</span>
+                            <span style="font-family:monospace; color:var(--silver-muted);">v1.0.4</span>
+                        </div>
                         <button class="interactive-btn highlight" style="margin-top:8px;" onclick="playClickSound(); alert('Configuration successfully flashed to ESP32 EEPROM!')">Flash to ESP32</button>
                     </div>
                 </div>
@@ -780,19 +809,27 @@
 
         </div>
 
-        <!-- Floating Bottom Dock Navigation -->
+        <!-- Floating Bottom Dock Navigation (6 Tabs) -->
         <nav class="bottom-dock">
             <button class="dock-item active" onclick="switchAppTab('home', this)">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <span>Dashboard</span>
+                <span>Home</span>
+            </button>
+            <button class="dock-item" onclick="switchAppTab('vision', this)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>AI Vision</span>
             </button>
             <button class="dock-item" onclick="switchAppTab('telemetry', this)">
                 <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                 <span>Sensors</span>
             </button>
-            <button class="dock-item" onclick="switchAppTab('alerts', this)">
-                <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                <span>Alerts</span>
+            <button class="dock-item" onclick="switchAppTab('history', this)">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span>Logs</span>
+            </button>
+            <button class="dock-item" onclick="switchAppTab('security', this)">
+                <svg viewBox="0 0 240 240"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Security</span>
             </button>
             <button class="dock-item" onclick="switchAppTab('settings', this)">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -802,7 +839,7 @@
     </div>
 
     <script>
-        // Web Audio API Sound Synthesizer (Tiada fail audio luar diperlukan)
+        // Web Audio API Sound Synthesizer
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
@@ -810,7 +847,6 @@
             }
         }
 
-        // Bunyi Klik Elektronik Moden untuk setiap Butang
         function playClickSound() {
             try {
                 initAudio();
@@ -828,7 +864,6 @@
             } catch (e) {}
         }
 
-        // Bunyi Siren Amaran Buzzer Sebenar (Anti-Theft Alarm)
         let alarmInterval = null;
         function playAlarmSound(start) {
             if (start) {
@@ -858,7 +893,7 @@
             }
         }
 
-        // Tab Navigation dengan Bunyi Klik
+        // Tab Navigation
         function switchAppTab(tabId, btnElement) {
             playClickSound();
             document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
@@ -876,7 +911,7 @@
             if(clockEl) clockEl.innerText = timeString;
         }, 1000);
 
-        // Interactive Presentation Logic with AI Camera Simulation & Sound
+        // Interactive Presentation Logic
         let hasParcel = true;
         function toggleParcelState() {
             playClickSound();
@@ -919,7 +954,6 @@
             }
         }
 
-        // Butang Ujian Alarm / Panik Buzzer
         let isAlarming = false;
         function triggerAlarmTest() {
             playClickSound();
