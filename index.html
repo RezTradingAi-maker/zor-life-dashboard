@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZOR SMART PARCEL DETECTOR | Cinematic Enterprise Suite</title>
+    <title>ZOR SMART PARCEL DETECTOR | Next-Gen IoT Suite</title>
     <style>
         :root {
-            --bg-base: #010103;
-            --bg-surface: #06060a;
-            --panel-glass: rgba(12, 12, 20, 0.85);
-            --border-line: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(255, 255, 255, 0.3);
-            --silver-light: #f2f2f8;
-            --silver-muted: #7d7d94;
+            --bg-obsidian: #020205;
+            --bg-panel: #07070c;
+            --glass-card: rgba(14, 14, 22, 0.82);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-bright: rgba(255, 255, 255, 0.35);
+            --silver-text: #f0f0f8;
+            --silver-muted: #787890;
             --accent-white: #ffffff;
             --accent-dark: #000000;
-            --alert-red: #ff3333;
-            --success-green: #00ff88;
+            --alert-crimson: #ff2a2a;
+            --success-neon: #00ff88;
         }
 
         * {
@@ -29,8 +29,8 @@
         }
 
         body {
-            background-color: var(--bg-base);
-            color: var(--silver-light);
+            background-color: var(--bg-obsidian);
+            color: var(--silver-text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -38,119 +38,119 @@
             padding: 0;
             overflow: hidden;
             background-image: 
-                radial-gradient(circle at 50% 10%, rgba(35, 35, 60, 0.4) 0%, transparent 60%),
-                radial-gradient(circle at 90% 90%, rgba(15, 15, 30, 0.7) 0%, transparent 50%);
+                radial-gradient(circle at 50% 0%, rgba(40, 40, 70, 0.35) 0%, transparent 60%),
+                radial-gradient(circle at 10% 90%, rgba(10, 10, 25, 0.7) 0%, transparent 50%);
         }
 
-        /* --- CINEMATIC SPLASH SCREEN --- */
+        /* --- CINEMATIC BOOT SPLASH SCREEN --- */
         #splash-screen {
             position: fixed;
             inset: 0;
-            background-color: #020204;
+            background-color: #010103;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 22px;
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
         }
 
-        .splash-logo-wrapper {
+        .splash-shield-box {
             display: flex;
             align-items: center;
             gap: 16px;
-            transform: translateX(-120px);
+            transform: translateX(-140px);
             opacity: 0;
-            animation: slideInLogo 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+            animation: slideInShield 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
         }
 
-        @keyframes slideInLogo {
+        @keyframes slideInShield {
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .splash-shield {
-            width: 54px;
-            height: 60px;
-            background: linear-gradient(135deg, #323246 0%, #0d0d14 100%);
-            border: 1px solid var(--border-glow);
+        .shield-icon {
+            width: 58px;
+            height: 64px;
+            background: linear-gradient(135deg, #35354d 0%, #0a0a0f 100%);
+            border: 1px solid var(--border-bright);
             display: flex;
             align-items: center;
             justify-content: center;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            box-shadow: 0 0 35px rgba(255,255,255,0.25);
         }
 
-        .splash-glyph {
+        .shield-glyph {
             color: #fff;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 900;
             letter-spacing: -1px;
         }
 
-        .splash-text h2 {
-            font-size: 18px;
+        .shield-title h2 {
+            font-size: 19px;
             font-weight: 800;
             letter-spacing: 3px;
             color: #fff;
         }
 
-        .splash-text span {
-            font-size: 9px;
+        .shield-title span {
+            font-size: 8px;
             letter-spacing: 3px;
             color: var(--silver-muted);
             text-transform: uppercase;
         }
 
-        .splash-loader-bar {
-            width: 180px;
+        .progress-track {
+            width: 200px;
             height: 2px;
             background: rgba(255,255,255,0.1);
             border-radius: 2px;
             overflow: hidden;
-            margin-top: 10px;
+            margin-top: 12px;
             opacity: 0;
-            animation: fadeInBar 0.5s ease forwards 0.8s;
+            animation: fadeInTrack 0.4s ease forwards 0.8s;
         }
 
-        @keyframes fadeInBar { to { opacity: 1; } }
+        @keyframes fadeInTrack { to { opacity: 1; } }
 
-        .splash-loader-progress {
+        .progress-fill {
             width: 0%;
             height: 100%;
             background: #fff;
-            box-shadow: 0 0 10px #fff;
-            animation: loadProgress 1.6s cubic-bezier(0.4, 0, 0.2, 1) forwards 1s;
+            box-shadow: 0 0 12px #fff;
+            animation: fillProgress 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 1s;
         }
 
-        @keyframes loadProgress { to { width: 100%; } }
+        @keyframes fillProgress { to { width: 100%; } }
 
 
-        /* --- APP CONTAINER FRAME --- */
+        /* --- MAIN APP FRAME --- */
         .app-frame {
             width: 100%;
             max-width: 430px;
             height: 100vh;
             max-height: 920px;
-            background-color: var(--bg-surface);
+            background-color: var(--bg-panel);
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 40px 90px rgba(0,0,0,0.95), 0 0 0 1px var(--border-line);
+            box-shadow: 0 45px 100px rgba(0,0,0,0.95), 0 0 0 1px var(--border-subtle);
             overflow: hidden;
             opacity: 0;
             transform: scale(0.98);
-            animation: appFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 2.4s;
+            animation: appScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 2.3s;
         }
 
-        @keyframes appFadeIn {
+        @keyframes appScaleIn {
             to { opacity: 1; transform: scale(1); }
         }
 
         @media (min-width: 431px) {
             .app-frame {
                 border-radius: 46px;
-                border: 6px solid #181822;
+                border: 6px solid #1c1c28;
                 height: 880px;
                 margin: 20px 0;
             }
@@ -158,9 +158,9 @@
 
         /* Top Header */
         .app-header {
-            background: rgba(6, 6, 10, 0.9);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid var(--border-line);
+            background: rgba(7, 7, 12, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
             padding: 16px 20px;
             display: flex;
             align-items: center;
@@ -174,34 +174,33 @@
             gap: 12px;
         }
 
-        .z-shield-logo {
+        .header-shield {
             width: 36px;
             height: 40px;
-            position: relative;
-            background: linear-gradient(135deg, #2c2c3c 0%, #0c0c10 100%);
-            border: 1px solid var(--border-glow);
+            background: linear-gradient(135deg, #2e2e42 0%, #0a0a0e 100%);
+            border: 1px solid var(--border-bright);
             display: flex;
             align-items: center;
             justify-content: center;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 4px 18px rgba(0,0,0,0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
 
-        .z-glyph {
+        .header-glyph {
             color: var(--accent-white);
             font-weight: 900;
             font-size: 17px;
             letter-spacing: -1px;
         }
 
-        .brand-title h1 {
+        .header-title h1 {
             font-size: 13px;
             font-weight: 700;
             letter-spacing: 1.5px;
             color: var(--accent-white);
         }
 
-        .brand-title span {
+        .header-title span {
             font-size: 8px;
             letter-spacing: 2px;
             color: var(--silver-muted);
@@ -213,29 +212,29 @@
             align-items: center;
             gap: 6px;
             background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-line);
+            border: 1px solid var(--border-subtle);
             padding: 5px 10px;
             font-size: 9px;
             letter-spacing: 1px;
-            color: var(--silver-light);
+            color: var(--silver-text);
         }
 
         .pulse-light {
             width: 6px;
             height: 6px;
-            background-color: var(--success-green);
+            background-color: var(--success-neon);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--success-green);
+            box-shadow: 0 0 8px var(--success-neon);
             animation: pulseGlow 2s infinite;
         }
 
         @keyframes pulseGlow {
             0% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px var(--success-green); }
+            50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px var(--success-neon); }
             100% { opacity: 0.4; transform: scale(0.9); }
         }
 
-        /* App Body Area */
+        /* App Scrollable Area */
         .app-body {
             flex: 1;
             overflow-y: auto;
@@ -252,22 +251,22 @@
             display: none;
             flex-direction: column;
             gap: 16px;
-            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeInView 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .view-panel.active {
             display: flex;
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeInView {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Hero Status Banner */
+        /* Hero Banner */
         .hero-banner {
-            background: linear-gradient(135deg, rgba(20, 20, 32, 0.85) 0%, rgba(6, 6, 12, 0.95) 100%);
-            border: 1px solid var(--border-glow);
+            background: linear-gradient(135deg, rgba(22, 22, 36, 0.85) 0%, rgba(6, 6, 12, 0.98) 100%);
+            border: 1px solid var(--border-bright);
             padding: 18px;
             display: flex;
             align-items: center;
@@ -287,15 +286,15 @@
         }
 
         .hero-banner.alarm-active {
-            border-color: var(--alert-red);
-            background: linear-gradient(135deg, rgba(55, 10, 10, 0.9) 0%, rgba(15, 3, 3, 0.95) 100%);
+            border-color: var(--alert-crimson);
+            background: linear-gradient(135deg, rgba(60, 10, 10, 0.9) 0%, rgba(15, 3, 3, 0.98) 100%);
             animation: flashAlarmBg 0.5s infinite alternate;
         }
-        .hero-banner.alarm-active::before { background: var(--alert-red); }
+        .hero-banner.alarm-active::before { background: var(--alert-crimson); }
 
         @keyframes flashAlarmBg {
-            from { box-shadow: 0 0 15px rgba(255, 51, 51, 0.2); }
-            to { box-shadow: 0 0 40px rgba(255, 51, 51, 0.7); }
+            from { box-shadow: 0 0 15px rgba(255, 42, 42, 0.2); }
+            to { box-shadow: 0 0 40px rgba(255, 42, 42, 0.7); }
         }
 
         .hero-text h3 {
@@ -324,9 +323,9 @@
             transition: all 0.3s;
         }
         .hero-pill.alarm-pill {
-            background: var(--alert-red);
+            background: var(--alert-crimson);
             color: #fff;
-            box-shadow: 0 0 20px rgba(255, 51, 51, 0.9);
+            box-shadow: 0 0 20px rgba(255, 42, 42, 0.9);
             animation: pulseAlarm 0.4s infinite;
         }
 
@@ -336,10 +335,10 @@
             100% { transform: scale(1); }
         }
 
-        /* Camera Viewport with AI Tracker */
+        /* Camera Viewport with Advanced Sonar Radar */
         .camera-card {
-            background: var(--panel-glass);
-            border: 1px solid var(--border-line);
+            background: var(--glass-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 6px;
             overflow: hidden;
             display: flex;
@@ -349,7 +348,7 @@
 
         .card-top-bar {
             padding: 10px 14px;
-            border-bottom: 1px solid var(--border-line);
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -365,7 +364,7 @@
             color: var(--accent-white);
             padding: 2px 6px;
             font-size: 7px;
-            border: 1px solid var(--border-line);
+            border: 1px solid var(--border-subtle);
             letter-spacing: 1px;
             display: flex;
             align-items: center;
@@ -375,12 +374,28 @@
         .camera-viewport {
             position: relative;
             width: 100%;
-            height: 215px;
-            background: #010103;
+            height: 220px;
+            background: #010104;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+        }
+
+        /* Sonar Radar Wave Animation */
+        .sonar-wave {
+            position: absolute;
+            width: 180px; height: 180px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            animation: sonarExpand 3s linear infinite;
+            pointer-events: none;
+        }
+        .sonar-wave:nth-child(2) { animation-delay: 1.5s; }
+
+        @keyframes sonarExpand {
+            0% { width: 20px; height: 20px; opacity: 0.8; }
+            100% { width: 320px; height: 320px; opacity: 0; }
         }
 
         .scanner-beam {
@@ -394,15 +409,15 @@
         }
 
         @keyframes scanBeam {
-            0% { top: 12%; opacity: 0.2; }
+            0% { top: 10%; opacity: 0.2; }
             50% { opacity: 1; }
-            100% { top: 88%; opacity: 0.2; }
+            100% { top: 90%; opacity: 0.2; }
         }
 
         .porch-scene {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 35%, #1a1a28 0%, #030306 90%);
+            background: radial-gradient(circle at 50% 35%, #1c1c2e 0%, #030307 90%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -413,15 +428,15 @@
         .ground-floor {
             position: absolute;
             bottom: 0; width: 100%; height: 50px;
-            background: linear-gradient(180deg, #0c0c14 0%, #010103 100%);
-            border-top: 1px solid var(--border-line);
+            background: linear-gradient(180deg, #0d0d17 0%, #010104 100%);
+            border-top: 1px solid var(--border-subtle);
         }
 
         .parcel-box {
             position: relative;
-            width: 85px; height: 58px;
-            background: #222230;
-            border: 1px solid rgba(255,255,255,0.3);
+            width: 88px; height: 60px;
+            background: #252536;
+            border: 1px solid rgba(255,255,255,0.35);
             box-shadow: 0 12px 30px rgba(0,0,0,0.95);
             transform: perspective(300px) rotateX(15deg) rotateY(-10deg);
             z-index: 2;
@@ -435,7 +450,7 @@
             content: '';
             position: absolute;
             top: 0; left: 50%; width: 2px; height: 100%;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
         }
 
         .box-label-badge {
@@ -450,10 +465,10 @@
 
         .ai-bounding {
             position: absolute;
-            top: 28px; left: 50%;
+            top: 26px; left: 50%;
             transform: translateX(-50%);
-            width: 125px; height: 98px;
-            border: 1px dashed rgba(255,255,255,0.7);
+            width: 130px; height: 102px;
+            border: 1px dashed rgba(255,255,255,0.75);
             background: rgba(255,255,255,0.02);
             z-index: 5;
             pointer-events: none;
@@ -464,27 +479,27 @@
             transition: all 0.4s ease;
         }
         .ai-bounding.alert-mode {
-            border-color: var(--alert-red);
-            background: rgba(255, 51, 51, 0.1);
+            border-color: var(--alert-crimson);
+            background: rgba(255, 42, 42, 0.12);
             animation: pulseBox 0.5s infinite alternate;
         }
 
         @keyframes pulseBox {
-            from { border-color: rgba(255,51,51,0.5); }
-            to { border-color: #ff3333; box-shadow: 0 0 18px rgba(255,51,51,0.6) inset; }
+            from { border-color: rgba(255,42,42,0.5); }
+            to { border-color: var(--alert-crimson); box-shadow: 0 0 20px rgba(255,42,42,0.7) inset; }
         }
 
         .ai-tag-txt {
             font-family: monospace;
             font-size: 7px;
             color: var(--accent-white);
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.88);
             padding: 1px 4px;
             align-self: flex-start;
-            border: 1px solid var(--border-line);
+            border: 1px solid var(--border-subtle);
             letter-spacing: 0.5px;
         }
-        .ai-bounding.alert-mode .ai-tag-txt { background: var(--alert-red); color: #fff; }
+        .ai-bounding.alert-mode .ai-tag-txt { background: var(--alert-crimson); color: #fff; }
 
         .cam-hud-overlay {
             position: absolute;
@@ -506,8 +521,8 @@
         }
 
         .sensor-card-mob {
-            background: var(--panel-glass);
-            border: 1px solid var(--border-line);
+            background: var(--glass-card);
+            border: 1px solid var(--border-subtle);
             padding: 14px;
             display: flex;
             flex-direction: column;
@@ -540,8 +555,8 @@
 
         /* Control Hub */
         .control-hub {
-            background: var(--panel-glass);
-            border: 1px solid var(--border-line);
+            background: var(--glass-card);
+            border: 1px solid var(--border-subtle);
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -564,8 +579,8 @@
 
         .interactive-btn {
             background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-line);
-            color: var(--silver-light);
+            border: 1px solid var(--border-subtle);
+            color: var(--silver-text);
             padding: 11px;
             font-size: 9px;
             font-weight: 700;
@@ -583,23 +598,23 @@
             background: var(--accent-white);
             color: var(--accent-dark);
             border-color: var(--accent-white);
-            box-shadow: 0 0 15px rgba(255,255,255,0.25);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
         .interactive-btn.danger {
-            border-color: rgba(255, 51, 51, 0.4);
+            border-color: rgba(255, 42, 42, 0.4);
             color: #ff6666;
         }
         .interactive-btn.danger:hover {
-            background: var(--alert-red);
+            background: var(--alert-crimson);
             color: #fff;
-            box-shadow: 0 0 20px rgba(255,51,51,0.6);
+            box-shadow: 0 0 20px rgba(255,42,42,0.6);
         }
 
         /* Timeline Logs */
         .activity-timeline {
-            background: var(--panel-glass);
-            border: 1px solid var(--border-line);
+            background: var(--glass-card);
+            border: 1px solid var(--border-subtle);
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -613,7 +628,7 @@
             letter-spacing: 1.5px;
             color: var(--silver-muted);
             text-transform: uppercase;
-            border-bottom: 1px solid var(--border-line);
+            border-bottom: 1px solid var(--border-subtle);
             padding-bottom: 6px;
         }
 
@@ -621,8 +636,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-line);
+            background: rgba(0,0,0,0.35);
+            border: 1px solid var(--border-subtle);
             padding: 8px 12px;
             font-size: 10px;
         }
@@ -631,7 +646,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: var(--silver-light);
+            color: var(--silver-text);
         }
 
         .log-dot {
@@ -648,8 +663,8 @@
 
         /* Generic Views Cards */
         .content-card {
-            background: var(--panel-glass);
-            border: 1px solid var(--border-line);
+            background: var(--glass-card);
+            border: 1px solid var(--border-subtle);
             padding: 18px;
             display: flex;
             flex-direction: column;
@@ -670,13 +685,12 @@
             line-height: 1.5;
         }
 
-        /* Toggle Switches */
         .setting-toggle-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.25);
-            border: 1px solid var(--border-line);
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-subtle);
             padding: 10px 12px;
             font-size: 10px;
         }
@@ -685,9 +699,9 @@
         .bottom-dock {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            background: rgba(6, 6, 10, 0.94);
-            backdrop-filter: blur(18px);
-            border-top: 1px solid var(--border-line);
+            background: rgba(7, 7, 12, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
             height: 72px;
             display: flex;
             align-items: center;
@@ -725,25 +739,25 @@
 
         .dock-item.active {
             color: var(--accent-white);
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- CINEMATIC SPLASH SCREEN (LOGO ANIMATION) -->
+    <!-- CINEMATIC BOOT SPLASH SCREEN -->
     <div id="splash-screen">
-        <div class="splash-logo-wrapper">
-            <div class="splash-shield">
-                <div class="splash-glyph">Z</div>
+        <div class="splash-shield-box">
+            <div class="shield-icon">
+                <div class="shield-glyph">Z</div>
             </div>
-            <div class="splash-text">
+            <div class="shield-title">
                 <h2>ZOR SECURITY</h2>
-                <span>ESP32 OS BOOT SEQUENCE</span>
+                <span>ESP32 OS INITIALIZING</span>
             </div>
         </div>
-        <div class="splash-loader-bar">
-            <div class="splash-loader-progress"></div>
+        <div class="progress-track">
+            <div class="progress-fill"></div>
         </div>
     </div>
 
@@ -752,10 +766,10 @@
         <!-- Top App Header -->
         <header class="app-header">
             <div class="brand-cluster">
-                <div class="z-shield-logo">
-                    <div class="z-glyph">Z</div>
+                <div class="header-shield">
+                    <div class="header-glyph">Z</div>
                 </div>
-                <div class="brand-title">
+                <div class="header-title">
                     <h1>ZOR SECURITY</h1>
                     <span>ESP32 IOT CORE</span>
                 </div>
@@ -785,6 +799,8 @@
                         <div class="tag-live">AI TRACKING</div>
                     </div>
                     <div class="camera-viewport">
+                        <div class="sonar-wave"></div>
+                        <div class="sonar-wave"></div>
                         <div class="scanner-beam"></div>
                         <div class="porch-scene">
                             <div class="ground-floor"></div>
@@ -888,15 +904,15 @@
                     <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
                         <div class="setting-toggle-row">
                             <span>Night Guard Mode</span>
-                            <span style="color:var(--success-green); font-weight:700;">ENABLED</span>
+                            <span style="color:var(--success-neon); font-weight:700;">ENABLED</span>
                         </div>
                         <div class="setting-toggle-row">
                             <span>Telegram Instant Alert</span>
-                            <span style="color:var(--success-green); font-weight:700;">ACTIVE</span>
+                            <span style="color:var(--success-neon); font-weight:700;">ACTIVE</span>
                         </div>
                         <div class="setting-toggle-row">
                             <span>Auto Siren Trigger (10s)</span>
-                            <span style="color:var(--success-green); font-weight:700;">ARMED</span>
+                            <span style="color:var(--success-neon); font-weight:700;">ARMED</span>
                         </div>
                         <button class="interactive-btn danger" style="margin-top:10px; padding:14px;" onclick="triggerAlarmTest()">EMERGENCY PANIC SIREN</button>
                     </div>
@@ -960,7 +976,7 @@
                     splash.style.opacity = '0';
                     setTimeout(() => splash.remove(), 800);
                 }
-            }, 2300);
+            }, 2200);
         });
 
         // Web Audio API Sound Synthesizer
@@ -1069,7 +1085,7 @@
                 mainTitle.innerText = "SYSTEM PROTECTED";
                 subDesc.innerText = "Ultrasonic & PIR defense grid active";
                 statusPill.innerText = "SECURE";
-                bannerBox.style.borderColor = "var(--border-glow)";
+                bannerBox.style.borderColor = "var(--border-bright)";
                 parcelBox.style.opacity = "1";
                 aiBox.style.opacity = "1";
                 aiTag.innerText = "PARCEL DETECTED // 99.4%";
