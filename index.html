@@ -1,1136 +1,500 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZOR SMART PARCEL DETECTOR | Next-Gen IoT Suite</title>
-    <style>
-        :root {
-            --bg-obsidian: #020205;
-            --bg-panel: #07070c;
-            --glass-card: rgba(14, 14, 22, 0.82);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-bright: rgba(255, 255, 255, 0.35);
-            --silver-text: #f0f0f8;
-            --silver-muted: #787890;
-            --accent-white: #ffffff;
-            --accent-dark: #000000;
-            --alert-crimson: #ff2a2a;
-            --success-neon: #00ff88;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-obsidian);
-            color: var(--silver-text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-            overflow: hidden;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(40, 40, 70, 0.35) 0%, transparent 60%),
-                radial-gradient(circle at 10% 90%, rgba(10, 10, 25, 0.7) 0%, transparent 50%);
-        }
-
-        /* --- CINEMATIC BOOT SPLASH SCREEN --- */
-        #splash-screen {
-            position: fixed;
-            inset: 0;
-            background-color: #010103;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 22px;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
-        }
-
-        .splash-shield-box {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transform: translateX(-140px);
-            opacity: 0;
-            animation: slideInShield 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
-        }
-
-        @keyframes slideInShield {
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .shield-icon {
-            width: 58px;
-            height: 64px;
-            background: linear-gradient(135deg, #35354d 0%, #0a0a0f 100%);
-            border: 1px solid var(--border-bright);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 0 35px rgba(255,255,255,0.25);
-        }
-
-        .shield-glyph {
-            color: #fff;
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: -1px;
-        }
-
-        .shield-title h2 {
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            color: #fff;
-        }
-
-        .shield-title span {
-            font-size: 8px;
-            letter-spacing: 3px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-        }
-
-        .progress-track {
-            width: 200px;
-            height: 2px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-top: 12px;
-            opacity: 0;
-            animation: fadeInTrack 0.4s ease forwards 0.8s;
-        }
-
-        @keyframes fadeInTrack { to { opacity: 1; } }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: #fff;
-            box-shadow: 0 0 12px #fff;
-            animation: fillProgress 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 1s;
-        }
-
-        @keyframes fillProgress { to { width: 100%; } }
-
-
-        /* --- MAIN APP FRAME --- */
-        .app-frame {
-            width: 100%;
-            max-width: 430px;
-            height: 100vh;
-            max-height: 920px;
-            background-color: var(--bg-panel);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 45px 100px rgba(0,0,0,0.95), 0 0 0 1px var(--border-subtle);
-            overflow: hidden;
-            opacity: 0;
-            transform: scale(0.98);
-            animation: appScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 2.3s;
-        }
-
-        @keyframes appScaleIn {
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @media (min-width: 431px) {
-            .app-frame {
-                border-radius: 46px;
-                border: 6px solid #1c1c28;
-                height: 880px;
-                margin: 20px 0;
-            }
-        }
-
-        /* Top Header */
-        .app-header {
-            background: rgba(7, 7, 12, 0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-subtle);
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 20;
-        }
-
-        .brand-cluster {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-shield {
-            width: 36px;
-            height: 40px;
-            background: linear-gradient(135deg, #2e2e42 0%, #0a0a0e 100%);
-            border: 1px solid var(--border-bright);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-        }
-
-        .header-glyph {
-            color: var(--accent-white);
-            font-weight: 900;
-            font-size: 17px;
-            letter-spacing: -1px;
-        }
-
-        .header-title h1 {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--accent-white);
-        }
-
-        .header-title span {
-            font-size: 8px;
-            letter-spacing: 2px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-        }
-
-        .iot-status-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-subtle);
-            padding: 5px 10px;
-            font-size: 9px;
-            letter-spacing: 1px;
-            color: var(--silver-text);
-        }
-
-        .pulse-light {
-            width: 6px;
-            height: 6px;
-            background-color: var(--success-neon);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--success-neon);
-            animation: pulseGlow 2s infinite;
-        }
-
-        @keyframes pulseGlow {
-            0% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px var(--success-neon); }
-            100% { opacity: 0.4; transform: scale(0.9); }
-        }
-
-        /* App Scrollable Area */
-        .app-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding-bottom: 95px;
-            scrollbar-width: none;
-        }
-        .app-body::-webkit-scrollbar { display: none; }
-
-        .view-panel {
-            display: none;
-            flex-direction: column;
-            gap: 16px;
-            animation: fadeInView 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .view-panel.active {
-            display: flex;
-        }
-
-        @keyframes fadeInView {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Hero Banner */
-        .hero-banner {
-            background: linear-gradient(135deg, rgba(22, 22, 36, 0.85) 0%, rgba(6, 6, 12, 0.98) 100%);
-            border: 1px solid var(--border-bright);
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.7);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .hero-banner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 3px; height: 100%;
-            background: var(--accent-white);
-            transition: background 0.3s;
-        }
-
-        .hero-banner.alarm-active {
-            border-color: var(--alert-crimson);
-            background: linear-gradient(135deg, rgba(60, 10, 10, 0.9) 0%, rgba(15, 3, 3, 0.98) 100%);
-            animation: flashAlarmBg 0.5s infinite alternate;
-        }
-        .hero-banner.alarm-active::before { background: var(--alert-crimson); }
-
-        @keyframes flashAlarmBg {
-            from { box-shadow: 0 0 15px rgba(255, 42, 42, 0.2); }
-            to { box-shadow: 0 0 40px rgba(255, 42, 42, 0.7); }
-        }
-
-        .hero-text h3 {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--accent-white);
-        }
-
-        .hero-text p {
-            font-size: 9px;
-            color: var(--silver-muted);
-            margin-top: 3px;
-            letter-spacing: 0.5px;
-        }
-
-        .hero-pill {
-            background: var(--accent-white);
-            color: var(--accent-dark);
-            padding: 6px 14px;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
-            transition: all 0.3s;
-        }
-        .hero-pill.alarm-pill {
-            background: var(--alert-crimson);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255, 42, 42, 0.9);
-            animation: pulseAlarm 0.4s infinite;
-        }
-
-        @keyframes pulseAlarm {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-            100% { transform: scale(1); }
-        }
-
-        /* Camera Viewport with Advanced Sonar Radar */
-        .camera-card {
-            background: var(--glass-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        .card-top-bar {
-            padding: 10px 14px;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-        }
-
-        .tag-live {
-            background: rgba(255,255,255,0.1);
-            color: var(--accent-white);
-            padding: 2px 6px;
-            font-size: 7px;
-            border: 1px solid var(--border-subtle);
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .camera-viewport {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            background: #010104;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        /* Sonar Radar Wave Animation */
-        .sonar-wave {
-            position: absolute;
-            width: 180px; height: 180px;
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 50%;
-            animation: sonarExpand 3s linear infinite;
-            pointer-events: none;
-        }
-        .sonar-wave:nth-child(2) { animation-delay: 1.5s; }
-
-        @keyframes sonarExpand {
-            0% { width: 20px; height: 20px; opacity: 0.8; }
-            100% { width: 320px; height: 320px; opacity: 0; }
-        }
-
-        .scanner-beam {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 14px rgba(255,255,255,1);
-            z-index: 6;
-            pointer-events: none;
-            animation: scanBeam 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes scanBeam {
-            0% { top: 10%; opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { top: 90%; opacity: 0.2; }
-        }
-
-        .porch-scene {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 35%, #1c1c2e 0%, #030307 90%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            padding-bottom: 15px;
-        }
-
-        .ground-floor {
-            position: absolute;
-            bottom: 0; width: 100%; height: 50px;
-            background: linear-gradient(180deg, #0d0d17 0%, #010104 100%);
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .parcel-box {
-            position: relative;
-            width: 88px; height: 60px;
-            background: #252536;
-            border: 1px solid rgba(255,255,255,0.35);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.95);
-            transform: perspective(300px) rotateX(15deg) rotateY(-10deg);
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .parcel-box::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 50%; width: 2px; height: 100%;
-            background: rgba(255,255,255,0.25);
-        }
-
-        .box-label-badge {
-            background: var(--accent-white);
-            color: var(--accent-dark);
-            font-size: 7px;
-            font-weight: 800;
-            padding: 1px 5px;
-            letter-spacing: 1px;
-            z-index: 3;
-        }
-
-        .ai-bounding {
-            position: absolute;
-            top: 26px; left: 50%;
-            transform: translateX(-50%);
-            width: 130px; height: 102px;
-            border: 1px dashed rgba(255,255,255,0.75);
-            background: rgba(255,255,255,0.02);
-            z-index: 5;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 4px;
-            transition: all 0.4s ease;
-        }
-        .ai-bounding.alert-mode {
-            border-color: var(--alert-crimson);
-            background: rgba(255, 42, 42, 0.12);
-            animation: pulseBox 0.5s infinite alternate;
-        }
-
-        @keyframes pulseBox {
-            from { border-color: rgba(255,42,42,0.5); }
-            to { border-color: var(--alert-crimson); box-shadow: 0 0 20px rgba(255,42,42,0.7) inset; }
-        }
-
-        .ai-tag-txt {
-            font-family: monospace;
-            font-size: 7px;
-            color: var(--accent-white);
-            background: rgba(0,0,0,0.88);
-            padding: 1px 4px;
-            align-self: flex-start;
-            border: 1px solid var(--border-subtle);
-            letter-spacing: 0.5px;
-        }
-        .ai-bounding.alert-mode .ai-tag-txt { background: var(--alert-crimson); color: #fff; }
-
-        .cam-hud-overlay {
-            position: absolute;
-            top: 10px; left: 12px; right: 12px;
-            display: flex;
-            justify-content: space-between;
-            font-family: monospace;
-            font-size: 8px;
-            color: var(--silver-muted);
-            z-index: 6;
-            pointer-events: none;
-        }
-
-        /* Grid Metrics */
-        .sensor-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .sensor-card-mob {
-            background: var(--glass-card);
-            border: 1px solid var(--border-subtle);
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .sensor-card-mob label {
-            font-size: 8px;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .sensor-card-mob .metric-val {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--accent-white);
-            letter-spacing: 0.5px;
-            margin-top: 8px;
-        }
-
-        .sensor-card-mob .metric-sub {
-            font-size: 8px;
-            color: var(--silver-muted);
-            margin-top: 4px;
-            font-family: monospace;
-        }
-
-        /* Control Hub */
-        .control-hub {
-            background: var(--glass-card);
-            border: 1px solid var(--border-subtle);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .control-hub h4 {
-            font-size: 9px;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-        }
-
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .interactive-btn {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-subtle);
-            color: var(--silver-text);
-            padding: 11px;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .interactive-btn:hover, .interactive-btn.highlight {
-            background: var(--accent-white);
-            color: var(--accent-dark);
-            border-color: var(--accent-white);
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
-        }
-
-        .interactive-btn.danger {
-            border-color: rgba(255, 42, 42, 0.4);
-            color: #ff6666;
-        }
-        .interactive-btn.danger:hover {
-            background: var(--alert-crimson);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(255,42,42,0.6);
-        }
-
-        /* Timeline Logs */
-        .activity-timeline {
-            background: var(--glass-card);
-            border: 1px solid var(--border-subtle);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .timeline-title {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--silver-muted);
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--border-subtle);
-            padding-bottom: 6px;
-        }
-
-        .log-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid var(--border-subtle);
-            padding: 8px 12px;
-            font-size: 10px;
-        }
-
-        .log-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--silver-text);
-        }
-
-        .log-dot {
-            width: 5px; height: 5px;
-            background: var(--accent-white);
-            border-radius: 50%;
-        }
-
-        .log-time {
-            font-family: monospace;
-            font-size: 9px;
-            color: var(--silver-muted);
-        }
-
-        /* Generic Views Cards */
-        .content-card {
-            background: var(--glass-card);
-            border: 1px solid var(--border-subtle);
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
-
-        .content-card h3 {
-            font-size: 11px;
-            letter-spacing: 1.5px;
-            color: var(--accent-white);
-            text-transform: uppercase;
-        }
-
-        .content-card p {
-            font-size: 10px;
-            color: var(--silver-muted);
-            line-height: 1.5;
-        }
-
-        .setting-toggle-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-subtle);
-            padding: 10px 12px;
-            font-size: 10px;
-        }
-
-        /* Floating Bottom Dock Navigation (6 Tabs) */
-        .bottom-dock {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            background: rgba(7, 7, 12, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-subtle);
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 4px;
-            z-index: 100;
-        }
-
-        .dock-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--silver-muted);
-            transition: color 0.2s;
-            padding: 4px 6px;
-        }
-
-        .dock-item svg {
-            width: 17px; height: 17px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .dock-item span {
-            font-size: 6.5px;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .dock-item.active {
-            color: var(--accent-white);
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090b">
+<title>ZOR | Smart Parcel Detector</title>
+<style>
+:root {
+  --bg:#08090b;--panel:#111317;--line:#292b31;
+  --text:#f5f6f8;--muted:#9297a1;--silver:#dfe2e7;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid white;outline-offset:3px}
+button,a{-webkit-tap-highlight-color:transparent}
+.intro{position:fixed;inset:0;z-index:1000;background:#08090b;display:grid;place-items:center;transition:opacity .7s,visibility .7s;overflow:hidden}
+.intro.done{opacity:0;visibility:hidden;pointer-events:none}
+.intro:before{content:"";position:absolute;width:300px;height:300px;border:1px solid #24262c;border-radius:50%;box-shadow:0 0 0 45px #111216,0 0 0 90px #0c0d10}
+.intro-content{position:relative;text-align:center}
+.intro-logo{width:100px;height:115px;opacity:0;transform:translateX(-45vw);animation:logoIn 1.4s cubic-bezier(.16,1,.3,1) .2s forwards}
+.intro-title{font-size:31px;font-weight:900;letter-spacing:9px;margin-top:20px;opacity:0;animation:fadeIn .6s 1s forwards}
+.intro-sub{font-size:9px;color:#8e939d;letter-spacing:4px;margin-top:10px;opacity:0;animation:fadeIn .6s 1.25s forwards}
+.intro-line{height:1px;width:0;background:white;margin:23px auto 0;animation:lineIn .6s 1.4s forwards}
+.intro-loading{font-size:9px;color:#777d87;letter-spacing:2px;margin-top:14px;opacity:0;animation:fadeIn .5s 1.55s forwards}
+.skip{position:absolute;bottom:25px;right:20px;background:none;border:1px solid #303239;color:#aaaeb6;padding:10px 13px;border-radius:8px;font-size:10px}
+@keyframes logoIn{0%{transform:translateX(-45vw);opacity:0}65%{opacity:1}82%{transform:translateX(8px) scale(1.04)}100%{transform:translateX(0);opacity:1}}
+@keyframes fadeIn{to{opacity:1}}
+@keyframes lineIn{to{width:170px}}
+.topbar{height:72px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);position:sticky;top:0;background:#08090beF;backdrop-filter:blur(15px);z-index:10}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:36px;height:42px}
+.brand-name{font-size:12px;font-weight:850;letter-spacing:2px}
+.brand-sub{font-size:9px;color:#858b95;letter-spacing:2px;margin-top:4px}
+.top-right{display:flex;align-items:center;gap:10px}
+.live{border:1px solid #34363d;border-radius:30px;padding:9px 12px;font-size:9px;letter-spacing:1px;color:#d8dce2}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e5e8ec;margin-right:7px;box-shadow:0 0 10px #aeb5c0}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line);background:#111317;color:white;border-radius:11px}
+.layout{display:grid;grid-template-columns:215px 1fr;min-height:calc(100vh - 72px)}
+aside{padding:26px 15px;border-right:1px solid var(--line)}
+.nav-label{font-size:9px;letter-spacing:2px;color:#6e737d;padding:0 10px;margin:0 0 12px}
+.nav{display:grid;gap:5px}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 12px;background:transparent;color:#9a9faa;border:1px solid transparent;border-radius:11px;text-align:left;font-size:12px}
+.nav button:hover,.nav button.active{background:#1a1c21;color:white;border-color:#303239}
+.nav button.active{box-shadow:inset 2px 0 white}
+.nav svg{width:17px;height:17px;flex-shrink:0}
+.side-card{margin-top:55px;border:1px solid var(--line);border-radius:15px;padding:15px;background:#101216}
+.side-card small{color:#858b95;font-size:9px;letter-spacing:1px}
+.side-card strong{display:block;font-size:12px;margin:12px 0}
+.progress{height:4px;background:#2b2d33;border-radius:5px;overflow:hidden}
+.progress span{display:block;width:99%;height:100%;background:#e8eaf0}
+.side-card p{font-size:10px;color:#888e98;line-height:1.6}
+main{padding:30px clamp(16px,3vw,42px);max-width:1600px;width:100%;margin:auto}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:25px}
+.eyebrow{font-size:10px;color:#a7acb5;letter-spacing:2px}
+h1{font-size:clamp(28px,3vw,39px);letter-spacing:-1.7px;margin:12px 0 8px}
+.subtitle{font-size:12px;color:var(--muted);line-height:1.7}
+.actions{display:flex;gap:9px}
+.btn{padding:11px 14px;border:1px solid #34363d;border-radius:10px;background:#17191e;color:#e7e9ed;font-size:11px}
+.btn:hover{background:#292c32}
+.btn.primary{background:#f1f2f4;color:#111216;font-weight:800;border-color:#f1f2f4}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 21px;border:1px solid #36383e;border-radius:17px;background:linear-gradient(110deg,#1b1d22,#101114);margin-bottom:16px}
+.banner-left{display:flex;align-items:center;gap:14px}
+.shield-box{width:43px;height:47px;border:1px solid #3d4047;border-radius:12px;display:grid;place-items:center}
+.shield-box svg{width:25px}
+.banner-title{font-size:13px;font-weight:800}
+.banner-desc{font-size:11px;color:#969ba5;margin-top:5px;line-height:1.5}
+.banner-right{text-align:right;font-size:10px;letter-spacing:1px}
+.banner-right small{display:block;color:#8e949e;margin-top:7px;letter-spacing:0}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.metric{padding:17px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#14161a,#0e0f12);min-width:0}
+.metric-label{display:flex;justify-content:space-between;align-items:center;color:#a0a5ae;font-size:10px;gap:5px}
+.metric-icon{width:29px;height:29px;border:1px solid #303239;border-radius:9px;display:grid;place-items:center;font-size:15px}
+.metric-value{font-size:30px;letter-spacing:-1.5px;font-weight:700;margin:16px 0 7px}
+.metric-foot{font-size:10px;color:#9297a1;line-height:1.5}
+.metric-foot b{color:#e2e5e9}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(275px,.85fr);gap:15px}
+.panel{border:1px solid var(--line);border-radius:17px;background:#0f1013;overflow:hidden;min-width:0}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:17px 18px;border-bottom:1px solid var(--line)}
+.panel-title{font-size:12px;font-weight:750}
+.panel-sub{font-size:10px;color:#9297a1;margin-top:5px}
+.tag{font-size:9px;color:#c7cbd2;border:1px solid #34363d;padding:6px 8px;border-radius:6px;white-space:nowrap}
+.camera{height:275px;position:relative;overflow:hidden;background:linear-gradient(#27292e 0%,#17191d 58%,#111216 58%)}
+.wall{position:absolute;inset:0 0 37%;background:linear-gradient(110deg,#292b30,#1b1d21 60%,#303238);border-bottom:2px solid #454850}
+.door{position:absolute;right:12%;top:9%;width:23%;height:57%;background:linear-gradient(90deg,#202227,#303238);border:5px solid #484b52}
+.door:after{content:"";position:absolute;right:12%;top:48%;width:5px;height:5px;background:#b4b7bc;border-radius:50%}
+.floor{position:absolute;bottom:0;left:0;right:0;height:39%;background:repeating-linear-gradient(172deg,#17191d 0,#17191d 18px,#202227 19px,#202227 20px)}
+.parcel{position:absolute;left:29%;bottom:17%;width:120px;height:83px;filter:drop-shadow(0 13px 10px #0008);animation:float 5s ease-in-out infinite}
+.parcel-front{position:absolute;bottom:0;left:0;width:92px;height:63px;background:linear-gradient(135deg,#c6b9a5,#82776a);clip-path:polygon(0 0,75% 0,100% 20%,100% 100%,0 100%)}
+.parcel-side{position:absolute;right:0;bottom:0;width:28px;height:63px;background:#70665c;clip-path:polygon(0 0,100% -18%,100% 80%,0 100%)}
+.parcel-top{position:absolute;top:0;left:0;width:100%;height:21px;background:#d5c8b3;clip-path:polygon(0 0,77% 0,100% 32%,25% 100%)}
+.parcel-tape{position:absolute;left:39px;top:2px;width:14px;height:73px;background:#403b343f;z-index:2}
+.scan-frame{position:absolute;left:24%;bottom:12%;width:35%;height:49%;border:1px solid #fff;pointer-events:none}
+.scan-frame:before,.scan-frame:after{content:"";position:absolute;width:13px;height:13px;border-color:white;border-style:solid}
+.scan-frame:before{top:-2px;left:-2px;border-width:2px 0 0 2px}
+.scan-frame:after{right:-2px;bottom:-2px;border-width:0 2px 2px 0}
+.scan-line{position:absolute;left:24%;bottom:12%;width:35%;height:2px;background:white;box-shadow:0 0 12px #fff;animation:scan 3s ease-in-out infinite alternate}
+.camera-overlay{position:absolute;inset:0;padding:13px;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.camera-row{display:flex;justify-content:space-between;gap:8px}
+.cam-label{padding:7px 9px;border-radius:6px;background:#08090bc9;border:1px solid #ffffff20;font-size:9px;letter-spacing:.6px}
+.camera-bottom{align-items:flex-end}
+.camera-note{display:flex;justify-content:space-between;gap:8px;padding:13px 16px;color:#999faa;font-size:10px}
+.camera-note b{color:#e6e8ec}
+.sensor-list{padding:2px 17px 6px}
+.sensor{display:flex;align-items:center;gap:11px;padding:15px 0;border-bottom:1px solid var(--line)}
+.sensor:last-child{border:0}
+.sensor-icon{width:36px;height:36px;display:grid;place-items:center;border:1px solid #303239;border-radius:11px;flex-shrink:0;font-size:16px}
+.sensor-info{flex:1;min-width:0}
+.sensor-name{font-size:11px;font-weight:700}
+.sensor-desc{font-size:9px;color:#8f95a0;margin-top:5px}
+.sensor-reading{text-align:right;white-space:nowrap}
+.sensor-reading strong{font-size:12px}
+.sensor-reading small{display:block;font-size:9px;color:#8f95a0;margin-top:4px}
+.state{display:inline-block;border:1px solid #3b3e45;border-radius:5px;padding:5px 7px;font-size:9px;color:#e3e5e9}
+.sensor-actions{display:flex;gap:8px;padding:0 17px 16px}
+.sensor-actions button{flex:1;font-size:10px;padding:10px 7px}
+.lower-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px;margin-top:15px}
+.activity-list{padding:5px 18px 10px}
+.activity{display:grid;grid-template-columns:33px 1fr auto;align-items:start;gap:10px;padding:14px 0;border-bottom:1px solid var(--line)}
+.activity:last-child{border:0}
+.activity-icon{height:32px;width:32px;display:grid;place-items:center;border:1px solid #303239;border-radius:10px}
+.activity-title{font-size:11px;font-weight:700}
+.activity-desc{font-size:10px;color:#9297a1;line-height:1.5;margin-top:5px}
+.activity-time{font-size:9px;color:#858b95;white-space:nowrap}
+.chart-content{padding:19px}
+.chart-number{font-size:27px;font-weight:800;letter-spacing:-1px;margin-top:8px}
+.chart-number small{font-size:10px;color:#9ca1aa;font-weight:400;letter-spacing:0}
+.bars{height:115px;display:flex;align-items:flex-end;gap:9px;margin-top:18px;border-bottom:1px solid #303239;padding-bottom:17px;position:relative}
+.bars:before,.bars:after{content:"";position:absolute;left:0;right:0;border-top:1px dashed #ffffff14}
+.bars:before{top:30%}.bars:after{top:60%}
+.bar{flex:1;min-width:4px;border-radius:4px 4px 0 0;background:linear-gradient(#f1f2f4,#666d77);position:relative;z-index:1}
+.chart-labels{display:flex;justify-content:space-between;color:#7f858e;font-size:9px;margin-top:9px}
+.chart-foot{display:flex;justify-content:space-between;gap:8px;color:#9297a1;font-size:10px;margin-top:17px}
+.chart-foot b{color:#dfe2e7}
+footer{margin:25px 0 0;border-top:1px solid var(--line);padding-top:16px;display:flex;justify-content:space-between;gap:10px;color:#707680;font-size:9px;letter-spacing:1px;line-height:1.7}
+footer b{color:#b7bbc2}
+.toast{position:fixed;bottom:20px;right:20px;z-index:1200;padding:14px 17px;background:#1a1c21;border:1px solid #41444b;border-radius:12px;font-size:12px;box-shadow:0 15px 45px #0008;opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;max-width:calc(100vw - 35px)}
+.toast.show{opacity:1;transform:translateY(0)}
+.modal-backdrop{position:fixed;inset:0;z-index:100;background:#000b;backdrop-filter:blur(7px);display:none;place-items:center;padding:18px}
+.modal-backdrop.show{display:grid}
+.modal{width:min(430px,100%);background:#111317;border:1px solid #35383f;border-radius:18px;padding:23px}
+.modal h2{font-size:20px;margin:0 0 8px}
+.modal p{font-size:12px;color:#969ba5;line-height:1.6}
+.modal-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292b31;padding:13px 0;font-size:12px}
+.switch{width:39px;height:23px;background:#454951;border:0;border-radius:20px;padding:3px}
+.switch:after{content:"";display:block;width:17px;height:17px;background:white;border-radius:50%;transition:.2s}
+.switch.on{background:#e5e7eb}.switch.on:after{transform:translateX(16px);background:#111317}
+.modal-actions{text-align:right;margin-top:18px}
+.exit-screen{position:fixed;inset:0;z-index:900;background:#08090b;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .35s}
+.exit-screen.show{opacity:1;pointer-events:auto}
+.exit-logo{width:95px;animation:exitMove .8s ease both}
+.exit-text{text-align:center;font-size:11px;letter-spacing:4px;margin-top:17px}
+@keyframes scan{from{transform:translateY(0)}to{transform:translateY(-110px)}}
+@keyframes float{50%{transform:translateY(-4px)}}
+@keyframes exitMove{to{transform:translateX(40vw) scale(.7);opacity:0}}
+@media(max-width:1050px){
+.layout{grid-template-columns:70px 1fr}
+aside{padding:23px 8px}
+.nav-label,.nav button span,.side-card{display:none}
+.nav button{justify-content:center;padding:13px 5px}
+.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid{grid-template-columns:1.1fr .9fr}
+}
+@media(max-width:720px){
+.topbar{height:64px;padding:0 13px}
+.brand-logo{width:30px;height:36px}
+.brand-name{font-size:10px;letter-spacing:1px}
+.brand-sub{font-size:8px;letter-spacing:1px}
+.top-right{gap:6px}
+.live{font-size:8px;padding:8px}
+.layout{display:block;min-height:calc(100vh - 64px)}
+aside{position:fixed;bottom:0;left:0;right:0;z-index:30;height:66px;padding:6px 7px calc(6px + env(safe-area-inset-bottom));background:#090a0cf5;backdrop-filter:blur(15px);border-right:0;border-top:1px solid var(--line)}
+.nav{height:100%;display:flex;justify-content:space-around;gap:2px}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:5px 1px;font-size:8px}
+.nav button span{display:block;font-size:8px;white-space:nowrap}
+.nav svg{width:17px;height:17px}
+main{padding:23px 13px 95px}
+.page-head{display:block}
+h1{font-size:29px}
+.actions{margin-top:15px}
+.actions .btn{flex:1;justify-content:center;padding:10px 8px;font-size:10px}
+.banner{padding:14px}
+.shield-box{width:37px;height:41px}
+.banner-title{font-size:12px}
+.banner-desc{font-size:10px}
+.banner-right{display:none}
+.metrics{gap:9px}
+.metric{padding:13px;border-radius:14px}
+.metric-label{font-size:9px}
+.metric-icon{width:25px;height:25px}
+.metric-value{font-size:26px;margin:13px 0 6px}
+.metric-foot{font-size:9px}
+.grid,.lower-grid{grid-template-columns:1fr;gap:13px}
+.camera{height:245px}
+.parcel{left:28%;transform:scale(.9);transform-origin:bottom left}
+.panel-head{padding:15px}
+.sensor-list{padding:2px 14px 5px}
+.sensor-actions{padding:0 14px 14px}
+.activity-list{padding:3px 14px 8px}
+.chart-content{padding:16px}
+footer{font-size:8px;flex-direction:column}
+.toast{bottom:80px;right:12px}
+.intro-logo{width:82px;height:95px}
+.intro:before{width:230px;height:230px}
+}
+@media(prefers-reduced-motion:reduce){
+*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+</style>
 </head>
 <body>
 
-    <!-- CINEMATIC BOOT SPLASH SCREEN -->
-    <div id="splash-screen">
-        <div class="splash-shield-box">
-            <div class="shield-icon">
-                <div class="shield-glyph">Z</div>
-            </div>
-            <div class="shield-title">
-                <h2>ZOR SECURITY</h2>
-                <span>ESP32 OS INITIALIZING</span>
-            </div>
-        </div>
-        <div class="progress-track">
-            <div class="progress-fill"></div>
-        </div>
+<!-- INTRO LOGO -->
+<div class="intro" id="intro">
+  <div class="intro-content">
+    <div class="intro-logo">
+      <svg viewBox="0 0 100 116" fill="none">
+        <path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="#f5f6f8" stroke-width="2.5"/>
+        <path d="M28 31h45L39 75h34" stroke="#f5f6f8" stroke-width="8" stroke-linecap="square"/>
+      </svg>
     </div>
+    <div class="intro-title">ZOR</div>
+    <div class="intro-sub">SMART PARCEL DETECTOR</div>
+    <div class="intro-line"></div>
+    <div class="intro-loading">SECURE SYSTEM INITIALIZING</div>
+  </div>
+  <button class="skip" id="skipIntro">SKIP INTRO ↗</button>
+</div>
 
-    <!-- MAIN APP FRAME -->
-    <div class="app-frame">
-        <!-- Top App Header -->
-        <header class="app-header">
-            <div class="brand-cluster">
-                <div class="header-shield">
-                    <div class="header-glyph">Z</div>
-                </div>
-                <div class="header-title">
-                    <h1>ZOR SECURITY</h1>
-                    <span>ESP32 IOT CORE</span>
-                </div>
-            </div>
-            <div class="iot-status-badge">
-                <div class="pulse-light"></div>
-                <span id="conn-state-text">CONNECTED</span>
-            </div>
-        </header>
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-logo" viewBox="0 0 100 116" fill="none">
+      <path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="white" stroke-width="5"/>
+      <path d="M28 31h45L39 75h34" stroke="white" stroke-width="9" stroke-linecap="square"/>
+    </svg>
+    <div><div class="brand-name">ZOR SMART PARCEL</div><div class="brand-sub">DETECTOR SYSTEM</div></div>
+  </div>
+  <div class="top-right">
+    <div class="live"><span class="dot"></span>DEMO MODE</div>
+    <button class="icon-btn" id="soundToggle" title="Toggle sound" aria-label="Toggle sound">♫</button>
+    <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings">⚙</button>
+  </div>
+</header>
 
-        <!-- Scrollable Content Views (6 Tabs) -->
-        <div class="app-body">
+<div class="layout">
+<aside>
+  <div class="nav-label">WORKSPACE</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-target="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span>Overview</span></button>
+    <button data-target="liveDetection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg><span>Detection</span></button>
+    <button data-target="cameraPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="m7 6 1.5-2h7L17 6"/></svg><span>Camera</span></button>
+    <button data-target="activityPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v17H5zM9 4V2h6v2M8 9h8M8 13h8M8 17h5"/></svg><span>History</span></button>
+    <button data-target="analyticsPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Analytics</span></button>
+    <button id="settingsNav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="m19 13 1 1-2 3-2-.6-2 1-.3 1.6h-3.5L10 17l-2-1-1.5.6-2-3 1.3-1a7 7 0 0 1 0-2l-1.3-1 2-3L8 7l2-1 .3-1.6h3.5L14 6l2 1 2-.6 2 3-1 1a7 7 0 0 1 0 2Z"/></svg><span>Settings</span></button>
+  </nav>
+  <div class="side-card"><small>SYSTEM HEALTH</small><strong>● All systems nominal</strong><div class="progress"><span></span></div><p>Local demo interface. Connect ESP32 for real readings.</p></div>
+</aside>
 
-            <!-- TAB 1: DASHBOARD -->
-            <div id="view-home" class="view-panel active">
-                <div class="hero-banner" id="hero-banner-box">
-                    <div class="hero-text">
-                        <h3 id="hero-main-title">SYSTEM PROTECTED</h3>
-                        <p id="hero-sub-desc">Ultrasonic & PIR defense grid active</p>
-                    </div>
-                    <div class="hero-pill" id="hero-status-pill">SECURE</div>
-                </div>
+<main id="overview">
+  <div class="page-head">
+    <div><div class="eyebrow">SECURITY COMMAND CENTER</div><h1>Parcel intelligence<span style="color:#777d87">.</span></h1><div class="subtitle">Monitor deliveries. Detect movement. Protect what matters.</div></div>
+    <div class="actions"><button class="btn" id="testSound">♫ Test sound</button><button class="btn primary" id="simulate">＋ Simulate event</button></div>
+  </div>
 
-                <div class="camera-card">
-                    <div class="card-top-bar">
-                        <span>Porch AI Optical Feed</span>
-                        <div class="tag-live">AI TRACKING</div>
-                    </div>
-                    <div class="camera-viewport">
-                        <div class="sonar-wave"></div>
-                        <div class="sonar-wave"></div>
-                        <div class="scanner-beam"></div>
-                        <div class="porch-scene">
-                            <div class="ground-floor"></div>
-                            <div class="parcel-box" id="sim-parcel-box">
-                                <div class="box-label-badge">ZOR PARCEL</div>
-                            </div>
-                        </div>
-                        <div class="ai-bounding" id="sim-ai-box">
-                            <div class="ai-tag-txt" id="ai-status-tag">PARCEL DETECTED // 99.4%</div>
-                            <div class="ai-tag-txt" style="align-self:flex-end;">ZONE-01 [LOCKED]</div>
-                        </div>
-                        <div class="cam-hud-overlay">
-                            <span>CAM_01 // ESP32-CAM 1080P</span>
-                            <span id="app-live-clock">00:00:00</span>
-                        </div>
-                    </div>
-                </div>
+  <section class="banner">
+    <div class="banner-left"><div class="shield-box"><svg viewBox="0 0 100 116" fill="none"><path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="white" stroke-width="5"/><path d="M28 31h45L39 75h34" stroke="white" stroke-width="8" stroke-linecap="square"/></svg></div><div><div class="banner-title" id="bannerTitle">SYSTEM PROTECTED</div><div class="banner-desc" id="bannerDesc">Security monitoring is active in demonstration mode.</div></div></div>
+    <div class="banner-right"><span class="dot"></span> SECURITY STATUS<small id="updated">Updated just now</small></div>
+  </section>
 
-                <div class="sensor-grid">
-                    <div class="sensor-card-mob">
-                        <label>Distance Sensor</label>
-                        <div class="metric-val" id="metric-dist">14.2 cm</div>
-                        <div class="metric-sub" id="metric-dist-sub">Proximity Optimal</div>
-                    </div>
-                    <div class="sensor-card-mob">
-                        <label>PIR Motion Sensor</label>
-                        <div class="metric-val" id="metric-motion">NO MOTION</div>
-                        <div class="metric-sub">Perimeter Clean</div>
-                    </div>
-                </div>
+  <section class="metrics">
+    <article class="metric"><div class="metric-label">DETECTIONS TODAY <span class="metric-icon">◎</span></div><div class="metric-value" id="detections">12</div><div class="metric-foot"><b>+3 events</b> compared to yesterday</div></article>
+    <article class="metric"><div class="metric-label">SECURITY ALERTS <span class="metric-icon">♧</span></div><div class="metric-value" id="alerts">03</div><div class="metric-foot"><b>All recorded</b> in demo activity log</div></article>
+    <article class="metric"><div class="metric-label">SYSTEM UPTIME <span class="metric-icon">◴</span></div><div class="metric-value">99.8<span style="font-size:15px">%</span></div><div class="metric-foot"><b>Stable</b> interface demonstration</div></article>
+    <article class="metric"><div class="metric-label">DEVICE STATUS <span class="metric-icon">▦</span></div><div class="metric-value" style="font-size:24px">DEMO</div><div class="metric-foot"><b>ESP32</b> not connected</div></article>
+  </section>
 
-                <div class="control-hub">
-                    <h4>Interactive Presentation Controls</h4>
-                    <div class="btn-grid">
-                        <button class="interactive-btn highlight" onclick="toggleParcelState()">Toggle Delivery</button>
-                        <button class="interactive-btn danger" onclick="triggerAlarmTest()">Test Buzzer Alarm</button>
-                    </div>
-                </div>
+  <section class="grid">
+    <article class="panel" id="cameraPanel">
+      <div class="panel-head"><div><div class="panel-title">Camera monitoring</div><div class="panel-sub">Front entrance · visual preview</div></div><span class="tag">DEMO FEED</span></div>
+      <div class="camera">
+        <div class="wall"></div><div class="door"></div><div class="floor"></div>
+        <div class="parcel" id="parcel"><div class="parcel-front"></div><div class="parcel-side"></div><div class="parcel-top"></div><div class="parcel-tape"></div></div>
+        <div class="scan-frame" id="scanFrame"></div><div class="scan-line" id="scanLine"></div>
+        <div class="camera-overlay"><div class="camera-row"><span class="cam-label">CAM 01 / FRONT DOOR</span><span class="cam-label">● REC SIMULATION</span></div><div class="camera-row camera-bottom"><span class="cam-label" id="camTime">LOCAL PREVIEW</span><span class="cam-label" id="camObject">OBJECT: PARCEL</span></div></div>
+      </div>
+      <div class="camera-note"><span><b id="cameraNote">Parcel-like object shown</b> · simulated preview</span><span>VISUAL DEMO</span></div>
+    </article>
 
-                <div class="activity-timeline">
-                    <div class="timeline-title">Recent System Events</div>
-                    <div class="log-row">
-                        <div class="log-info"><div class="log-dot"></div><span>Parcel secured in drop zone</span></div>
-                        <span class="log-time">00:18</span>
-                    </div>
-                    <div class="log-row">
-                        <div class="log-info"><div class="log-dot"></div><span>ESP32 hardware booted & armed</span></div>
-                        <span class="log-time">00:00</span>
-                    </div>
-                </div>
-            </div>
+    <article class="panel" id="liveDetection">
+      <div class="panel-head"><div><div class="panel-title">Live sensor status</div><div class="panel-sub">Simulated hardware telemetry</div></div><span class="tag">LOCAL DEMO</span></div>
+      <div class="sensor-list">
+        <div class="sensor"><div class="sensor-icon">⌁</div><div class="sensor-info"><div class="sensor-name">Ultrasonic sensor</div><div class="sensor-desc">HC-SR04 · distance measurement</div></div><div class="sensor-reading"><strong><span id="distance">18</span> cm</strong><small id="distanceState">Within threshold</small></div></div>
+        <div class="sensor"><div class="sensor-icon">⌁</div><div class="sensor-info"><div class="sensor-name">Motion detection</div><div class="sensor-desc">PIR HC-SR501 · movement</div></div><div class="sensor-reading"><span class="state" id="motionState">DETECTED</span><small>Demo event</small></div></div>
+        <div class="sensor"><div class="sensor-icon">⚠</div><div class="sensor-info"><div class="sensor-name">Security alert</div><div class="sensor-desc">Event notification status</div></div><div class="sensor-reading"><span class="state" id="alertState">REVIEW</span><small id="alertSub">Simulated event</small></div></div>
+        <div class="sensor"><div class="sensor-icon">▦</div><div class="sensor-info"><div class="sensor-name">ESP32 controller</div><div class="sensor-desc">Hardware connection</div></div><div class="sensor-reading"><strong>OFFLINE</strong><small>Demo interface only</small></div></div>
+      </div>
+      <div class="sensor-actions"><button class="btn" id="toggleMotion">Toggle motion</button><button class="btn" id="toggleParcel">Toggle parcel</button></div>
+    </article>
+  </section>
 
-            <!-- TAB 2: AI VISION -->
-            <div id="view-vision" class="view-panel">
-                <div class="content-card">
-                    <h3>AI Object Recognition Suite</h3>
-                    <p>Powered by Edge-AI neural network running on ESP32-CAM module.</p>
-                    <div class="sensor-grid" style="margin-top: 4px;">
-                        <div class="sensor-card-mob"><label>Model Engine</label><div class="metric-val">YOLOv8-Nano</div><div class="metric-sub">Quantized INT8</div></div>
-                        <div class="sensor-card-mob"><label>Inference Time</label><div class="metric-val">42 ms</div><div class="metric-sub">24.5 FPS</div></div>
-                        <div class="sensor-card-mob"><label>Confidence</label><div class="metric-val">98.9%</div><div class="metric-sub">High Precision</div></div>
-                        <div class="sensor-card-mob"><label>Target Class</label><div class="metric-val">Cardboard Box</div><div class="metric-sub">Class ID #04</div></div>
-                    </div>
-                </div>
-            </div>
+  <section class="lower-grid">
+    <article class="panel" id="activityPanel">
+      <div class="panel-head"><div><div class="panel-title">Recent activity</div><div class="panel-sub">Local demonstration activity log</div></div><button class="btn" id="clearLog" style="padding:8px 10px">Clear log</button></div>
+      <div class="activity-list" id="activityList">
+        <div class="activity"><div class="activity-icon">▣</div><div><div class="activity-title">Parcel detected</div><div class="activity-desc">Object within the configured detection range.</div></div><div class="activity-time">NOW</div></div>
+        <div class="activity"><div class="activity-icon">⌁</div><div><div class="activity-title">Motion sensor active</div><div class="activity-desc">PIR event simulated for interface preview.</div></div><div class="activity-time">2 MIN</div></div>
+        <div class="activity"><div class="activity-icon">⚙</div><div><div class="activity-title">System initialized</div><div class="activity-desc">Dashboard loaded in demonstration mode.</div></div><div class="activity-time">5 MIN</div></div>
+      </div>
+    </article>
+    <article class="panel" id="analyticsPanel">
+      <div class="panel-head"><div><div class="panel-title">Detection analytics</div><div class="panel-sub">Activity overview · sample values</div></div><span class="tag">7 DAYS</span></div>
+      <div class="chart-content"><div style="font-size:9px;color:#9297a1;letter-spacing:1px">TOTAL EVENTS</div><div class="chart-number" id="chartTotal">48 <small>events</small></div>
+        <div class="bars" id="bars"><div class="bar" style="height:32%"></div><div class="bar" style="height:52%"></div><div class="bar" style="height:42%"></div><div class="bar" style="height:76%"></div><div class="bar" style="height:58%"></div><div class="bar" style="height:90%"></div><div class="bar" style="height:66%"></div></div>
+        <div class="chart-labels"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+        <div class="chart-foot"><span>Sensor event activity</span><b>Illustrative only</b></div>
+      </div>
+    </article>
+  </section>
+  <footer><span>© <span id="year"></span> <b>ZOR TECHNOLOGY</b> · SMART DELIVERY SECURITY</span><span>BUILD 1.0.0 · FRONT-END DEMO · <span id="clock">--:--:--</span></span></footer>
+</main>
+</div>
 
-            <!-- TAB 3: TELEMETRY -->
-            <div id="view-telemetry" class="view-panel">
-                <div class="content-card">
-                    <h3>ESP32 Hardware Telemetry</h3>
-                    <p>Live pin states and micro-controller diagnostic registers.</p>
-                    <div class="sensor-grid" style="margin-top: 4px;">
-                        <div class="sensor-card-mob"><label>TRIG Pin (IO5)</label><div class="metric-val">HIGH</div><div class="metric-sub">10µs Pulse Active</div></div>
-                        <div class="sensor-card-mob"><label>ECHO Pin (IO18)</label><div class="metric-val">820 µs</div><div class="metric-sub">Return Echo Valid</div></div>
-                        <div class="sensor-card-mob"><label>PIR Sensor (IO19)</label><div class="metric-val">0.02 V</div><div class="metric-sub">Normal Low State</div></div>
-                        <div class="sensor-card-mob"><label>Buzzer Relay (IO21)</label><div class="metric-val" id="telemetry-buzzer-state">STANDBY</div><div class="metric-sub">Relay Open</div></div>
-                        <div class="sensor-card-mob"><label>MCU Temperature</label><div class="metric-val">41.2 °C</div><div class="metric-sub">Optimal Range</div></div>
-                        <div class="sensor-card-mob"><label>Wi-Fi RSSI</label><div class="metric-val">-64 dBm</div><div class="metric-sub">Signal Strong</div></div>
-                    </div>
-                </div>
-            </div>
+<div class="toast" id="toast">Action completed.</div>
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal"><h2 id="modalTitle">System preferences</h2><p>These settings affect this dashboard demonstration only.</p>
+    <div class="modal-row"><span>Interface sound effects</span><button class="switch on" id="soundSwitch" aria-label="Toggle sound"></button></div>
+    <div class="modal-row"><span>Camera scan animation</span><button class="switch on" id="scanSwitch" aria-label="Toggle scan"></button></div>
+    <div class="modal-actions"><button class="btn primary" id="closeModal">Done</button></div>
+  </div>
+</div>
+<div class="exit-screen" id="exitScreen"><div><div class="exit-logo"><svg viewBox="0 0 100 116" fill="none"><path d="M50 4 91 19v31c0 28-17 48-41 61C26 98 9 78 9 50V19L50 4Z" stroke="white" stroke-width="3"/><path d="M28 31h45L39 75h34" stroke="white" stroke-width="8"/></svg></div><div class="exit-text">SESSION SECURED</div></div></div>
 
-            <!-- TAB 4: HISTORY -->
-            <div id="view-history" class="view-panel">
-                <div class="content-card">
-                    <h3>Delivery Activity Logs</h3>
-                    <p>Chronological record of all registered drop-offs and events.</p>
-                    <div class="activity-timeline" style="background:transparent; padding:0; border:none;">
-                        <div class="log-row"><div class="log-info"><div class="log-dot"></div><span>PosLaju Courier Drop</span></div><span class="log-time">Today, 14:20</span></div>
-                        <div class="log-row"><div class="log-info"><div class="log-dot"></div><span>J&T Express Drop</span></div><span class="log-time">Yesterday, 11:05</span></div>
-                        <div class="log-row"><div class="log-info"><div class="log-dot"></div><span>Shopee Xpress Drop</span></div><span class="log-time">Oct 23, 09:40</span></div>
-                    </div>
-                </div>
-            </div>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  let soundOn=true, scanOn=true, parcelOn=true, motionOn=true;
+  let detectionCount=12, alertCount=3, audio=null, toastTimer;
 
-            <!-- TAB 5: SECURITY & SIREN -->
-            <div id="view-security" class="view-panel">
-                <div class="content-card">
-                    <h3>Anti-Theft Security Guard</h3>
-                    <p>Advanced perimeter protection and automated panic response settings.</p>
-                    <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
-                        <div class="setting-toggle-row">
-                            <span>Night Guard Mode</span>
-                            <span style="color:var(--success-neon); font-weight:700;">ENABLED</span>
-                        </div>
-                        <div class="setting-toggle-row">
-                            <span>Telegram Instant Alert</span>
-                            <span style="color:var(--success-neon); font-weight:700;">ACTIVE</span>
-                        </div>
-                        <div class="setting-toggle-row">
-                            <span>Auto Siren Trigger (10s)</span>
-                            <span style="color:var(--success-neon); font-weight:700;">ARMED</span>
-                        </div>
-                        <button class="interactive-btn danger" style="margin-top:10px; padding:14px;" onclick="triggerAlarmTest()">EMERGENCY PANIC SIREN</button>
-                    </div>
-                </div>
-            </div>
+  function getAudio(){
+    if(!soundOn)return null;
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return null;
+      if(!audio)audio=new AC();
+      if(audio.state==='suspended')audio.resume().catch(()=>{});
+      return audio;
+    }catch(e){return null}
+  }
+  function tone(freq,delay,duration,type='sine',volume=.035,endFreq=null){
+    const ctx=getAudio();if(!ctx)return;
+    try{
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type=type;osc.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+      if(endFreq)osc.frequency.exponentialRampToValueAtTime(endFreq,ctx.currentTime+delay+duration);
+      gain.gain.setValueAtTime(.0001,ctx.currentTime+delay);
+      gain.gain.exponentialRampToValueAtTime(volume,ctx.currentTime+delay+.02);
+      gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+delay+duration);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+delay);osc.stop(ctx.currentTime+delay+duration+.03);
+    }catch(e){}
+  }
+  function startupSound(){
+    if(!soundOn)return;
+    tone(440,0,.12,'sine',.025,660);
+    tone(660,.13,.14,'sine',.03,880);
+    tone(880,.29,.22,'triangle',.035,1175);
+    tone(587,.54,.18,'sine',.02,784);
+  }
+  function chime(){tone(700,0,.09,'sine',.025);tone(950,.1,.14,'sine',.025)}
+  function alarm(){tone(740,0,.1,'square',.018);tone(520,.14,.12,'square',.018);tone(740,.3,.18,'triangle',.025,980)}
+  function showToast(text){
+    $('#toast').textContent=text;$('#toast').classList.add('show');
+    clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),2600);
+  }
+  function timeNow(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+  function updateTime(){
+    $('#clock').textContent=timeNow();$('#camTime').textContent=timeNow()+' · LOCAL';
+  }
+  $('#year').textContent=new Date().getFullYear();updateTime();setInterval(updateTime,1000);
 
-            <!-- TAB 6: SETTINGS -->
-            <div id="view-settings" class="view-panel">
-                <div class="content-card">
-                    <h3>System Configuration</h3>
-                    <p>Calibrate ultrasonic sensor distance threshold and firmware settings.</p>
-                    <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
-                        <label style="font-size:9px; color:var(--silver-muted); text-transform:uppercase; letter-spacing:1px;">Threshold Distance: <span id="thresh-display" style="color:#fff;">20</span> cm</label>
-                        <input type="range" min="5" max="50" value="20" oninput="playClickSound(); document.getElementById('thresh-display').innerText=this.value" style="accent-color:#fff;">
-                        <div class="setting-toggle-row" style="margin-top:4px;">
-                            <span>OTA Firmware Update</span>
-                            <span style="font-family:monospace; color:var(--silver-muted);">v1.0.4</span>
-                        </div>
-                        <button class="interactive-btn highlight" style="margin-top:8px;" onclick="playClickSound(); alert('Configuration successfully flashed to ESP32 EEPROM!')">Flash to ESP32</button>
-                    </div>
-                </div>
-            </div>
+  function closeIntro(){
+    const el=$('#intro');if(el.classList.contains('done'))return;
+    el.classList.add('done');chime();
+  }
+  window.addEventListener('load',()=>{
+    setTimeout(startupSound,300);
+    setTimeout(closeIntro,window.matchMedia('(prefers-reduced-motion: reduce)').matches?400:2800);
+  });
+  $('#skipIntro').addEventListener('click',closeIntro);
+  document.addEventListener('pointerdown',function unlock(){
+    getAudio();document.removeEventListener('pointerdown',unlock);
+  },{once:true});
 
-        </div>
+  function addLog(title,description,icon='▣'){
+    const row=document.createElement('div');row.className='activity';
+    const ico=document.createElement('div');ico.className='activity-icon';ico.textContent=icon;
+    const body=document.createElement('div');
+    const t=document.createElement('div');t.className='activity-title';t.textContent=title;
+    const d=document.createElement('div');d.className='activity-desc';d.textContent=description;
+    body.append(t,d);
+    const tm=document.createElement('div');tm.className='activity-time';tm.textContent='NOW';
+    row.append(ico,body,tm);$('#activityList').prepend(row);
+    while($('#activityList').children.length>7)$('#activityList').lastElementChild.remove();
+    $('#updated').textContent='Updated '+timeNow();
+  }
+  function render(){
+    $('#distance').textContent=parcelOn?(motionOn?'18':'24'):'86';
+    $('#distanceState').textContent=parcelOn?'Within threshold':'Outside threshold';
+    $('#motionState').textContent=motionOn?'DETECTED':'CLEAR';
+    $('#alertState').textContent=(parcelOn&&motionOn)?'REVIEW':'STANDBY';
+    $('#alertSub').textContent=(parcelOn&&motionOn)?'Simulated event':'No active alert';
+    $('#parcel').style.display=parcelOn?'block':'none';
+    $('#scanFrame').style.display=parcelOn&&scanOn?'block':'none';
+    $('#scanLine').style.display=parcelOn&&scanOn?'block':'none';
+    $('#camObject').textContent=parcelOn?'OBJECT: PARCEL':'OBJECT: NONE';
+    $('#cameraNote').textContent=parcelOn?'Parcel-like object shown':'No parcel in preview';
+    $('#bannerTitle').textContent=parcelOn&&motionOn?'ACTIVITY DETECTED':'SYSTEM PROTECTED';
+    $('#bannerDesc').textContent=parcelOn&&motionOn?'A simulated parcel and motion event is present. Review the activity log.':'Monitoring interface is active in demonstration mode.';
+  }
+  function simulate(){
+    const type=Math.floor(Math.random()*4);
+    if(type===0){
+      parcelOn=true;motionOn=true;detectionCount++;alertCount++;
+      addLog('Parcel and motion detected','Simulated object inside threshold; review the event.','⚠');
+      showToast('Simulated security event created.');alarm();
+    }else if(type===1){
+      parcelOn=true;motionOn=false;detectionCount++;
+      addLog('Parcel presence detected','Parcel-like object shown in demo preview.','▣');
+      showToast('Parcel detection simulated.');chime();
+    }else if(type===2){
+      parcelOn=false;motionOn=true;alertCount++;
+      addLog('Motion near delivery zone','PIR motion event simulated; parcel is not present.','⌁');
+      showToast('Motion event simulated.');alarm();
+    }else{
+      parcelOn=false;motionOn=false;
+      addLog('Delivery zone clear','No parcel or motion shown in this demo state.','✓');
+      showToast('Zone marked clear in demo.');chime();
+    }
+    $('#detections').textContent=detectionCount;
+    $('#alerts').textContent=String(alertCount).padStart(2,'0');
+    $('#chartTotal').innerHTML=(48+detectionCount-12)+' <small>events</small>';
+    render();
+  }
+  $('#simulate').addEventListener('click',simulate);
+  $('#toggleMotion').addEventListener('click',()=>{
+    motionOn=!motionOn;render();
+    addLog(motionOn?'Motion sensor triggered':'Motion sensor cleared',motionOn?'Motion switched on by user.':'Motion switched off by user.','⌁');
+    showToast('Motion state: '+(motionOn?'DETECTED':'CLEAR'));motionOn?alarm():chime();
+  });
+  $('#toggleParcel').addEventListener('click',()=>{
+    parcelOn=!parcelOn;render();
+    addLog(parcelOn?'Parcel detected':'Parcel removed from preview',parcelOn?'Parcel state switched on by user.':'Parcel state switched off by user.','▣');
+    showToast('Parcel state: '+(parcelOn?'DETECTED':'NOT DETECTED'));chime();
+  });
+  $('#testSound').addEventListener('click',()=>{
+    if(!soundOn){showToast('Enable sound effects first.');return}
+    alarm();showToast('Security sound test played.');
+  });
+  $('#soundToggle').addEventListener('click',()=>{
+    soundOn=!soundOn;$('#soundSwitch').classList.toggle('on',soundOn);
+    $('#soundToggle').style.opacity=soundOn?'1':'.45';
+    showToast('Sound effects '+(soundOn?'enabled':'muted'));if(soundOn)chime();
+  });
+  $('#clearLog').addEventListener('click',()=>{
+    $('#activityList').innerHTML='';showToast('Activity log cleared.');chime();
+  });
 
-        <!-- Floating Bottom Dock Navigation (6 Tabs) -->
-        <nav class="bottom-dock">
-            <button class="dock-item active" onclick="switchAppTab('home', this)">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                <span>Home</span>
-            </button>
-            <button class="dock-item" onclick="switchAppTab('vision', this)">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-                <span>AI Vision</span>
-            </button>
-            <button class="dock-item" onclick="switchAppTab('telemetry', this)">
-                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                <span>Sensors</span>
-            </button>
-            <button class="dock-item" onclick="switchAppTab('history', this)">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span>Logs</span>
-            </button>
-            <button class="dock-item" onclick="switchAppTab('security', this)">
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>Security</span>
-            </button>
-            <button class="dock-item" onclick="switchAppTab('settings', this)">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Config</span>
-            </button>
-        </nav>
-    </div>
+  const modal=$('#modal');
+  function openModal(){modal.classList.add('show')}
+  function closeModal(){modal.classList.remove('show')}
+  $('#settingsBtn').addEventListener('click',openModal);
+  $('#settingsNav').addEventListener('click',openModal);
+  $('#closeModal').addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-    <script>
-        // Automatic Splash Screen Dismissal after Animation
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if(splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.remove(), 800);
-                }
-            }, 2200);
-        });
-
-        // Web Audio API Sound Synthesizer
-        let audioCtx = null;
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playClickSound() {
-            try {
-                initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch (e) {}
-        }
-
-        let alarmInterval = null;
-        function playAlarmSound(start) {
-            if (start) {
-                try {
-                    initAudio();
-                    if (alarmInterval) clearInterval(alarmInterval);
-                    alarmInterval = setInterval(() => {
-                        if (!audioCtx) return;
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.type = 'sawtooth';
-                        osc.frequency.setValueAtTime(700, audioCtx.currentTime);
-                        osc.frequency.linearRampToValueAtTime(1400, audioCtx.currentTime + 0.2);
-                        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                        gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.start();
-                        osc.stop(audioCtx.currentTime + 0.2);
-                    }, 250);
-                } catch (e) {}
-            } else {
-                if (alarmInterval) {
-                    clearInterval(alarmInterval);
-                    alarmInterval = null;
-                }
-            }
-        }
-
-        // Tab Navigation
-        function switchAppTab(tabId, btnElement) {
-            playClickSound();
-            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
-            document.querySelectorAll('.dock-item').forEach(item => item.classList.remove('active'));
-            
-            document.getElementById('view-' + tabId).classList.add('active');
-            btnElement.classList.add('active');
-        }
-
-        // Live Clock
-        setInterval(() => {
-            const now = new Date();
-            const timeString = now.toTimeString().split(' ')[0];
-            const clockEl = document.getElementById('app-live-clock');
-            if(clockEl) clockEl.innerText = timeString;
-        }, 1000);
-
-        // Interactive Presentation Logic
-        let hasParcel = true;
-        function toggleParcelState() {
-            playClickSound();
-            hasParcel = !hasParcel;
-            const mainTitle = document.getElementById('hero-main-title');
-            const subDesc = document.getElementById('hero-sub-desc');
-            const statusPill = document.getElementById('hero-status-pill');
-            const bannerBox = document.getElementById('hero-banner-box');
-            const parcelBox = document.getElementById('sim-parcel-box');
-            const aiBox = document.getElementById('sim-ai-box');
-            const aiTag = document.getElementById('ai-status-tag');
-            const distVal = document.getElementById('metric-dist');
-            const distSub = document.getElementById('metric-dist-sub');
-
-            bannerBox.classList.remove('alarm-active');
-            statusPill.classList.remove('alarm-pill');
-            aiBox.classList.remove('alert-mode');
-            playAlarmSound(false);
-
-            if(!hasParcel) {
-                mainTitle.innerText = "NO PARCEL DETECTED";
-                subDesc.innerText = "Drop zone is clear. Waiting for courier arrival.";
-                statusPill.innerText = "WAITING";
-                bannerBox.style.borderColor = "rgba(255,255,255,0.15)";
-                parcelBox.style.opacity = "0.15";
-                aiBox.style.opacity = "0.7";
-                aiTag.innerText = "SCANNING... [NO OBJECT]";
-                distVal.innerText = "45.0 cm";
-                distSub.innerText = "Out of range";
-            } else {
-                mainTitle.innerText = "SYSTEM PROTECTED";
-                subDesc.innerText = "Ultrasonic & PIR defense grid active";
-                statusPill.innerText = "SECURE";
-                bannerBox.style.borderColor = "var(--border-bright)";
-                parcelBox.style.opacity = "1";
-                aiBox.style.opacity = "1";
-                aiTag.innerText = "PARCEL DETECTED // 99.4%";
-                distVal.innerText = "14.2 cm";
-                distSub.innerText = "Proximity Optimal";
-            }
-        }
-
-        let isAlarming = false;
-        function triggerAlarmTest() {
-            playClickSound();
-            isAlarming = !isAlarming;
-            const mainTitle = document.getElementById('hero-main-title');
-            const subDesc = document.getElementById('hero-sub-desc');
-            const statusPill = document.getElementById('hero-status-pill');
-            const bannerBox = document.getElementById('hero-banner-box');
-            const aiBox = document.getElementById('sim-ai-box');
-            const aiTag = document.getElementById('ai-status-tag');
-            const motionVal = document.getElementById('metric-motion');
-            const telemetryBuzzer = document.getElementById('telemetry-buzzer-state');
-
-            if(isAlarming) {
-                playAlarmSound(true);
-                mainTitle.innerText = "INTRUSION ALERT!";
-                subDesc.innerText = "Unauthorized movement detected in drop zone!";
-                statusPill.innerText = "ALARM ON";
-                bannerBox.classList.add('alarm-active');
-                statusPill.classList.add('alarm-pill');
-                aiBox.classList.add('alert-mode');
-                aiTag.innerText = "WARNING: TAMPER DETECTED!";
-                motionVal.innerText = "MOTION!";
-                if(telemetryBuzzer) telemetryBuzzer.innerText = "ACTIVE (HIGH)";
-            } else {
-                playAlarmSound(false);
-                mainTitle.innerText = "SYSTEM PROTECTED";
-                subDesc.innerText = "Ultrasonic & PIR defense grid active";
-                statusPill.innerText = "SECURE";
-                bannerBox.classList.remove('alarm-active');
-                statusPill.classList.remove('alarm-pill');
-                aiBox.classList.remove('alert-mode');
-                aiTag.innerText = "PARCEL DETECTED // 99.4%";
-                motionVal.innerText = "NO MOTION";
-                if(telemetryBuzzer) telemetryBuzzer.innerText = "STANDBY";
-            }
-        }
-    </script>
+  $('#soundSwitch').addEventListener('click',()=>{
+    soundOn=!soundOn;$('#soundSwitch').classList.toggle('on',soundOn);
+    $('#soundToggle').style.opacity=soundOn?'1':'.45';if(soundOn)chime();
+  });
+  $('#scanSwitch').addEventListener('click',()=>{
+    scanOn=!scanOn;$('#scanSwitch').classList.toggle('on',scanOn);render();
+    showToast('Camera scan animation '+(scanOn?'enabled':'disabled'));
+  });
+  $('#nav').querySelectorAll('button[data-target]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      $('#nav').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const target=document.getElementById(btn.dataset.target);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+      if(innerWidth<=720)setTimeout(()=>window.scrollBy({top:-72,behavior:'smooth'}),100);
+    });
+  });
+  render();
+})();
+</script>
 </body>
 </html>
