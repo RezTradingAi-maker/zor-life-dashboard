@@ -1,347 +1,1173 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0b0e14">
-<title>ZOR LIFE DASHBOARD</title>
-<style>
-:root{--bg:#0b0e14;--panel:#141923;--line:#293142;--gold:#e9bd62;--text:#f4f5f7;--muted:#9ba5b7;--green:#4ade80;--red:#fb7185}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{padding:22px 18px;border-bottom:1px solid var(--line);background:#10141d;position:sticky;top:0;z-index:5}
-.wrap{max-width:1050px;margin:auto}
-.brand{color:var(--gold);font-weight:900;letter-spacing:2px;font-size:21px}
-.sub{color:var(--muted);font-size:12px;margin-top:5px}
-nav{display:flex;gap:8px;overflow:auto;margin-top:18px}
-button{cursor:pointer;border:1px solid var(--line);border-radius:10px;background:#202735;color:var(--text);padding:11px 14px;font-weight:650}
-button:hover{border-color:var(--gold)}
-nav button.active,.primary{background:var(--gold);color:#151515;border-color:var(--gold)}
-main{max-width:1050px;margin:auto;padding:20px 15px 50px}
-h2{font-size:20px;margin:4px 0 16px}
-h3{font-size:15px;margin:0 0 13px}
-.muted{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:20px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}
-.stat-label{font-size:12px;color:var(--muted)}
-.stat-value{font-size:clamp(19px,4vw,27px);font-weight:800;margin-top:10px;overflow-wrap:anywhere}
-.gold{color:var(--gold)}.green{color:var(--green)}.red{color:var(--red)}
-form{display:grid;gap:10px}
-input,select,textarea{width:100%;min-width:0;background:#0c111a;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:12px;font:inherit}
-label{font-size:12px;color:var(--muted);display:grid;gap:6px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.item{padding:13px 0;border-bottom:1px solid var(--line)}
-.item:last-child{border-bottom:0}
-.itemtop{display:flex;justify-content:space-between;gap:12px;align-items:start}
-.itemtitle{font-weight:700;overflow-wrap:anywhere}
-.small{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.6}
-.tag{display:inline-block;border:1px solid var(--line);border-radius:20px;padding:4px 8px;font-size:11px;margin-top:7px;color:var(--gold)}
-.empty{padding:22px 0;color:var(--muted);text-align:center}
-.hidden{display:none!important}
-.progress{height:6px;background:#293142;border-radius:8px;margin-top:10px;overflow:hidden}
-.progress span{display:block;height:100%;background:var(--gold)}
-footer{text-align:center;padding:25px;color:var(--muted);font-size:12px}
-hr{border:0;border-top:1px solid var(--line);margin:15px 0}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.stats .card:last-child{grid-column:1/-1}.two{grid-template-columns:1fr}header{padding:17px 13px}main{padding:16px 12px 35px}.card{padding:14px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZOR SMART PARCEL DETECTOR | Professional UI Presentation</title>
+    <style>
+        :root {
+            --bg-deep: #08080a;
+            --bg-matte: #0e0e12;
+            --panel-charcoal: #141419;
+            --panel-hover: #1b1b22;
+            --border-subtle: #24242f;
+            --border-highlight: #3f3f52;
+            --silver-accent: #c0c0d0;
+            --silver-muted: #808092;
+            --text-main: #f4f4f8;
+            --text-muted: #9494a8;
+            --white: #ffffff;
+            --black: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* Presentation Wrapper */
+        .presentation-container {
+            width: 100%;
+            max-width: 1600px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Presentation Header */
+        .presentation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 20px;
+        }
+
+        .presentation-title-group h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .presentation-title-group p {
+            font-size: 13px;
+            color: var(--silver-muted);
+            letter-spacing: 1px;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .project-badge {
+            background: var(--panel-charcoal);
+            border: 1px solid var(--border-highlight);
+            padding: 6px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--silver-accent);
+            text-transform: uppercase;
+        }
+
+        /* Showcase Stage (Desktop + Mobile) */
+        .showcase-stage {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1300px) {
+            .showcase-stage {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mockup Common Window Frame */
+        .mockup-window {
+            background-color: var(--bg-matte);
+            border: 1px solid var(--border-highlight);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .window-header {
+            background-color: var(--panel-charcoal);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--border-highlight);
+        }
+
+        .window-title {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: var(--silver-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* --- DESKTOP DASHBOARD --- */
+        .desktop-dashboard {
+            width: 100%;
+        }
+
+        /* Top Navbar */
+        .nav-bar {
+            background-color: var(--panel-charcoal);
+            border-bottom: 1px solid var(--border-subtle);
+            height: 64px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .z-shield-logo {
+            width: 38px;
+            height: 42px;
+            position: relative;
+            background: linear-gradient(135deg, #2a2a35 0%, #111116 100%);
+            border: 1px solid var(--border-highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .z-shield-logo::before {
+            content: '';
+            position: absolute;
+            inset: 1px;
+            background: linear-gradient(180deg, #181820 0%, #0a0a0e 100%);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .z-glyph {
+            position: relative;
+            z-index: 2;
+            color: var(--white);
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .brand-text h2 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--white);
+        }
+
+        .brand-text span {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--silver-muted);
+            text-transform: uppercase;
+        }
+
+        .nav-status-cluster {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hardware-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 12px;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--silver-accent);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--white);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--white);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .user-profile {
+            width: 36px;
+            height: 36px;
+            background: var(--border-subtle);
+            border: 1px solid var(--border-highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 1px;
+        }
+
+        /* Dashboard Body Layout */
+        .dashboard-body {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 680px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-body {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--panel-charcoal);
+            border-right: 1px solid var(--border-subtle);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: var(--white);
+            background-color: var(--panel-hover);
+        }
+
+        .nav-item.active {
+            color: var(--white);
+            background-color: var(--panel-hover);
+            border-left-color: var(--white);
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .sidebar-footer {
+            padding: 0 24px;
+            font-size: 10px;
+            color: var(--silver-muted);
+            letter-spacing: 1px;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 16px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: var(--bg-matte);
+        }
+
+        /* Top Status Banner */
+        .system-status-card {
+            background: linear-gradient(135deg, var(--panel-charcoal) 0%, var(--bg-deep) 100%);
+            border: 1px solid var(--border-highlight);
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .status-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-icon-box {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-matte);
+            border: 1px solid var(--border-highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-icon-box svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--white);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .status-text h3 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--white);
+        }
+
+        .status-text p {
+            font-size: 11px;
+            color: var(--silver-muted);
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .status-pill {
+            background: var(--white);
+            color: var(--black);
+            padding: 6px 16px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Grid Metrics & Camera Row */
+        .dashboard-grid-top {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .dashboard-grid-top {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Camera Monitoring Panel */
+        .panel {
+            background-color: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--silver-accent);
+            text-transform: uppercase;
+        }
+
+        .panel-header .live-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            padding: 2px 8px;
+            font-size: 9px;
+            letter-spacing: 1px;
+            border: 1px solid var(--border-highlight);
+        }
+
+        .camera-viewport {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: #060608;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Realistic Camera Feed Mock (Stylized Porch with Parcel) */
+        .camera-simulation {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 40%, #1c1c24 0%, #08080a 80%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 20px;
+        }
+
+        .porch-floor {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(180deg, #111116 0%, #050507 100%);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .box-3d {
+            position: relative;
+            width: 110px;
+            height: 75px;
+            background: #282835;
+            border: 1px solid var(--silver-muted);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            transform: perspective(400px) rotateX(15deg) rotateY(-10deg);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: var(--border-highlight);
+        }
+
+        .box-label {
+            background: var(--white);
+            color: var(--black);
+            font-size: 8px;
+            font-weight: 800;
+            padding: 2px 6px;
+            letter-spacing: 1px;
+            z-index: 3;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* AI Bounding Box */
+        .ai-bounding-box {
+            position: absolute;
+            top: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 110px;
+            border: 1px dashed var(--white);
+            background: rgba(255, 255, 255, 0.03);
+            z-index: 4;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+        }
+
+        .ai-tag-top, .ai-tag-bottom {
+            font-family: monospace;
+            font-size: 9px;
+            color: var(--white);
+            background: rgba(0,0,0,0.8);
+            padding: 1px 4px;
+            align-self: flex-start;
+            letter-spacing: 1px;
+            border: 1px solid var(--border-highlight);
+        }
+
+        .camera-hud-overlay {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 10px;
+            color: var(--silver-accent);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Right Column: Sensor Metrics */
+        .sensors-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sensor-card {
+            background-color: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sensor-info label {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--silver-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+        }
+
+        .sensor-info .sensor-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .sensor-status-badge {
+            background: var(--bg-deep);
+            border: 1px solid var(--border-highlight);
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .sensor-status-badge.active {
+            background: var(--white);
+            color: var(--black);
+            border-color: var(--white);
+        }
+
+        /* Analytics & Timeline Row */
+        .dashboard-grid-bottom {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) 2fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid-bottom {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .dashboard-grid-bottom {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric-card {
+            background-color: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .metric-card span {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--silver-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .metric-card .metric-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin: 10px 0 4px 0;
+        }
+
+        .metric-card .metric-sub {
+            font-size: 11px;
+            color: var(--silver-accent);
+            letter-spacing: 0.5px;
+        }
+
+        /* Timeline / Activity Log Panel */
+        .activity-panel {
+            background-color: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .activity-header {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--silver-accent);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 8px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-deep);
+            border: 1px solid var(--border-subtle);
+            padding: 10px 14px;
+        }
+
+        .activity-desc {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--silver-accent);
+            border-radius: 50%;
+        }
+
+        .activity-time {
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--silver-muted);
+        }
+
+        /* Professional Footer */
+        .dashboard-footer {
+            background-color: var(--panel-charcoal);
+            border-top: 1px solid var(--border-subtle);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: var(--silver-muted);
+            text-transform: uppercase;
+        }
+
+        .footer-system-info {
+            display: flex;
+            gap: 20px;
+        }
+
+
+        /* --- SMARTPHONE PREVIEW CONCEPT --- */
+        .smartphone-mockup-wrapper {
+            width: 340px;
+            background: var(--panel-charcoal);
+            border: 1px solid var(--border-highlight);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 1300px) {
+            .smartphone-mockup-wrapper {
+                align-self: center;
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        .phone-screen {
+            background-color: var(--bg-deep);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 650px;
+        }
+
+        .phone-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 10px;
+        }
+
+        .phone-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .phone-brand span {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .phone-status-card {
+            background: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .phone-status-card h4 {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--white);
+        }
+
+        .phone-status-card p {
+            font-size: 9px;
+            color: var(--silver-muted);
+            margin-top: 2px;
+        }
+
+        .phone-camera-box {
+            width: 100%;
+            height: 160px;
+            background: #060608;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .phone-sensors-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .phone-sensor-card {
+            background: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .phone-sensor-card label {
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--silver-muted);
+            text-transform: uppercase;
+        }
+
+        .phone-sensor-card .val {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--white);
+            margin-top: 4px;
+        }
+
+        .phone-alerts-box {
+            background: var(--panel-charcoal);
+            border: 1px solid var(--border-subtle);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .phone-alert-title {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--silver-accent);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 4px;
+        }
+
+        .phone-alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            color: var(--white);
+            padding: 4px 0;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+
+        .phone-alert-item span:last-child {
+            font-family: monospace;
+            color: var(--silver-muted);
+        }
+    </style>
 </head>
 <body>
-<header>
-<div class="wrap">
-<div class="brand">ZOR LIFE DASHBOARD</div>
-<div class="sub">Plan smarter. Manage your money. Build your future.</div>
-<nav>
-<button class="active" data-tab="dashboard">Dashboard</button>
-<button data-tab="tasks">Tasks</button>
-<button data-tab="budget">Budget</button>
-<button data-tab="settings">Settings</button>
-</nav>
-</div>
-</header>
-<main>
-<section id="dashboard">
-<h2>Overview</h2>
-<div class="stats">
-<div class="card"><div class="stat-label">AVAILABLE BALANCE</div><div id="balance" class="stat-value gold">RM 0.00</div></div>
-<div class="card"><div class="stat-label">TOTAL INCOME</div><div id="income" class="stat-value green">RM 0.00</div></div>
-<div class="card"><div class="stat-label">TOTAL EXPENSES</div><div id="expense" class="stat-value red">RM 0.00</div></div>
-</div>
-<div class="grid">
-<div class="card"><h3>Today's Focus</h3>
-<label>What matters most today?
-<input id="focus" maxlength="180" placeholder="e.g. Finish my assignment"></label>
-<div class="actions"><button class="primary" id="saveFocus">Save Focus</button></div>
-<p class="small" id="focusStatus">Your focus is saved on this device.</p>
-</div>
-<div class="card"><h3>Task Summary</h3>
-<div class="item"><span class="muted">Open tasks</span><strong id="openTasks" style="float:right">0</strong></div>
-<div class="item"><span class="muted">Due today</span><strong id="dueTasks" style="float:right">0</strong></div>
-<div class="item"><span class="muted">Estimated work remaining</span><strong id="remaining" style="float:right">0 min</strong></div>
-<div class="actions"><button data-goto="tasks">Manage Tasks</button></div>
-</div>
-</div>
-<div class="card" style="margin-top:14px"><h3>Upcoming Tasks</h3><div id="upcoming"></div></div>
-<div class="card" style="margin-top:14px"><h3>Recent Transactions</h3><div id="recent"></div><div class="actions"><button data-goto="budget">View Full Ledger</button></div></div>
-</section>
 
-<section id="tasks" class="hidden">
-<h2>Task Manager</h2>
-<div class="grid">
-<div class="card"><h3>Create a Task</h3>
-<form id="taskForm">
-<label>Task title<input id="taskTitle" required maxlength="160" placeholder="What needs to be done?"></label>
-<div class="two">
-<label>Deadline date<input type="date" id="taskDate"></label>
-<label>Deadline time<input type="time" id="taskTime"></label>
-</div>
-<div class="two">
-<label>Estimated duration (minutes)<input type="number" id="taskDuration" min="1" max="100000" value="30" required></label>
-<label>Reminder before deadline<select id="taskReminder"><option value="0">At deadline</option><option value="5">5 minutes</option><option value="15" selected>15 minutes</option><option value="30">30 minutes</option><option value="60">1 hour</option><option value="1440">1 day</option></select></label>
-</div>
-<label>Priority<select id="taskPriority"><option>Normal</option><option>High</option><option>Low</option></select></label>
-<button class="primary" type="submit">+ Add Task</button>
-<p class="small">Reminders work while the app is open. Background push notifications require additional setup.</p>
-</form>
-</div>
-<div class="card"><h3>Task Filters</h3>
-<label>Show tasks<select id="taskFilter"><option value="open">Open tasks</option><option value="all">All tasks</option><option value="done">Completed tasks</option></select></label>
-<hr><p class="muted">Finish tasks to track your progress. Deadlines and estimated durations help you plan your time.</p>
-<div id="taskProgress"></div>
-</div>
-</div>
-<div class="card" style="margin-top:14px"><h3>Your Tasks</h3><div id="taskList"></div></div>
-</section>
+    <div class="presentation-container">
+        <!-- Header -->
+        <div class="presentation-header">
+            <div class="presentation-title-group">
+                <h1>ZOR SMART PARCEL DETECTOR</h1>
+                <p>Diploma Final-Year Project UI Presentation &bull; Embedded IoT Security Platform</p>
+            </div>
+            <div class="project-badge">Monochrome SaaS Edition</div>
+        </div>
 
-<section id="budget" class="hidden">
-<h2>Personal Budget</h2>
-<div class="stats">
-<div class="card"><div class="stat-label">CURRENT BALANCE</div><div id="bBalance" class="stat-value gold">RM 0.00</div></div>
-<div class="card"><div class="stat-label">MONEY IN</div><div id="bIncome" class="stat-value green">RM 0.00</div></div>
-<div class="card"><div class="stat-label">MONEY OUT</div><div id="bExpense" class="stat-value red">RM 0.00</div></div>
-</div>
-<div class="grid">
-<div class="card"><h3>Add a Transaction</h3>
-<form id="moneyForm">
-<label>Transaction type<select id="moneyType"><option value="income">Money In</option><option value="expense">Money Out</option></select></label>
-<label>Amount (RM)<input type="number" id="moneyAmount" min="0.01" max="1000000000" step="0.01" required placeholder="0.00"></label>
-<label>Category<select id="moneyCategory"><option>Salary</option><option>Allowance</option><option>Savings</option><option>Food</option><option>Transport</option><option>Education</option><option>Bills</option><option>Shopping</option><option>Trading</option><option>Other</option></select></label>
-<label>Description<input id="moneyNote" maxlength="180" placeholder="What is this transaction for?"></label>
-<button class="primary" type="submit">Record Transaction</button>
-</form>
-<p class="small">Transactions are append-only in this app. Adding money creates a new entry; spending money creates a separate entry.</p>
-</div>
-<div class="card"><h3>Ledger Tools</h3>
-<p class="muted">Download a copy of your records for backup or review.</p>
-<div class="actions"><button id="exportCsv">Export Ledger CSV</button><button id="exportJson">Backup All Data</button></div>
-<hr>
-<label>Restore a JSON backup<input id="importJson" type="file" accept=".json,application/json"></label>
-<p class="small">Restoring a backup replaces the current data on this device. Export a backup first if you need to keep your current data.</p>
-</div>
-</div>
-<div class="card" style="margin-top:14px"><h3>Transaction Ledger</h3><p class="small">Newest transactions appear first. Each entry includes its balance after the transaction.</p><div id="ledger"></div></div>
-</section>
+        <!-- Showcase Stage: Desktop Dashboard + Mobile Preview -->
+        <div class="showcase-stage">
 
-<section id="settings" class="hidden">
-<h2>Settings & Data</h2>
-<div class="card">
-<h3>Reminders</h3>
-<p class="muted">Allow browser notifications for reminders while the website is active. On iPhone, web push notifications require the website to be added to the Home Screen and additional push-service setup.</p>
-<div class="actions"><button class="primary" id="enableNotifications">Enable Notifications</button><button id="testNotification">Test Notification</button></div>
-<p id="notificationStatus" class="small">Notification permission has not been requested.</p>
-</div>
-<div class="card" style="margin-top:14px">
-<h3>Data & Privacy</h3>
-<p class="muted">Your tasks, focus, and transactions are saved in this browser on this device. They are not automatically synced across devices or shared with other website visitors.</p>
-<div class="actions"><button id="settingsBackup">Download Backup</button><button id="clearTasks">Clear Completed Tasks</button></div>
-</div>
-<div class="card" style="margin-top:14px">
-<h3>About</h3>
-<p><strong>ZOR LIFE DASHBOARD</strong></p>
-<p class="muted">Personal productivity and budget management.</p>
-<p class="small">Version 2.0 · Created for everyday planning.</p>
-</div>
-</section>
-<footer>ZOR LIFE DASHBOARD · Stay consistent. Make progress.</footer>
-</main>
-<script>
-(() => {
-"use strict";
-const KEY = "zor-life-dashboard-v1";
-const $ = id => document.getElementById(id);
-const money = n => "RM " + Number(n || 0).toLocaleString("en-MY",{minimumFractionDigits:2,maximumFractionDigits:2});
-const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const uid = () => Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9);
-const now = () => new Date().toISOString();
+            <!-- DESKTOP DASHBOARD MOCKUP -->
+            <div class="mockup-window desktop-dashboard">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="control-dot"></div>
+                        <div class="control-dot"></div>
+                        <div class="control-dot"></div>
+                    </div>
+                    <div class="window-title">ZOR_OS // DESKTOP DASHBOARD - V2.4</div>
+                    <div style="width: 40px;"></div>
+                </div>
 
-function load() {
- try {
-  const d = JSON.parse(localStorage.getItem(KEY) || "{}");
-  const tasks = Array.isArray(d.tasks) ? d.tasks : [];
-  let transactions = Array.isArray(d.transactions) ? d.transactions : [];
-  // Migrate the older dashboard's totals into opening entries once.
-  if (!d.migrationV2 && !transactions.length) {
-   const inc = Number(d.income || 0), exp = Number(d.expense || 0);
-   if (inc > 0) transactions.push({id:uid(),type:"income",amount:inc,category:"Opening Balance",note:"Migrated opening income",createdAt:now(),legacy:true});
-   if (exp > 0) transactions.push({id:uid(),type:"expense",amount:exp,category:"Opening Balance",note:"Migrated opening expenses",createdAt:now(),legacy:true});
-  }
-  return {tasks,transactions,focus:d.focus || "",migrationV2:true,reminded:Array.isArray(d.reminded)?d.reminded:[]};
- } catch(e) { return {tasks:[],transactions:[],focus:"",migrationV2:true,reminded:[]}; }
-}
-let data = load();
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){alert("Unable to save data. Please export a backup and check browser storage.");}}
-function totals(){
- return data.transactions.reduce((t,x)=>{if(x.type==="income")t.income+=Number(x.amount);else t.expense+=Number(x.amount);return t;},{income:0,expense:0});
-}
-function balanceAt(index){
- return data.transactions.slice(0,index+1).reduce((b,x)=>b+(x.type==="income"?1:-1)*Number(x.amount),0);
-}
-function balance(){const t=totals();return t.income-t.expense;}
-function dateLabel(s){
- if(!s)return "No deadline";
- const d=new Date(s);
- return isNaN(d)?"No deadline":d.toLocaleString([],{dateStyle:"medium",timeStyle:"short"});
-}
-function taskDeadline(t){return t.date ? new Date(t.date+(t.time?"T"+t.time: "T23:59")) : null;}
-function remainingText(t){
- if(t.done)return "Completed";
- const d=taskDeadline(t); if(!d)return t.duration+" min · No deadline";
- const ms=d.getTime()-Date.now();
- if(ms<0)return "Overdue · "+t.duration+" min";
- if(ms<3600000)return "Due in "+Math.max(1,Math.round(ms/60000))+" min";
- if(ms<86400000)return "Due in "+Math.floor(ms/3600000)+"h "+Math.floor((ms%3600000)/60000)+"m";
- return "Due "+dateLabel(d.toISOString());
-}
-function openTab(tab){
- document.querySelectorAll("main section").forEach(s=>s.classList.toggle("hidden",s.id!==tab));
- document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
- render();
- window.scrollTo({top:0,behavior:"smooth"});
-}
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
-document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.goto)));
+                <!-- Top Navbar -->
+                <div class="nav-bar">
+                    <div class="brand-container">
+                        <div class="z-shield-logo">
+                            <div class="z-glyph">Z</div>
+                        </div>
+                        <div class="brand-text">
+                            <h2>ZOR SMART PARCEL DETECTOR</h2>
+                            <span>Embedded Security Ecosystem</span>
+                        </div>
+                    </div>
+                    <div class="nav-status-cluster">
+                        <div class="hardware-badge">
+                            <div class="pulse-dot"></div>
+                            <span>ESP32 // ONLINE</span>
+                        </div>
+                        <div class="user-profile">MZ</div>
+                    </div>
+                </div>
 
-function renderStats(){
- const t=totals(), b=balance();
- $("balance").textContent=money(b);$("income").textContent=money(t.income);$("expense").textContent=money(t.expense);
- $("bBalance").textContent=money(b);$("bIncome").textContent=money(t.income);$("bExpense").textContent=money(t.expense);
-}
-function renderTasks(){
- const open=data.tasks.filter(t=>!t.done);
- $("openTasks").textContent=open.length;
- $("dueTasks").textContent=open.filter(t=>{const d=taskDeadline(t);return d&&d.toDateString()===new Date().toDateString();}).length;
- $("remaining").textContent=open.reduce((n,t)=>n+Number(t.duration||0),0)+" min";
- const done=data.tasks.filter(t=>t.done).length;
- $("taskProgress").innerHTML=`<p>${done} of ${data.tasks.length} tasks completed</p><div class="progress"><span style="width:${data.tasks.length?done/data.tasks.length*100:0}%"></span></div>`;
- const upcoming=open.slice().sort((a,b)=>(taskDeadline(a)?.getTime()||Infinity)-(taskDeadline(b)?.getTime()||Infinity)).slice(0,4);
- $("upcoming").innerHTML=upcoming.length?upcoming.map(t=>taskHTML(t,false)).join(""):'<div class="empty">No open tasks. Add a task to get started.</div>';
- const filter=$("taskFilter").value;
- const list=data.tasks.filter(t=>filter==="all"||(filter==="done"?t.done:!t.done)).slice().sort((a,b)=>(taskDeadline(a)?.getTime()||Infinity)-(taskDeadline(b)?.getTime()||Infinity));
- $("taskList").innerHTML=list.length?list.map(t=>taskHTML(t,true)).join(""):'<div class="empty">No tasks to show.</div>';
-}
-function taskHTML(t,controls){
- return `<div class="item"><div class="itemtop"><div><div class="itemtitle">${esc(t.title)}</div><div class="small">${t.date?esc(dateLabel((t.date)+"T"+(t.time||"23:59"))):"No deadline set"} · Estimated ${Number(t.duration)||0} min</div><span class="tag">${esc(t.priority||"Normal")} priority</span> <span class="tag">${t.done?"Completed":esc(remainingText(t))}</span></div></div>${controls?`<div class="actions">${t.done?"":`<button data-done="${esc(t.id)}">Mark Complete</button>`}<button data-delete-task="${esc(t.id)}">Delete Task</button></div>`:""}</div>`;
-}
-function renderLedger(){
- const tx=data.transactions.map((x,i)=>({...x,index:i})).reverse();
- $("ledger").innerHTML=tx.length?tx.map(x=>`<div class="item"><div class="itemtop"><div><div class="itemtitle">${esc(x.category||"Other")} · ${esc(x.note||"No description")}</div><div class="small">${esc(dateLabel(x.createdAt))} · ID ${esc(x.id)}</div><div class="small">Balance after transaction: <strong>${money(balanceAt(x.index))}</strong></div></div><strong class="${x.type==="income"?"green":"red"}">${x.type==="income"?"+":"−"}${money(x.amount)}</strong></div></div>`).join(""):'<div class="empty">No transactions yet. Add your first transaction above.</div>';
- const recent=tx.slice(0,4);
- $("recent").innerHTML=recent.length?recent.map(x=>`<div class="item itemtop"><div><div class="itemtitle">${esc(x.category||"Other")}</div><div class="small">${esc(dateLabel(x.createdAt))}</div></div><strong class="${x.type==="income"?"green":"red"}">${x.type==="income"?"+":"−"}${money(x.amount)}</strong></div>`).join(""):'<div class="empty">No transaction history yet.</div>';
-}
-function render(){
- renderStats();renderTasks();renderLedger();
- $("focus").value=data.focus||"";
-}
-$("taskForm").addEventListener("submit",e=>{
- e.preventDefault();
- const title=$("taskTitle").value.trim(), duration=Number($("taskDuration").value);
- if(!title||!Number.isFinite(duration)||duration<1)return;
- data.tasks.push({id:uid(),title,date:$("taskDate").value,time:$("taskTime").value,duration,reminder:Number($("taskReminder").value),priority:$("taskPriority").value,done:false,createdAt:now()});
- save();e.target.reset();$("taskDuration").value=30;$("taskReminder").value="15";render();
-});
-$("taskFilter").addEventListener("change",renderTasks);
-$("taskList").addEventListener("click",e=>{
- const done=e.target.closest("[data-done]"),del=e.target.closest("[data-delete-task]");
- if(done){const t=data.tasks.find(t=>t.id===done.dataset.done);if(t)t.done=true;save();render();}
- if(del&&confirm("Delete this task?")){data.tasks=data.tasks.filter(t=>t.id!==del.dataset.deleteTask);save();render();}
-});
-$("saveFocus").addEventListener("click",()=>{data.focus=$("focus").value.trim();save();$("focusStatus").textContent="Focus saved successfully.";});
-$("moneyForm").addEventListener("submit",e=>{
- e.preventDefault();
- const amount=Math.round(Number($("moneyAmount").value)*100)/100;
- if(!Number.isFinite(amount)||amount<=0){alert("Enter an amount greater than zero.");return;}
- const type=$("moneyType").value;
- if(type==="expense"&&amount>balance()&&!confirm("This expense is greater than your current balance. Record it anyway?"))return;
- data.transactions.push({id:uid(),type,amount,category:$("moneyCategory").value,note:$("moneyNote").value.trim(),createdAt:now()});
- save();e.target.reset();render();
-});
-function download(filename,content,type){
- const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-}
-function csvCell(v){return '"'+String(v??"").replace(/"/g,'""')+'"';}
-function exportCsv(){
- const rows=[["Transaction ID","Date","Type","Category","Description","Amount (RM)","Balance After (RM)"]];
- data.transactions.forEach((x,i)=>rows.push([x.id,x.createdAt,x.type,x.category,x.note,x.amount,balanceAt(i).toFixed(2)]));
- download("zor-life-ledger.csv","\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n"),"text/csv;charset=utf-8");
-}
-function exportJson(){download("zor-life-backup.json",JSON.stringify(data,null,2),"application/json");}
-$("exportCsv").addEventListener("click",exportCsv);
-$("exportJson").addEventListener("click",exportJson);
-$("settingsBackup").addEventListener("click",exportJson);
-$("importJson").addEventListener("change",async e=>{
- const file=e.target.files[0];if(!file)return;
- try{
-  const d=JSON.parse(await file.text());
-  if(!d||!Array.isArray(d.tasks)||!Array.isArray(d.transactions))throw Error("Invalid backup");
-  if(!confirm("Restore this backup? Current local data will be replaced."))return;
-  data={tasks:d.tasks,transactions:d.transactions,focus:d.focus||"",migrationV2:true,reminded:Array.isArray(d.reminded)?d.reminded:[]};
-  save();render();alert("Backup restored.");
- }catch(err){alert("Could not restore this file. Please select a valid ZOR JSON backup.");}
- e.target.value="";
-});
-$("clearTasks").addEventListener("click",()=>{
- if(!confirm("Remove all completed tasks? Transaction history will not be changed."))return;
- data.tasks=data.tasks.filter(t=>!t.done);save();render();
-});
-function notify(title,body){
- if(!("Notification" in window)){ $("notificationStatus").textContent="Notifications are not supported in this browser context.";return;}
- if(Notification.permission==="granted")new Notification(title,{body});
-}
-async function enableNotifications(){
- if(!("Notification" in window)){$("notificationStatus").textContent="Notifications are unavailable in this browser. On iPhone, add the site to your Home Screen and open it there.";return;}
- try{
-  const p=await Notification.requestPermission();
-  $("notificationStatus").textContent=p==="granted"?"Notifications enabled when the app is running.":("Notification permission: "+p+".");
- }catch(e){$("notificationStatus").textContent="Could not request permission. Try opening the website from your Home Screen.";}
-}
-$("enableNotifications").addEventListener("click",enableNotifications);
-$("testNotification").addEventListener("click",async()=>{
- if(!("Notification" in window)){await enableNotifications();return;}
- if(Notification.permission!=="granted")await enableNotifications();
- if(Notification.permission==="granted")notify("ZOR LIFE DASHBOARD","Your test notification is working.");
-});
-function checkReminders(){
- const current=Date.now();
- for(const t of data.tasks){
-  if(t.done||!t.date)continue;
-  const deadline=taskDeadline(t);if(!deadline||isNaN(deadline.getTime()))continue;
-  const fireAt=deadline.getTime()-(Number(t.reminder)||0)*60000;
-  const reminderKey=t.id+"-"+fireAt;
-  if(current>=fireAt&&current<=deadline.getTime()+60000&&!data.reminded.includes(reminderKey)){
-   if("Notification" in window&&Notification.permission==="granted")notify("Task reminder: "+t.title,"Deadline: "+dateLabel(deadline.toISOString()));
-   data.reminded.push(reminderKey);
-   if(data.reminded.length>1000)data.reminded=data.reminded.slice(-500);
-   save();
-  }
- }
-}
-render();
-checkReminders();
-setInterval(()=>{checkReminders();renderStats();},30000);
-})();
-</script>
+                <!-- Dashboard Body -->
+                <div class="dashboard-body">
+                    <!-- Sidebar Navigation -->
+                    <div class="sidebar">
+                        <div class="nav-menu">
+                            <a href="#" class="nav-item active">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                Overview
+                            </a>
+                            <a href="#" class="nav-item">
+                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                Live Detection
+                            </a>
+                            <a href="#" class="nav-item">
+                                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                Camera Monitoring
+                            </a>
+                            <a href="#" class="nav-item">
+                                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                Parcel History
+                            </a>
+                            <a href="#" class="nav-item">
+                                <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                Security Alerts
+                            </a>
+                            <a href="#" class="nav-item">
+                                <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                                Analytics
+                            </a>
+                            <a href="#" class="nav-item">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                                Settings
+                            </a>
+                        </div>
+                        <div class="sidebar-footer">
+                            POLISAS // DTK3C
+                        </div>
+                    </div>
+
+                    <!-- Main Content View -->
+                    <div class="main-content">
+                        <!-- Top System Status Card -->
+                        <div class="system-status-card">
+                            <div class="status-left">
+                                <div class="status-icon-box">
+                                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <div class="status-text">
+                                    <h3>SYSTEM PROTECTED</h3>
+                                    <p>Ultrasonic & PIR defense grid fully operational. Anti-theft buzzer armed.</p>
+                                </div>
+                            </div>
+                            <div class="status-pill">SECURE</div>
+                        </div>
+
+                        <!-- Grid Top: Camera Monitoring + Sensors Stack -->
+                        <div class="dashboard-grid-top">
+                            <!-- Camera Monitoring Panel -->
+                            <div class="panel">
+                                <div class="panel-header">
+                                    <span>Camera Feed & AI Detection</span>
+                                    <span class="live-tag">LIVE OPTIONAL</span>
+                                </div>
+                                <div class="camera-viewport">
+                                    <div class="camera-simulation">
+                                        <div class="porch-floor"></div>
+                                        <div class="box-3d">
+                                            <div class="box-label">ZOR PARCEL</div>
+                                        </div>
+                                    </div>
+                                    <div class="ai-bounding-box">
+                                        <div class="ai-tag-top">PARCEL // CONF: 98.4%</div>
+                                        <div class="ai-tag-bottom">ZONE: PORCH-01</div>
+                                    </div>
+                                    <div class="camera-hud-overlay">
+                                        <span>CAM_01 // 1080P_30FPS</span>
+                                        <span>2026-10-25 00:21:00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sensor Cards Stack -->
+                            <div class="sensors-stack">
+                                <div class="sensor-card">
+                                    <div class="sensor-info">
+                                        <label>Parcel Status</label>
+                                        <div class="sensor-value">PARCEL DETECTED</div>
+                                    </div>
+                                    <div class="sensor-status-badge active">DETECTED</div>
+                                </div>
+
+                                <div class="sensor-card">
+                                    <div class="sensor-info">
+                                        <label>Ultrasonic Distance Sensor</label>
+                                        <div class="sensor-value">14.2 cm</div>
+                                    </div>
+                                    <div class="sensor-status-badge">OPTIMAL</div>
+                                </div>
+
+                                <div class="sensor-card">
+                                    <div class="sensor-info">
+                                        <label>PIR Motion Detector</label>
+                                        <div class="sensor-value">NO MOTION</div>
+                                    </div>
+                                    <div class="sensor-status-badge">CLEAR</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid Bottom: Metrics & Activity Timeline -->
+                        <div class="dashboard-grid-bottom">
+                            <div class="metric-card">
+                                <span>Total Detections</span>
+                                <div class="metric-number">48</div>
+                                <div class="metric-sub">+12 today</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <span>Security Alerts</span>
+                                <div class="metric-number">03</div>
+                                <div class="metric-sub">All cleared</div>
+                            </div>
+
+                            <div class="metric-card">
+                                <span>System Uptime</span>
+                                <div class="metric-number">99.8%</div>
+                                <div class="metric-sub">14d 6h active</div>
+                            </div>
+
+                            <div class="activity-panel">
+                                <div class="activity-header">Parcel Activity Timeline</div>
+                                <div class="activity-list">
+                                    <div class="activity-item">
+                                        <div class="activity-desc">
+                                            <div class="activity-dot"></div>
+                                            <span>Parcel secured in drop zone</span>
+                                        </div>
+                                        <span class="activity-time">00:18:42</span>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="activity-desc">
+                                            <div class="activity-dot"></div>
+                                            <span>Ultrasonic proximity trigger</span>
+                                        </div>
+                                        <span class="activity-time">00:18:39</span>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="activity-desc">
+                                            <div class="activity-dot"></div>
+                                            <span>System armed by ESP32</span>
+                                        </div>
+                                        <span class="activity-time">00:00:15</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="dashboard-footer">
+                    <span>ZOR TECHNOLOGY | SMART DELIVERY SECURITY</span>
+                    <div class="footer-system-info">
+                        <span>FIRMWARE: V1.0.4</span>
+                        <span>HARDWARE: ESP32 DEVKIT V1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMARTPHONE PREVIEW CONCEPT -->
+            <div class="smartphone-mockup-wrapper">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="control-dot"></div>
+                        <div class="control-dot"></div>
+                        <div class="control-dot"></div>
+                    </div>
+                    <div class="window-title">MOBILE APP VIEW</div>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="phone-screen">
+                    <div class="phone-top-bar">
+                        <div class="phone-brand">
+                            <div class="z-shield-logo" style="width: 24px; height: 28px;">
+                                <div class="z-glyph" style="font-size: 14px;">Z</div>
+                            </div>
+                            <span>ZOR MOBILE</span>
+                        </div>
+                        <div class="hardware-badge" style="padding: 3px 8px; font-size: 9px;">
+                            <div class="pulse-dot" style="width: 6px; height: 6px;"></div>
+                            <span>ESP32</span>
+                        </div>
+                    </div>
+
+                    <div class="phone-status-card">
+                        <div>
+                            <h4>SYSTEM PROTECTED</h4>
+                            <p>Anti-theft defense active</p>
+                        </div>
+                        <div class="status-pill" style="padding: 4px 8px; font-size: 9px;">SECURE</div>
+                    </div>
+
+                    <div class="phone-camera-box">
+                        <div class="camera-simulation">
+                            <div class="porch-floor" style="height: 40px;"></div>
+                            <div class="box-3d" style="width: 70px; height: 48px;">
+                                <div class="box-label" style="font-size: 6px;">ZOR</div>
+                            </div>
+                        </div>
+                        <div class="ai-bounding-box" style="width: 90px; height: 70px; top: 40px;">
+                            <div class="ai-tag-top" style="font-size: 7px;">PARCEL DETECTED</div>
+                        </div>
+                    </div>
+
+                    <div class="phone-sensors-grid">
+                        <div class="phone-sensor-card">
+                            <label>Distance</label>
+                            <div class="val">14.2 cm</div>
+                        </div>
+                        <div class="phone-sensor-card">
+                            <label>Motion</label>
+                            <div class="val" style="font-size: 11px;">NO MOTION</div>
+                        </div>
+                    </div>
+
+                    <div class="phone-alerts-box">
+                        <div class="phone-alert-title">Recent Security Events</div>
+                        <div class="phone-alert-item">
+                            <span>Parcel Arrived</span>
+                            <span>00:18</span>
+                        </div>
+                        <div class="phone-alert-item">
+                            <span>Proximity OK</span>
+                            <span>00:18</span>
+                        </div>
+                        <div class="phone-alert-item">
+                            <span>System Armed</span>
+                            <span>00:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </body>
 </html>
