@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZOR SMART PARCEL DETECTOR | Enterprise IoT Security</title>
+    <title>ZOR SMART PARCEL DETECTOR | Enterprise AI Security Demo</title>
     <style>
         :root {
             --bg-base: #030305;
             --bg-surface: #0a0a0f;
-            --panel-glass: rgba(18, 18, 26, 0.75);
-            --border-line: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(255, 255, 255, 0.25);
-            --silver-light: #e2e2f0;
-            --silver-muted: #8c8c9e;
+            --panel-glass: rgba(16, 16, 24, 0.85);
+            --border-line: rgba(255, 255, 255, 0.1);
+            --border-glow: rgba(255, 255, 255, 0.3);
+            --silver-light: #ececf4;
+            --silver-muted: #88889c;
             --accent-white: #ffffff;
             --accent-dark: #000000;
-            --danger-glow: rgba(255, 60, 60, 0.4);
+            --alert-red: #ff3b3b;
         }
 
         * {
@@ -37,11 +37,11 @@
             padding: 0;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(30, 30, 45, 0.3) 0%, transparent 60%),
-                radial-gradient(circle at 10% 90%, rgba(15, 15, 25, 0.5) 0%, transparent 50%);
+                radial-gradient(circle at 50% 0%, rgba(35, 35, 55, 0.35) 0%, transparent 60%),
+                radial-gradient(circle at 10% 90%, rgba(15, 15, 25, 0.6) 0%, transparent 50%);
         }
 
-        /* Mobile App Frame Container */
+        /* App Frame Container */
         .app-frame {
             width: 100%;
             max-width: 414px;
@@ -51,14 +51,14 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 0 1px var(--border-line);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.95), 0 0 0 1px var(--border-line);
             overflow: hidden;
         }
 
         @media (min-width: 415px) {
             .app-frame {
                 border-radius: 44px;
-                border: 5px solid #1c1c26;
+                border: 6px solid #1a1a26;
                 height: 850px;
                 margin: 20px 0;
             }
@@ -66,8 +66,8 @@
 
         /* Top Header */
         .app-header {
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(12px);
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border-line);
             padding: 16px 20px;
             display: flex;
@@ -86,13 +86,13 @@
             width: 34px;
             height: 38px;
             position: relative;
-            background: linear-gradient(135deg, #282836 0%, #0d0d12 100%);
+            background: linear-gradient(135deg, #2a2a38 0%, #0d0d12 100%);
             border: 1px solid var(--border-glow);
             display: flex;
             align-items: center;
             justify-content: center;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
         }
 
         .z-glyph {
@@ -143,7 +143,7 @@
             100% { opacity: 0.3; transform: scale(0.9); }
         }
 
-        /* Main Viewport Container */
+        /* App Body Content */
         .app-body {
             flex: 1;
             overflow-y: auto;
@@ -174,7 +174,7 @@
 
         /* Hero Status Banner */
         .hero-banner {
-            background: linear-gradient(135deg, rgba(25, 25, 38, 0.6) 0%, rgba(10, 10, 15, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(25, 25, 40, 0.7) 0%, rgba(10, 10, 15, 0.95) 100%);
             border: 1px solid var(--border-glow);
             padding: 18px;
             display: flex;
@@ -183,6 +183,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .hero-banner::before {
@@ -190,6 +191,21 @@
             position: absolute;
             top: 0; left: 0; width: 3px; height: 100%;
             background: var(--accent-white);
+            transition: background 0.3s;
+        }
+
+        .hero-banner.alarm-active {
+            border-color: var(--alert-red);
+            background: linear-gradient(135deg, rgba(50, 15, 15, 0.8) 0%, rgba(15, 5, 5, 0.95) 100%);
+            animation: flashAlarmBg 0.5s infinite alternate;
+        }
+        .hero-banner.alarm-active::before {
+            background: var(--alert-red);
+        }
+
+        @keyframes flashAlarmBg {
+            from { box-shadow: 0 0 15px rgba(255, 59, 59, 0.2); }
+            to { box-shadow: 0 0 30px rgba(255, 59, 59, 0.6); }
         }
 
         .hero-text h3 {
@@ -215,9 +231,22 @@
             letter-spacing: 1.5px;
             text-transform: uppercase;
             box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            transition: all 0.3s;
+        }
+        .hero-pill.alarm-pill {
+            background: var(--alert-red);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 59, 59, 0.8);
+            animation: pulseAlarm 0.4s infinite;
         }
 
-        /* Camera Feed & Radar Box */
+        @keyframes pulseAlarm {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Advanced Realistic AI Camera Viewport */
         .camera-card {
             background: var(--panel-glass);
             border: 1px solid var(--border-line);
@@ -247,31 +276,49 @@
             font-size: 7px;
             border: 1px solid var(--border-line);
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .tag-live::before {
+            content: '';
+            width: 5px; height: 5px; background: #00ff66; border-radius: 50%;
+            box-shadow: 0 0 6px #00ff66;
+            animation: pulse 1s infinite;
         }
 
         .camera-viewport {
             position: relative;
             width: 100%;
-            height: 200px;
-            background: #020204;
+            height: 210px;
+            background: #010103;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
 
-        /* Radar Scanner Effect */
-        .radar-sweep {
+        /* Optical Scanning Laser Line */
+        .scanner-beam {
             position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 12px rgba(255,255,255,0.9);
+            z-index: 6;
             pointer-events: none;
+            animation: scanBeam 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes scanBeam {
+            0% { top: 15%; opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { top: 85%; opacity: 0.3; }
         }
 
         .porch-scene {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 35%, #181824 0%, #050508 85%);
+            background: radial-gradient(circle at 50% 35%, #1a1a28 0%, #040407 90%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -284,7 +331,7 @@
             bottom: 0;
             width: 100%;
             height: 50px;
-            background: linear-gradient(180deg, #0f0f17 0%, #020204 100%);
+            background: linear-gradient(180deg, #0d0d14 0%, #010103 100%);
             border-top: 1px solid var(--border-line);
         }
 
@@ -292,9 +339,9 @@
             position: relative;
             width: 85px;
             height: 58px;
-            background: #20202c;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+            background: #242433;
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.95);
             transform: perspective(300px) rotateX(15deg) rotateY(-10deg);
             z-index: 2;
             display: flex;
@@ -308,7 +355,7 @@
             position: absolute;
             top: 0; left: 50%;
             width: 2px; height: 100%;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2);
         }
 
         .box-label-badge {
@@ -321,22 +368,33 @@
             z-index: 3;
         }
 
+        /* Realistic AI Bounding Box Tracker */
         .ai-bounding {
             position: absolute;
-            top: 32px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
-            width: 115px;
-            height: 90px;
-            border: 1px dashed rgba(255,255,255,0.6);
-            background: rgba(255,255,255,0.02);
-            z-index: 4;
+            width: 120px;
+            height: 95px;
+            border: 1px dashed rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.03);
+            z-index: 5;
             pointer-events: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 3px;
+            padding: 4px;
             transition: all 0.4s ease;
+        }
+        .ai-bounding.alert-mode {
+            border-color: var(--alert-red);
+            background: rgba(255, 59, 59, 0.08);
+            animation: pulseBox 0.5s infinite alternate;
+        }
+
+        @keyframes pulseBox {
+            from { border-color: rgba(255,59,59,0.4); }
+            to { border-color: #ff3b3b; box-shadow: 0 0 15px rgba(255,59,59,0.5) inset; }
         }
 
         .ai-tag-txt {
@@ -349,6 +407,10 @@
             border: 1px solid var(--border-line);
             letter-spacing: 0.5px;
         }
+        .ai-bounding.alert-mode .ai-tag-txt {
+            background: var(--alert-red);
+            color: #fff;
+        }
 
         .cam-hud-overlay {
             position: absolute;
@@ -358,7 +420,7 @@
             font-family: monospace;
             font-size: 8px;
             color: var(--silver-muted);
-            z-index: 5;
+            z-index: 6;
             pointer-events: none;
         }
 
@@ -455,8 +517,9 @@
             color: #ff6b6b;
         }
         .interactive-btn.danger:hover {
-            background: #ff4747;
+            background: #ff3b3b;
             color: #fff;
+            box-shadow: 0 0 20px rgba(255,59,59,0.5);
         }
 
         /* Activity Timeline */
@@ -531,11 +594,11 @@
             line-height: 1.5;
         }
 
-        /* Floating Navigation Bar */
+        /* Floating Bottom Dock Navigation */
         .bottom-dock {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            background: rgba(10, 10, 15, 0.9);
+            background: rgba(10, 10, 15, 0.92);
             backdrop-filter: blur(16px);
             border-top: 1px solid var(--border-line);
             height: 72px;
@@ -614,11 +677,11 @@
 
                 <div class="camera-card">
                     <div class="card-top-bar">
-                        <span>Porch Surveillance Feed</span>
-                        <span class="tag-live">AI OPTIONAL</span>
+                        <span>Porch AI Optical Feed</span>
+                        <div class="tag-live">AI TRACKING</div>
                     </div>
                     <div class="camera-viewport">
-                        <div class="radar-sweep"></div>
+                        <div class="scanner-beam"></div>
                         <div class="porch-scene">
                             <div class="ground-floor"></div>
                             <div class="parcel-box" id="sim-parcel-box">
@@ -626,11 +689,11 @@
                             </div>
                         </div>
                         <div class="ai-bounding" id="sim-ai-box">
-                            <div class="ai-tag-txt">PARCEL DETECTED // 99%</div>
-                            <div class="ai-tag-txt" style="align-self:flex-end;">ZONE-01</div>
+                            <div class="ai-tag-txt" id="ai-status-tag">PARCEL DETECTED // 99.4%</div>
+                            <div class="ai-tag-txt" style="align-self:flex-end;">ZONE-01 [LOCKED]</div>
                         </div>
                         <div class="cam-hud-overlay">
-                            <span>CAM_01 // ESP32-CAM</span>
+                            <span>CAM_01 // ESP32-CAM 1080P</span>
                             <span id="app-live-clock">00:00:00</span>
                         </div>
                     </div>
@@ -685,7 +748,7 @@
                         <div class="sensor-card-mob"><label>TRIG Pin (IO5)</label><div class="metric-val">HIGH</div><div class="metric-sub">10µs Pulse</div></div>
                         <div class="sensor-card-mob"><label>ECHO Pin (IO18)</label><div class="metric-val">820 µs</div><div class="metric-sub">Echo Return</div></div>
                         <div class="sensor-card-mob"><label>PIR Sensor (IO19)</label><div class="metric-val">0.02 V</div><div class="metric-sub">Low State</div></div>
-                        <div class="sensor-card-mob"><label>Buzzer (IO21)</label><div class="metric-val">STANDBY</div><div class="metric-sub">Relay Open</div></div>
+                        <div class="sensor-card-mob"><label>Buzzer (IO21)</label><div class="metric-val" id="telemetry-buzzer-state">STANDBY</div><div class="metric-sub">Relay Open</div></div>
                     </div>
                 </div>
             </div>
@@ -709,8 +772,8 @@
                     <p>Calibrate detection distance threshold and buzzer duration.</p>
                     <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
                         <label style="font-size:9px; color:var(--silver-muted); text-transform:uppercase; letter-spacing:1px;">Threshold Distance: <span id="thresh-display" style="color:#fff;">20</span> cm</label>
-                        <input type="range" min="5" max="50" value="20" oninput="document.getElementById('thresh-display').innerText=this.value" style="accent-color:#fff;">
-                        <button class="interactive-btn highlight" style="margin-top:8px;" onclick="alert('Configuration successfully flashed to ESP32 EEPROM!')">Flash to ESP32</button>
+                        <input type="range" min="5" max="50" value="20" oninput="playClickSound(); document.getElementById('thresh-display').innerText=this.value" style="accent-color:#fff;">
+                        <button class="interactive-btn highlight" style="margin-top:8px;" onclick="playClickSound(); alert('Configuration successfully flashed to ESP32 EEPROM!')">Flash to ESP32</button>
                     </div>
                 </div>
             </div>
@@ -732,15 +795,72 @@
                 <span>Alerts</span>
             </button>
             <button class="dock-item" onclick="switchAppTab('settings', this)">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 <span>Config</span>
             </button>
         </nav>
     </div>
 
     <script>
-        // Tab Navigation
+        // Web Audio API Sound Synthesizer (Tiada fail audio luar diperlukan)
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Bunyi Klik Elektronik Moden untuk setiap Butang
+        function playClickSound() {
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch (e) {}
+        }
+
+        // Bunyi Siren Amaran Buzzer Sebenar (Anti-Theft Alarm)
+        let alarmInterval = null;
+        function playAlarmSound(start) {
+            if (start) {
+                try {
+                    initAudio();
+                    if (alarmInterval) clearInterval(alarmInterval);
+                    alarmInterval = setInterval(() => {
+                        if (!audioCtx) return;
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(700, audioCtx.currentTime);
+                        osc.frequency.linearRampToValueAtTime(1400, audioCtx.currentTime + 0.2);
+                        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                        gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start();
+                        osc.stop(audioCtx.currentTime + 0.2);
+                    }, 250);
+                } catch (e) {}
+            } else {
+                if (alarmInterval) {
+                    clearInterval(alarmInterval);
+                    alarmInterval = null;
+                }
+            }
+        }
+
+        // Tab Navigation dengan Bunyi Klik
         function switchAppTab(tabId, btnElement) {
+            playClickSound();
             document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
             document.querySelectorAll('.dock-item').forEach(item => item.classList.remove('active'));
             
@@ -756,9 +876,10 @@
             if(clockEl) clockEl.innerText = timeString;
         }, 1000);
 
-        // Interactive Presentation Logic
+        // Interactive Presentation Logic with AI Camera Simulation & Sound
         let hasParcel = true;
         function toggleParcelState() {
+            playClickSound();
             hasParcel = !hasParcel;
             const mainTitle = document.getElementById('hero-main-title');
             const subDesc = document.getElementById('hero-sub-desc');
@@ -766,16 +887,23 @@
             const bannerBox = document.getElementById('hero-banner-box');
             const parcelBox = document.getElementById('sim-parcel-box');
             const aiBox = document.getElementById('sim-ai-box');
+            const aiTag = document.getElementById('ai-status-tag');
             const distVal = document.getElementById('metric-dist');
             const distSub = document.getElementById('metric-dist-sub');
 
+            bannerBox.classList.remove('alarm-active');
+            statusPill.classList.remove('alarm-pill');
+            aiBox.classList.remove('alert-mode');
+            playAlarmSound(false);
+
             if(!hasParcel) {
                 mainTitle.innerText = "NO PARCEL DETECTED";
-                subDesc.innerText = "Drop zone is clear. Waiting for courier.";
+                subDesc.innerText = "Drop zone is clear. Waiting for courier arrival.";
                 statusPill.innerText = "WAITING";
                 bannerBox.style.borderColor = "rgba(255,255,255,0.15)";
                 parcelBox.style.opacity = "0.15";
-                aiBox.style.opacity = "0.15";
+                aiBox.style.opacity = "0.7";
+                aiTag.innerText = "SCANNING... [NO OBJECT]";
                 distVal.innerText = "45.0 cm";
                 distSub.innerText = "Out of range";
             } else {
@@ -785,13 +913,49 @@
                 bannerBox.style.borderColor = "var(--border-glow)";
                 parcelBox.style.opacity = "1";
                 aiBox.style.opacity = "1";
+                aiTag.innerText = "PARCEL DETECTED // 99.4%";
                 distVal.innerText = "14.2 cm";
                 distSub.innerText = "Proximity Optimal";
             }
         }
 
+        // Butang Ujian Alarm / Panik Buzzer
+        let isAlarming = false;
         function triggerAlarmTest() {
-            alert('ESP32 Command Dispatched: Buzzer Active & Telegram Alert Sent!');
+            playClickSound();
+            isAlarming = !isAlarming;
+            const mainTitle = document.getElementById('hero-main-title');
+            const subDesc = document.getElementById('hero-sub-desc');
+            const statusPill = document.getElementById('hero-status-pill');
+            const bannerBox = document.getElementById('hero-banner-box');
+            const aiBox = document.getElementById('sim-ai-box');
+            const aiTag = document.getElementById('ai-status-tag');
+            const motionVal = document.getElementById('metric-motion');
+            const telemetryBuzzer = document.getElementById('telemetry-buzzer-state');
+
+            if(isAlarming) {
+                playAlarmSound(true);
+                mainTitle.innerText = "INTRUSION ALERT!";
+                subDesc.innerText = "Unauthorized movement detected in drop zone!";
+                statusPill.innerText = "ALARM ON";
+                bannerBox.classList.add('alarm-active');
+                statusPill.classList.add('alarm-pill');
+                aiBox.classList.add('alert-mode');
+                aiTag.innerText = "WARNING: TAMPER DETECTED!";
+                motionVal.innerText = "MOTION!";
+                if(telemetryBuzzer) telemetryBuzzer.innerText = "ACTIVE (HIGH)";
+            } else {
+                playAlarmSound(false);
+                mainTitle.innerText = "SYSTEM PROTECTED";
+                subDesc.innerText = "Ultrasonic & PIR defense grid active";
+                statusPill.innerText = "SECURE";
+                bannerBox.classList.remove('alarm-active');
+                statusPill.classList.remove('alarm-pill');
+                aiBox.classList.remove('alert-mode');
+                aiTag.innerText = "PARCEL DETECTED // 99.4%";
+                motionVal.innerText = "NO MOTION";
+                if(telemetryBuzzer) telemetryBuzzer.innerText = "STANDBY";
+            }
         }
     </script>
 </body>
