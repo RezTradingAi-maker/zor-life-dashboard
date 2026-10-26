@@ -1,0 +1,210 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model User {
+  id               String           @id @default(uuid())
+  email            String           @unique
+  name             String
+  passwordHash     String
+  role             Role             @default(STUDENT)
+  subscriptionTier String           @default("Free") // "Free" or "Plus"
+  aiUsageCount     Int              @default(0)
+  aiUsageLimit     Int              @default(50)
+  streakCount      Int              @default(0)
+  lastActiveDate   DateTime?
+  weeklyGoalMins   Int              @default(300)
+  weeklyStudiedMins Int             @default(0)
+  enableReminders  Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  conversations    AiConversation[]
+  documents        Document[]
+  quizSets         QuizSet[]
+  quizAttempts     QuizAttempt[]
+  flashcardDecks   FlashcardDeck[]
+  studyPlans       StudyPlan[]
+  badges           UserBadge[]
+  auditLogs        AdminAuditLog[]
+}
+
+model AiConversation {
+  id             String      @id @default(uuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject        String
+  topic          String
+  educationLevel String
+  difficulty     String
+  title          String      @default("Sesi Pembelajaran")
+  messages       AiMessage[]
+  createdAt      DateTime    @default(now())
+}
+
+model AiMessage {
+  id             String         @id @default(uuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String         // 'user' or 'assistant'
+  content        String         @db.Text
+  createdAt      DateTime       @default(now())
+}
+
+model Document {
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  filename      String
+  originalName  String
+  mimeType      String
+  size          Int
+  filePath      String
+  extractedText String       @db.Text
+  status        String       @default("READY")
+  createdAt     DateTime     @default(now())
+  summaries     DocSummary[]
+}
+
+model DocSummary {
+  id         String   @id @default(uuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  type       String   // SUMMARY, TERMS, NOTES, QUESTIONS
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+}
+
+model QuizSet {
+  id         String         @id @default(uuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  subject    String
+  topic      String
+  difficulty String
+  mode       String         // PRACTICE, EXAM
+  questions  QuizQuestion[]
+  attempts   QuizAttempt[]
+  createdAt  DateTime       @default(now())
+}
+
+model QuizQuestion {
+  id            String     @id @default(uuid())
+  quizSetId     String
+  quizSet       QuizSet    @relation(fields: [quizSetId], references: [id], onDelete: Cascade)
+  questionText  String     @db.Text
+  questionType  String     // MCQ, TRUE_FALSE, SUBJECTIVE
+  options       String[]
+  correctAnswer String     @db.Text
+  explanation   String     @db.Text
+}
+
+model QuizAttempt {
+  id          String       @id @default(uuid())
+  quizSetId   String
+  quizSet     QuizSet      @relation(fields: [quizSetId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score       Int
+  totalScore  Int
+  answers     UserAnswer[]
+  createdAt   DateTime     @default(now())
+}
+
+model UserAnswer {
+  id         String      @id @default(uuid())
+  attemptId  String
+  attempt    QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId String
+  userAnswer String      @db.Text
+  isCorrect  Boolean     @default(false)
+  aiFeedback String?     @db.Text
+}
+
+model FlashcardDeck {
+  id        String      @id @default(uuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  subject   String
+  cards     Flashcard[]
+  createdAt DateTime    @default(now())
+}
+
+model Flashcard {
+  id           String        @id @default(uuid())
+  deckId       String
+  deck         FlashcardDeck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  front        String        @db.Text
+  back         String        @db.Text
+  interval     Int           @default(0)
+  repetitions  Int           @default(0)
+  easeFactor   Float         @default(2.5)
+  dueDate      DateTime      @default(now())
+  lastReviewed DateTime?
+}
+
+model StudyPlan {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  subject     String
+  dueDate     DateTime
+  priority    String   // HIGH, MEDIUM, LOW
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model LibraryItem {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  type      String   // NOTE, QUIZ, DOCUMENT, FLASHCARD
+  subject   String
+  tags      String[]
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Badge {
+  id          String      @id @default(uuid())
+  code        String      @unique
+  title       String
+  description String
+  icon        String
+  users       UserBadge[]
+}
+
+model UserBadge {
+  id       String   @id @default(uuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId  String
+  badge    Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+model AdminAuditLog {
+  id        String   @id @default(uuid())
+  adminId   String
+  admin     User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  action    String
+  details   String   @db.Text
+  createdAt DateTime @default(now())
+}
