@@ -4,164 +4,429 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StudyAI Malaysia - Platform Pembelajaran Pintar</title>
+  
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
+  <!-- Babel Standalone untuk JSX -->
   <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#4f46e5">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-indigo-500 selection:text-white">
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect } = React;
 
     function App() {
-      const [token, setToken] = useState(localStorage.getItem('studyai_token') || '');
+      // Auth State (Demo & Local Storage)
+      const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('studyai_logged') === 'true');
+      const [email, setEmail] = useState('zulkhairy@studyai.my');
+      const [password, setPassword] = useState('rahasia123');
+      const [isSignUp, setIsSignUp] = useState(false);
+      const [userName, setUserName] = useState('Muhammad Zulkhairy');
+      
+      // Navigation & Settings State
       const [currentView, setCurrentView] = useState('dashboard');
-      const [user, setUser] = useState(null);
       const [lang, setLang] = useState('bm');
+      
+      // Mock Data States
+      const [streak, setStreak] = useState(5);
+      const [studyTime, setStudyTime] = useState(240);
+      const [tasks, setTasks] = useState([
+        { id: 1, title: 'Ulangkaji Add Maths Bab 3 (Pembezaan)', subject: 'Add Maths', done: true },
+        { id: 2, title: 'Buat Latihan Fizik Hukum Newton', subject: 'Fizik', done: false },
+        { id: 3, title: 'Hafal Fakta Sejarah Tingkatan 5', subject: 'Sejarah', done: false }
+      ]);
+      const [newTaskTitle, setNewTaskTitle] = useState('');
 
-      // Auth State
-      const [email, setEmail] = useState('');
-      const [password, setPassword] = useState('');
-      const [isLoginMode, setIsLoginMode] = useState(true);
+      // AI Tutor Chat State
+      const [chatMessages, setChatMessages] = useState([
+        { role: 'assistant', content: 'Halo! Saya Tutor AI StudyAI Malaysia anda. Pilih subjek atau tanya apa sahaja soalan untuk saya bantu terangkan langkah demi langkah.' }
+      ]);
+      const [chatInput, setChatInput] = useState('');
+      const [isAiLoading, setIsAiLoading] = useState(false);
 
-      useEffect(() => {
-        if (token) {
-          fetch('/api/v1/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
-            .then(res => res.json())
-            .then(data => {
-              if (data.success) setUser(data.user);
-              else setToken('');
-            })
-            .catch(() => setToken(''));
-        }
-      }, [token]);
+      // Flashcards State
+      const [flashcards, setFlashcards] = useState([
+        { id: 1, front: 'Apakah formula bagi kecerunan garis lurus?', back: 'm = (y2 - y1) / (x2 - x1)', deck: 'Add Maths' },
+        { id: 2, front: 'Apakah hukum gerakan Newton pertama?', back: 'Objek kekal dalam keadaan piawai atau bergerak lurus malar kecuali dikenakan daya luar.', deck: 'Fizik' }
+      ]);
+      const [cardIndex, setCardIndex] = useState(0);
+      const [isFlipped, setIsFlipped] = useState(false);
 
-      const handleAuth = async (e) => {
+      // Handle Login / Demo Entry
+      const handleLogin = (e) => {
         e.preventDefault();
-        const endpoint = isLoginMode ? '/api/v1/auth/login' : '/api/v1/auth/signup';
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name: 'Pelajar StudyAI' })
-        });
-        const data = await res.json();
-        if (data.success) {
-          localStorage.setItem('studyai_token', data.token);
-          setToken(data.token);
-          setUser(data.user);
-        } else {
-          alert(data.error);
+        if (!email || !password) {
+          alert('Sila masukkan emel dan kata laluan.');
+          return;
         }
+        localStorage.setItem('studyai_logged', 'true');
+        setIsLoggedIn(true);
       };
 
-      if (!token || !user) {
+      const handleLogout = () => {
+        localStorage.removeItem('studyai_logged');
+        setIsLoggedIn(false);
+      };
+
+      // Handle AI Tutor Send
+      const handleSendChat = (e) => {
+        e.preventDefault();
+        if (!chatInput.trim()) return;
+
+        const userMsg = chatInput;
+        setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+        setChatInput('');
+        setIsAiLoading(true);
+
+        setTimeout(() => {
+          let reply = `Bagus soalan anda tentang "${userMsg}". Berdasarkan silibus peperiksaan di Malaysia, konsep ini melibatkan kefahaman asas dan aplikasi rumus yang tepat. Ada Bahagian tertentu yang anda keliru?`;
+          if (userMsg.toLowerCase().contains('math') || userMsg.toLowerCase().contains('cangkuk')) {
+            reply = 'Dalam topik Add Maths, pastikan anda sentiasa menyemak tanda positif dan negatif terutamanya semasa melakukan pembezaan peringkat kedua.';
+          }
+          setChatMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+          setIsAiLoading(false);
+        }, 1000);
+      };
+
+      // Handle Add Task
+      const handleAddTask = (e) => {
+        e.preventDefault();
+        if (!newTaskTitle.trim()) return;
+        setTasks(prev => [...prev, { id: Date.now(), title: newTaskTitle, subject: 'Am', done: false }]);
+        setNewTaskTitle('');
+      };
+
+      const toggleTask = (id) => {
+        setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
+      };
+
+      // ================= LOGIN SCREEN =================
+      if (!isLoggedIn) {
         return (
-          <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
-            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl max-w-md w-full space-y-6">
-              <div className="text-center">
-                <div className="bg-indigo-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 font-bold text-lg">AI</div>
-                <h2 className="text-2xl font-bold text-slate-900">StudyAI Malaysia</h2>
-                <p className="text-xs text-slate-500 mt-1">Platform Pembelajaran Pintar Berkuasa AI</p>
+          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
+            <div className="bg-white/95 backdrop-blur-md p-8 sm:p-10 rounded-3xl shadow-2xl max-w-md w-full space-y-6 border border-white/20">
+              <div className="text-center space-y-2">
+                <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center mx-auto shadow-lg font-extrabold text-xl">AI</div>
+                <h1 className="text-2xl font-extrabold text-slate-900">StudyAI Malaysia</h1>
+                <p className="text-xs text-slate-500">Platform Pembelajaran Pintar & Adaptif Pelajar Malaysia</p>
               </div>
 
-              <form onSubmit={handleAuth} className="space-y-4">
+              <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Emel</label>
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none" required />
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Emel Pengguna</label>
+                  <input 
+                    type="email" 
+                    value={email} 
+                    onChange={e => setEmail(e.target.value)} 
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none bg-slate-50" 
+                    required 
+                  />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Kata Laluan</label>
-                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none" required />
+                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Kata Laluan</label>
+                  <input 
+                    type="password" 
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)} 
+                    className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none bg-slate-50" 
+                    required 
+                  />
                 </div>
-                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl text-sm shadow-md transition">
-                  {isLoginMode ? 'Log Masuk' : 'Daftar Akaun Baru'}
+                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition transform active:scale-95">
+                  Masuk / Masuk Demo 🚀
                 </button>
               </form>
 
-              <div className="text-center">
-                <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-xs text-indigo-600 font-semibold hover:underline">
-                  {isLoginMode ? 'Belum ada akaun? Daftar sekarang' : 'Sudah ada akaun? Log masuk'}
-                </button>
+              <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-xl text-center text-xs text-indigo-800">
+                💡 <span className="font-bold">Tips Demo:</span> Anda boleh terus klik butang di atas untuk masuk dan melihat kesemua modul secara langsung!
               </div>
             </div>
           </div>
         );
       }
 
+      // ================= DASHBOARD & MAIN APP =================
       return (
         <div className="min-h-screen flex flex-col md:flex-row bg-slate-50">
-          <aside className="hidden md:flex w-72 bg-white border-r border-slate-200 flex-col h-screen sticky top-0 p-6 space-y-6">
-            <div className="flex items-center space-x-3">
-              <div className="bg-indigo-600 text-white p-2.5 rounded-2xl font-bold">AI</div>
-              <div>
-                <h1 className="font-extrabold text-slate-900 text-base">StudyAI</h1>
-                <span className="text-xs text-indigo-600 font-bold">Malaysia</span>
+          
+          {/* SIDEBAR NAVIGATION */}
+          <aside className="w-full md:w-72 bg-white border-r border-slate-200 flex flex-col md:h-screen sticky top-0 z-30">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-indigo-600 text-white p-2.5 rounded-2xl font-bold text-sm shadow-sm">AI</div>
+                <div>
+                  <h1 className="font-extrabold text-slate-900 text-base leading-none">StudyAI</h1>
+                  <span className="text-xs text-indigo-600 font-bold">Malaysia</span>
+                </div>
               </div>
+              <button 
+                onClick={() => setLang(lang === 'bm' ? 'en' : 'bm')}
+                className="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg text-slate-700"
+              >
+                {lang === 'bm' ? 'EN' : 'BM'}
+              </button>
             </div>
 
-            <nav className="flex-1 space-y-1.5 overflow-y-auto">
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
               {[
-                { id: 'dashboard', label: 'Utama' },
-                { id: 'tutor', label: 'Tutor AI Adaptif' },
-                { id: 'library', label: 'Perpustakaan' },
-                { id: 'admin', label: 'Admin Dashboard' },
+                { id: 'dashboard', label: lang === 'bm' ? 'Utama (Dashboard)' : 'Dashboard', icon: '🏠' },
+                { id: 'tutor', label: lang === 'bm' ? 'Tutor AI Adaptif' : 'Adaptive AI Tutor', icon: '🤖' },
+                { id: 'planner', label: lang === 'bm' ? 'Perancang Belajar' : 'Study Planner', icon: '📅' },
+                { id: 'flashcards', label: lang === 'bm' ? 'Kad Imbas (Flashcards)' : 'Flashcards', icon: '⚡' },
+                { id: 'library', label: lang === 'bm' ? 'Perpustakaan' : 'Study Library', icon: '📚' },
               ].map(item => (
                 <button
                   key={item.id}
                   onClick={() => setCurrentView(item.id)}
-                  className={`w-full text-left px-4 py-3 rounded-2xl font-bold text-sm transition ${currentView === item.id ? 'bg-indigo-50 text-indigo-700 shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl font-bold text-sm transition ${
+                    currentView === item.id ? 'bg-indigo-50 text-indigo-700 shadow-xs' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  }`}
                 >
-                  {item.label}
+                  <span className="text-base">{item.icon}</span>
+                  <span>{item.label}</span>
                 </button>
               ))}
             </nav>
 
-            <div className="pt-4 border-t border-slate-100">
-              <button onClick={() => { localStorage.removeItem('studyai_token'); setToken(''); }} className="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold py-2.5 rounded-xl text-xs">
+            <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+              <div className="flex items-center space-x-3 mb-3 px-2">
+                <div className="w-9 h-9 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs">
+                  {userName.charAt(0)}
+                </div>
+                <div className="overflow-hidden">
+                  <h4 className="font-bold text-xs text-slate-900 truncate">{userName}</h4>
+                  <span className="text-[10px] text-slate-500 truncate block">SPM (Form 5)</span>
+                </div>
+              </div>
+              <button 
+                onClick={handleLogout} 
+                className="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold py-2 rounded-xl text-xs transition text-center"
+              >
                 Log Keluar
               </button>
             </div>
           </aside>
 
-          <main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto">
+          {/* MAIN CONTENT AREA */}
+          <main className="flex-1 p-4 sm:p-6 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto">
+            
+            {/* 1. DASHBOARD VIEW */}
             {currentView === 'dashboard' && (
               <div className="space-y-6">
-                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex justify-between items-center">
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900">Selamat kembali, {user.name}!</h2>
-                    <p className="text-slate-500 text-sm">Teruskan kecemerlangan pembelajaran anda hari ini.</p>
+                <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-8 rounded-3xl text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-6">
+                  <div className="space-y-2">
+                    <span className="bg-white/20 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider inline-block">StudyAI Malaysia v2.6</span>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold">Selamat kembali, {userName}!</h2>
+                    <p className="text-indigo-100 text-sm max-w-lg">Teruskan fokus ulangkaji anda hari ini. AI Tutor dan perancang belajar anda sudah bersedia.</p>
                   </div>
-                  <div className="bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-2xl text-xs font-bold text-indigo-700">
-                    Peranan: {user.role} • Pelan: {user.subscriptionTier || 'Free'}
+                  <button 
+                    onClick={() => setCurrentView('tutor')}
+                    className="bg-white text-indigo-700 hover:bg-indigo-50 font-bold px-6 py-3.5 rounded-2xl text-sm shadow-md transition transform active:scale-95 flex-shrink-0"
+                  >
+                    Mula Belajar dengan AI 🤖
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-1">
+                    <span className="text-xs font-bold text-slate-400 uppercase">Study Streak</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900">{streak} Hari 🔥</h3>
+                    <p className="text-[10px] text-emerald-600 font-semibold">Aktif berturut-turut</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-1">
+                    <span className="text-xs font-bold text-slate-400 uppercase">Masa Belajar</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900">{studyTime} Minit</h3>
+                    <p className="text-[10px] text-indigo-600 font-semibold">Minggu semasa</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-1">
+                    <span className="text-xs font-bold text-slate-400 uppercase">Tugasan Selesai</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900">{tasks.filter(t => t.done).length} / {tasks.length}</h3>
+                    <p className="text-[10px] text-slate-500 font-semibold">Senarai perancang</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-1">
+                    <span className="text-xs font-bold text-slate-400 uppercase">Pelan Akaun</span>
+                    <h3 className="text-3xl font-extrabold text-indigo-600">Free Tier</h3>
+                    <p className="text-[10px] text-slate-500 font-semibold">12 / 50 Kuota AI</p>
+                  </div>
+                </div>
+
+                {/* Quick Shortcuts */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 className="font-bold text-slate-900 text-base">Tugasan Hari Ini</h3>
+                    <div className="space-y-2">
+                      {tasks.map(t => (
+                        <div key={t.id} onClick={() => toggleTask(t.id)} className={`p-3.5 rounded-2xl border cursor-pointer transition flex items-center justify-between ${t.done ? 'bg-slate-50 border-slate-200 text-slate-400 line-through' : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-600'}`}>
+                          <span className="text-xs font-semibold">{t.title}</span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${t.done ? 'bg-slate-200 text-slate-600' : 'bg-indigo-50 text-indigo-700'}`}>{t.subject}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 className="font-bold text-slate-900 text-base">Akses Pantas Modul</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button onClick={() => setCurrentView('tutor')} className="p-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 rounded-2xl text-left font-bold text-xs transition border border-indigo-100">
+                        🤖 Tutor AI Adaptif
+                        <p className="text-[10px] font-normal text-indigo-600 mt-1">Terangkan konsep langkah demi langkah</p>
+                      </button>
+                      <button onClick={() => setCurrentView('flashcards')} className="p-4 bg-purple-50 hover:bg-purple-100 text-purple-900 rounded-2xl text-left font-bold text-xs transition border border-purple-100">
+                        ⚡ Kad Imbas Pintar
+                        <p className="text-[10px] font-normal text-purple-600 mt-1">Ulangkaji ingatan jangka panjang</p>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
+            {/* 2. AI TUTOR VIEW */}
             {currentView === 'tutor' && (
-              <div className="bg-white rounded-3xl border border-slate-200 h-[calc(100vh-8rem)] flex flex-col shadow-sm overflow-hidden">
-                <div className="p-4 border-b bg-slate-50 font-bold text-sm">StudyAI Adaptive Tutor (OpenAI GPT-4o Terintegrasi)</div>
-                <div className="flex-1 p-6 overflow-y-auto">
-                  <p className="text-sm text-slate-600">Sila mulakan sesi perbualan adaptif dengan menaip soalan di bawah.</p>
+              <div className="bg-white rounded-3xl border border-slate-200 h-[calc(100vh-6rem)] flex flex-col shadow-sm overflow-hidden">
+                <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="bg-indigo-600 text-white p-2 rounded-xl">🤖</div>
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-sm">StudyAI Adaptive Tutor</h3>
+                      <p className="text-[10px] text-slate-500">SPM / STPM / Universiti • Bahasa Melayu & English</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4 border-t flex space-x-2">
-                  <input type="text" placeholder="Tanya soalan subjek..." className="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" />
-                  <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm">Hantar</button>
+
+                <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4">
+                  {chatMessages.map((m, idx) => (
+                    <div key={idx} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-xl rounded-2xl px-5 py-3.5 text-xs sm:text-sm leading-relaxed ${
+                        m.role === 'user' ? 'bg-indigo-600 text-white rounded-br-xs' : 'bg-slate-100 text-slate-800 rounded-bl-xs border border-slate-200/60'
+                      }`}>
+                        {m.content}
+                      </div>
+                    </div>
+                  ))}
+                  {isAiLoading && (
+                    <div className="flex justify-start">
+                      <div className="bg-slate-100 text-slate-500 rounded-2xl px-4 py-3 text-xs flex items-center space-x-2">
+                        <span>Tutor AI sedang menaip penjelasan...</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <form onSubmit={handleSendChat} className="p-4 border-t border-slate-200 bg-white flex items-center space-x-2">
+                  <input 
+                    type="text" 
+                    value={chatInput} 
+                    onChange={e => setChatInput(e.target.value)} 
+                    placeholder="Taip soalan subjek atau minta latihan..." 
+                    className="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none" 
+                  />
+                  <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold text-xs sm:text-sm shadow-md transition">
+                    Hantar
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* 3. PLANNER VIEW */}
+            {currentView === 'planner' && (
+              <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6 max-w-2xl mx-auto">
+                <div className="text-center">
+                  <h3 className="text-xl font-bold text-slate-900">Perancang Belajar (Study Planner)</h3>
+                  <p className="text-xs text-slate-500 mt-1">Urus jadual ulangkaji dan tugasan harian anda.</p>
+                </div>
+
+                <form onSubmit={handleAddTask} className="flex gap-2">
+                  <input 
+                    type="text" 
+                    value={newTaskTitle} 
+                    onChange={e => setNewTaskTitle(e.target.value)} 
+                    placeholder="Tambah tugasan baru (Cth: Buat nota Kimia Bab 2)..." 
+                    className="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none" 
+                  />
+                  <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl text-xs sm:text-sm shadow-md">
+                    Tambah
+                  </button>
+                </form>
+
+                <div className="space-y-2">
+                  {tasks.map(t => (
+                    <div key={t.id} onClick={() => toggleTask(t.id)} className={`p-4 rounded-2xl border cursor-pointer transition flex items-center justify-between ${t.done ? 'bg-slate-50 border-slate-200 text-slate-400 line-through' : 'bg-white border-slate-200 text-slate-800 hover:border-indigo-600'}`}>
+                      <span className="text-xs sm:text-sm font-semibold">{t.title}</span>
+                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${t.done ? 'bg-slate-200 text-slate-600' : 'bg-indigo-50 text-indigo-700'}`}>{t.subject}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
 
-            {currentView === 'admin' && (
-              <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-                <h3 className="text-xl font-bold text-slate-900">Admin Dashboard (RBAC Protected)</h3>
-                <p className="text-xs text-slate-500">Hanya pengguna dengan peranan ADMIN di pangkalan data boleh mengakses endpoint pelayan ini.</p>
+            {/* 4. FLASHCARDS VIEW */}
+            {currentView === 'flashcards' && (
+              <div className="max-w-md mx-auto space-y-6">
+                <div className="text-center">
+                  <h3 className="text-xl font-bold text-slate-900">Kad Imbas & Spaced Repetition</h3>
+                  <p className="text-xs text-slate-500 mt-1">Ulangkaji ingatan jangka panjang.</p>
+                </div>
+
+                <div 
+                  onClick={() => setIsFlipped(!isFlipped)}
+                  className="bg-white h-72 rounded-3xl border border-slate-200 shadow-md flex items-center justify-center p-8 text-center cursor-pointer transition transform hover:scale-[1.01]"
+                >
+                  <div>
+                    <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider mb-3 block">
+                      {isFlipped ? 'Jawapan / Belakang' : 'Soalan / Hadapan'} (Klik untuk pusing)
+                    </span>
+                    <h4 className="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
+                      {isFlipped ? flashcards[cardIndex].back : flashcards[cardIndex].front}
+                    </h4>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <button onClick={() => { setIsFlipped(false); setCardIndex((cardIndex + 1) % flashcards.length); }} className="bg-rose-50 hover:bg-rose-100 text-rose-700 py-3 rounded-2xl font-semibold text-xs border border-rose-200 transition">
+                    Ulang Lagi 🔄
+                  </button>
+                  <button onClick={() => { setIsFlipped(false); setCardIndex((cardIndex + 1) % flashcards.length); }} className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-3 rounded-2xl font-semibold text-xs border border-indigo-200 transition">
+                    Saya Tahu ✅
+                  </button>
+                  <button onClick={() => { setIsFlipped(false); setCardIndex((cardIndex + 1) % flashcards.length); }} className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-3 rounded-2xl font-semibold text-xs border border-emerald-200 transition">
+                    Sangat Mudah ✨
+                  </button>
+                </div>
               </div>
             )}
+
+            {/* 5. LIBRARY VIEW */}
+            {currentView === 'library' && (
+              <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center space-y-4 max-w-xl mx-auto">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-xl font-bold">📚</div>
+                <h3 className="text-xl font-bold text-slate-900">Perpustakaan Peribadi (Study Library)</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">Semua nota, dokumen PDF, kuiz dan kad imbas anda disimpan dengan selamat dan diasingkan mengikut akaun peribadi.</p>
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-left space-y-2">
+                  <div className="flex justify-between text-xs font-bold text-slate-800">
+                    <span>Nota Ringkasan Add Maths.pdf</span>
+                    <span className="text-indigo-600">PDF Doc</span>
+                  </div>
+                  <p className="text-[10px] text-slate-500">Dimuat naik • 3 MB • Diuji sah oleh pelayan</p>
+                </div>
+              </div>
+            )}
+
           </main>
         </div>
       );
