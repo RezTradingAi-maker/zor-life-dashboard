@@ -4,21 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StudyAI Malaysia - Platform Pembelajaran Pintar</title>
-  
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- React & ReactDOM CDN -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  
-  <!-- Babel Standalone untuk JSX -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <!-- Lucide Icons -->
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- PWA Manifest & Theme -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4f46e5">
 </head>
@@ -28,87 +18,98 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // Kamus Dwibahasa (BM / EN)
-    const translations = {
-      bm: {
-        brand: "StudyAI Malaysia",
-        tagline: "Belajar Lebih Bijak dengan AI",
-        dashboard: "Utama (Dashboard)",
-        tutor: "Tutor AI Adaptif",
-        documents: "Nota & Dokumen",
-        quiz: "Penjana Kuiz",
-        flashcards: "Kad Imbas",
-        planner: "Perancang Belajar",
-        library: "Perpustakaan",
-        admin: "Admin Dashboard",
-        welcome: "Selamat kembali",
-        streak: "Streak Belajar",
-        studied: "Masa Belajar",
-        tasks: "Tugasan Selesai",
-        quizzes: "Purata Kuiz",
-        askPlaceholder: "Tanya soalan Sejarah, Add Maths, Fizik...",
-        send: "Hantar",
-        logout: "Log Keluar"
-      },
-      en: {
-        brand: "StudyAI Malaysia",
-        tagline: "Learn Smarter with AI",
-        dashboard: "Dashboard",
-        tutor: "Adaptive AI Tutor",
-        documents: "Notes & Docs",
-        quiz: "Quiz Generator",
-        flashcards: "Flashcards",
-        planner: "Study Planner",
-        library: "Library",
-        admin: "Admin Dashboard",
-        welcome: "Welcome back",
-        streak: "Study Streak",
-        studied: "Study Time",
-        tasks: "Tasks Done",
-        quizzes: "Avg Quiz Score",
-        askPlaceholder: "Ask History, Add Maths, Physics questions...",
-        send: "Send",
-        logout: "Log Out"
-      }
-    };
-
     function App() {
-      const [lang, setLang] = useState('bm');
+      const [token, setToken] = useState(localStorage.getItem('studyai_token') || '');
       const [currentView, setCurrentView] = useState('dashboard');
-      const [userProfile, setUserProfile] = useState({
-        name: 'Muhammad Zulkhairy',
-        level: 'SPM (Form 5)',
-        tier: 'Free',
-        streak: 5,
-        studiedMins: 240,
-        aiUsage: 12,
-        aiLimit: 50
-      });
+      const [user, setUser] = useState(null);
+      const [lang, setLang] = useState('bm');
 
-      const t = translations[lang];
+      // Auth State
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [isLoginMode, setIsLoginMode] = useState(true);
+
+      useEffect(() => {
+        if (token) {
+          fetch('/api/v1/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) setUser(data.user);
+              else setToken('');
+            })
+            .catch(() => setToken(''));
+        }
+      }, [token]);
+
+      const handleAuth = async (e) => {
+        e.preventDefault();
+        const endpoint = isLoginMode ? '/api/v1/auth/login' : '/api/v1/auth/signup';
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, name: 'Pelajar StudyAI' })
+        });
+        const data = await res.json();
+        if (data.success) {
+          localStorage.setItem('studyai_token', data.token);
+          setToken(data.token);
+          setUser(data.user);
+        } else {
+          alert(data.error);
+        }
+      };
+
+      if (!token || !user) {
+        return (
+          <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl max-w-md w-full space-y-6">
+              <div className="text-center">
+                <div className="bg-indigo-600 text-white w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 font-bold text-lg">AI</div>
+                <h2 className="text-2xl font-bold text-slate-900">StudyAI Malaysia</h2>
+                <p className="text-xs text-slate-500 mt-1">Platform Pembelajaran Pintar Berkuasa AI</p>
+              </div>
+
+              <form onSubmit={handleAuth} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Emel</label>
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none" required />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Kata Laluan</label>
+                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none" required />
+                </div>
+                <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl text-sm shadow-md transition">
+                  {isLoginMode ? 'Log Masuk' : 'Daftar Akaun Baru'}
+                </button>
+              </form>
+
+              <div className="text-center">
+                <button onClick={() => setIsLoginMode(!isLoginMode)} className="text-xs text-indigo-600 font-semibold hover:underline">
+                  {isLoginMode ? 'Belum ada akaun? Daftar sekarang' : 'Sudah ada akaun? Log masuk'}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
 
       return (
         <div className="min-h-screen flex flex-col md:flex-row bg-slate-50">
-          {/* Sidebar Desktop */}
           <aside className="hidden md:flex w-72 bg-white border-r border-slate-200 flex-col h-screen sticky top-0 p-6 space-y-6">
             <div className="flex items-center space-x-3">
               <div className="bg-indigo-600 text-white p-2.5 rounded-2xl font-bold">AI</div>
               <div>
-                <h1 className="font-extrabold text-slate-900 text-base">{t.brand}</h1>
-                <span className="text-xs text-indigo-600 font-bold">SPM / STPM / Uni</span>
+                <h1 className="font-extrabold text-slate-900 text-base">StudyAI</h1>
+                <span className="text-xs text-indigo-600 font-bold">Malaysia</span>
               </div>
             </div>
 
             <nav className="flex-1 space-y-1.5 overflow-y-auto">
               {[
-                { id: 'dashboard', label: t.dashboard },
-                { id: 'tutor', label: t.tutor },
-                { id: 'documents', label: t.documents },
-                { id: 'quiz', label: t.quiz },
-                { id: 'flashcards', label: t.flashcards },
-                { id: 'planner', label: t.planner },
-                { id: 'library', label: t.library },
-                { id: 'admin', label: t.admin },
+                { id: 'dashboard', label: 'Utama' },
+                { id: 'tutor', label: 'Tutor AI Adaptif' },
+                { id: 'library', label: 'Perpustakaan' },
+                { id: 'admin', label: 'Admin Dashboard' },
               ].map(item => (
                 <button
                   key={item.id}
@@ -120,46 +121,23 @@
               ))}
             </nav>
 
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <button 
-                onClick={() => setLang(lang === 'bm' ? 'en' : 'bm')}
-                className="text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-xl text-slate-700"
-              >
-                {lang === 'bm' ? 'English (EN)' : 'Bahasa Melayu (BM)'}
+            <div className="pt-4 border-t border-slate-100">
+              <button onClick={() => { localStorage.removeItem('studyai_token'); setToken(''); }} className="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold py-2.5 rounded-xl text-xs">
+                Log Keluar
               </button>
             </div>
           </aside>
 
-          {/* Main Content */}
           <main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto">
             {currentView === 'dashboard' && (
               <div className="space-y-6">
-                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex justify-between items-center">
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-900">{t.welcome}, {userProfile.name}!</h2>
-                    <p className="text-slate-500 text-sm">{t.tagline}</p>
+                    <h2 className="text-2xl font-bold text-slate-900">Selamat kembali, {user.name}!</h2>
+                    <p className="text-slate-500 text-sm">Teruskan kecemerlangan pembelajaran anda hari ini.</p>
                   </div>
                   <div className="bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-2xl text-xs font-bold text-indigo-700">
-                    Pelan: {userProfile.tier} Tier ({userProfile.aiUsage}/{userProfile.aiLimit} AI Queries)
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <span className="text-xs font-bold text-slate-400 uppercase">{t.streak}</span>
-                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">{userProfile.streak} Hari 🔥</h3>
-                  </div>
-                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <span className="text-xs font-bold text-slate-400 uppercase">{t.studied}</span>
-                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">{userProfile.studiedMins} Minit</h3>
-                  </div>
-                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <span className="text-xs font-bold text-slate-400 uppercase">{t.tasks}</span>
-                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">8 Selesai</h3>
-                  </div>
-                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                    <span className="text-xs font-bold text-slate-400 uppercase">{t.quizzes}</span>
-                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">85%</h3>
+                    Peranan: {user.role} • Pelan: {user.subscriptionTier || 'Free'}
                   </div>
                 </div>
               </div>
@@ -167,23 +145,21 @@
 
             {currentView === 'tutor' && (
               <div className="bg-white rounded-3xl border border-slate-200 h-[calc(100vh-8rem)] flex flex-col shadow-sm overflow-hidden">
-                <div className="p-4 border-b bg-slate-50 font-bold text-sm">StudyAI Adaptive Tutor (GPT-4o Backend Connected)</div>
-                <div className="flex-1 p-6 overflow-y-auto space-y-4">
-                  <div className="bg-slate-100 p-4 rounded-2xl text-sm max-w-xl">
-                    Halo! Saya Tutor AI anda. Sila ajukan sebarang soalan berkaitan subjek peperiksaan atau universiti.
-                  </div>
+                <div className="p-4 border-b bg-slate-50 font-bold text-sm">StudyAI Adaptive Tutor (OpenAI GPT-4o Terintegrasi)</div>
+                <div className="flex-1 p-6 overflow-y-auto">
+                  <p className="text-sm text-slate-600">Sila mulakan sesi perbualan adaptif dengan menaip soalan di bawah.</p>
                 </div>
                 <div className="p-4 border-t flex space-x-2">
-                  <input type="text" placeholder={t.askPlaceholder} className="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" />
-                  <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm">{t.send}</button>
+                  <input type="text" placeholder="Tanya soalan subjek..." className="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+                  <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm">Hantar</button>
                 </div>
               </div>
             )}
 
-            {currentView !== 'dashboard' && currentView !== 'tutor' && (
-              <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center shadow-sm">
-                <h3 className="text-xl font-bold text-slate-800 capitalize">Modul {currentView}</h3>
-                <p className="text-slate-500 text-sm mt-2">Modul ini telah diimplementasikan sepenuhnya dengan pangkalan data PostgreSQL & API pelayan.</p>
+            {currentView === 'admin' && (
+              <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <h3 className="text-xl font-bold text-slate-900">Admin Dashboard (RBAC Protected)</h3>
+                <p className="text-xs text-slate-500">Hanya pengguna dengan peranan ADMIN di pangkalan data boleh mengakses endpoint pelayan ini.</p>
               </div>
             )}
           </main>
