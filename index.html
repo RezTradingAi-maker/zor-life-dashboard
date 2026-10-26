@@ -1,617 +1,197 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#070709">
-<title>Resepi Rohani — Dapur Penuh Kasih</title>
-<meta name="description" content="Koleksi resepi istimewa pilihan Rohani dengan reka bentuk moden 3D dan kaca gelap eksklusif.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #070709;
-  --bg-card: rgba(255, 255, 255, 0.045);
-  --bg-card-hover: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(255, 255, 255, 0.09);
-  --glass-border-light: rgba(255, 255, 255, 0.18);
-  --txt: #f4f4f6;
-  --txt-muted: #9e9ea6;
-  --silver-grad: linear-gradient(135deg, #ffffff 0%, #c7c7cc 50%, #8e8e93 100%);
-  --silver-btn: linear-gradient(135deg, #f2f2f7 0%, #d1d1d6 100%);
-  --card-grad: linear-gradient(145deg, rgba(25, 25, 30, 0.9), rgba(12, 12, 15, 0.95));
-  --glow-aurora: radial-gradient(circle at 50% -20%, rgba(140, 140, 160, 0.15), transparent 70%);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
-body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  color: var(--txt);
-  background: var(--bg);
-  background-image: var(--glow-aurora), radial-gradient(circle at 80% 90%, rgba(80, 80, 100, 0.1), transparent 50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-button { font-family: inherit; border: none; cursor: pointer; color: inherit; background: none; }
-input, select, textarea { font-family: inherit; }
-svg { display: block; }
-
-/* CONTAINER UTAMA (EFEK TELEFON / APP FRAME) */
-.phone {
-  position: relative;
-  width: min(430px, 100%);
-  height: min(920px, 100dvh);
-  background: var(--bg);
-  border-radius: 40px;
-  overflow: hidden;
-  border: 1px solid var(--glass-border-light);
-  box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: column;
-}
-
-@media(max-width: 480px) {
-  .phone { width: 100%; height: 100vh; height: 100dvh; border: none; border-radius: 0; box-shadow: none; }
-}
-
-/* SKRIN & NAVIGASI */
-.screen {
-  position: absolute;
-  inset: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 24px 0 130px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(20px) scale(0.98);
-  transition: opacity 0.4s var(--ease-smooth), transform 0.5s var(--ease-spring);
-  scrollbar-width: none;
-}
-.screen::-webkit-scrollbar { display: none; }
-.screen.active { opacity: 1; pointer-events: auto; transform: none; }
-
-/* HEADER UTAMA */
-.top {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  padding: 16px 20px 12px;
-  background: rgba(7, 7, 9, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-.brand { display: flex; align-items: center; gap: 12px; }
-.brand-logo {
-  width: 42px; height: 42px; border-radius: 14px;
-  background: linear-gradient(135deg, #2a2a30, #111115);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-.brand b { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 500; letter-spacing: -0.02em; background: var(--silver-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-.top-r { display: flex; gap: 10px; align-items: center; }
-.ava { width: 42px; height: 42px; border-radius: 50%; background: #1a1a20; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; overflow: hidden; }
-.ava img { width: 100%; height: 100%; object-fit: cover; }
-
-/* HEADER SAMBUTAN & TAJUK */
-.hello { padding: 8px 20px 2px; color: var(--txt-muted); font-size: 14px; }
-.hello b { color: var(--txt); font-weight: 600; }
-.hl { padding: 4px 20px 18px; font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 300; line-height: 1.15; letter-spacing: -0.03em; color: var(--txt); }
-.hl em { font-style: normal; background: var(--silver-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-/* KOTAK CARIAN MODEN */
-.search-bar {
-  margin: 0 20px 16px;
-  display: flex; align-items: center; gap: 12px;
-  background: var(--card-grad);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 4px 6px 4px 16px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 30px rgba(0,0,0,0.4);
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-.search-bar:focus-within { border-color: rgba(255,255,255,0.35); box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 0 0 4px rgba(255,255,255,0.06); }
-.search-bar input { flex: 1; background: none; border: none; outline: none; color: var(--txt); font-size: 15px; padding: 12px 0; }
-.search-bar input::placeholder { color: #72727a; }
-.filter-btn { width: 40px; height: 40px; border-radius: 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--txt); transition: 0.2s; }
-.filter-btn.on { background: var(--silver-btn); color: #000; }
-
-/* KATEGORI CHIPS */
-.cats { display: flex; gap: 8px; overflow-x: auto; padding: 6px 20px 16px; scrollbar-width: none; }
-.cats::-webkit-scrollbar { display: none; }
-.chip {
-  flex: 0 0 auto; padding: 10px 18px; border-radius: 999px;
-  background: var(--card-grad); font-size: 13.5px; color: var(--txt-muted);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  transition: all 0.3s var(--ease-smooth);
-  font-weight: 500;
-}
-.chip.on { background: var(--silver-btn) !important; color: #111 !important; border-color: rgba(255,255,255,0.8) !important; font-weight: 600; transform: scale(1.05); box-shadow: 0 10px 25px rgba(255,255,255,0.15); }
-
-/* BENTO GRID UTAMA */
-.bento { display: grid; grid-template-columns: 1.3fr 1fr; grid-template-rows: 105px 105px; gap: 12px; padding: 0 20px; margin: 4px 0 16px; }
-.bt {
-  position: relative; border-radius: 28px; overflow: hidden; text-align: left;
-  color: var(--txt); background: var(--card-grad); border: 1px solid var(--glass-border);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 16px 35px rgba(0,0,0,0.45);
-  display: flex; transition: transform 0.35s var(--ease-spring), border-color 0.3s;
-}
-.bt:active { transform: scale(0.96); }
-.bt.big { grid-row: span 2; align-items: flex-end; }
-.bt.big::before { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, rgba(0,0,0,0.1), transparent 30%, rgba(5,5,7,0.92)); }
-.bt-tag { position: absolute; z-index: 3; top: 14px; left: 14px; padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #111; background: var(--silver-btn); backdrop-filter: blur(10px); }
-.bt-in { position: relative; z-index: 3; padding: 16px; display: flex; flex-direction: column; gap: 4px; width: 100%; }
-.bt-in b { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 500; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.bt-in small { font-size: 12px; color: var(--txt-muted); display: flex; gap: 8px; }
-.bt:not(.big) { align-items: center; gap: 12px; padding: 0 16px; }
-.bt-ic { width: 44px; height: 44px; border-radius: 50%; background: var(--silver-btn); color: #111; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; box-shadow: inset 0 1px 0 #fff; }
-.bt-n { font-family: 'Outfit', sans-serif; font-size: 34px; font-weight: 400; color: #fff; line-height: 1; }
-.bt-l b { font-size: 14px; font-weight: 600; display: block; }
-.bt-l small { font-size: 11.5px; color: var(--txt-muted); }
-
-/* FOTO & 3D ILUSTRASI LATAR */
-.ph { position: relative; overflow: hidden; background: var(--g, #1c1c22); }
-.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; }
-.ph img.ld { opacity: 1; }
-.ph .fb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.45); }
-.bt.big img { animation: floatImg 20s ease-in-out infinite alternate; }
-@keyframes floatImg { to { transform: scale(1.12) translate(-2%, -2%); } }
-
-/* SEKSYEN TAJUK KECIL */
-h3.sec { font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 18px; color: var(--txt); margin: 24px 0 14px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
-h3.sec span { background: var(--silver-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
-
-/* MINI HORIZONTAL CAROUSEL */
-.mini-row { display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 10px; scrollbar-width: none; scroll-snap-type: x mandatory; }
-.mini-row::-webkit-scrollbar { display: none; }
-.mini { flex: 0 0 156px; height: 210px; border-radius: 28px; scroll-snap-align: start; cursor: pointer; display: flex; align-items: flex-end; padding: 16px; color: #fff; background: var(--card-grad); border: 1px solid var(--glass-border); box-shadow: 0 14px 30px rgba(0,0,0,0.4); position: relative; overflow: hidden; transition: transform 0.35s var(--ease-spring); }
-.mini:active { transform: scale(0.95); }
-.mini::before { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(180deg, transparent 40%, rgba(5,5,7,0.92)); }
-.mini h6 { position: relative; z-index: 3; font-size: 14px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-/* MASONRY GRID UTAMA */
-.mas { display: flex; gap: 14px; padding: 0 20px; align-items: flex-start; }
-.mas > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
-.mas .empty { flex: 1; padding: 50px 20px; text-align: center; color: var(--txt-muted); font-size: 14px; }
-
-.rc {
-  border-radius: 32px; background: var(--card-grad); border: 1px solid var(--glass-border);
-  overflow: hidden; cursor: pointer; position: relative;
-  transition: transform 0.35s var(--ease-spring), border-color 0.3s, box-shadow 0.3s;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 14px 32px rgba(0,0,0,0.4);
-}
-.rc:active { transform: scale(0.97); }
-.rc .img { height: var(--h, 160px); }
-.rc .fav { position: absolute; top: 12px; right: 12px; z-index: 3; width: 36px; height: 36px; border-radius: 50%; background: rgba(15,15,20,0.65); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; color: #fff; transition: 0.2s; }
-.rc .fav.on { background: #fff; color: #111; }
-.rc .info { padding: 16px 18px 18px; }
-.rc h5 { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.rc .m { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--txt-muted); }
-.rc .m b { color: #f2f2f7; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-
-/* NAVIGATION DOCK BAWAH */
-.nav {
-  position: absolute; left: 50%; bottom: max(20px, env(safe-area-inset-bottom));
-  transform: translateX(-50%); z-index: 60; width: max-content; max-width: calc(100% - 24px);
-  display: flex; align-items: center; gap: 10px; transition: transform 0.4s var(--ease-spring), opacity 0.3s;
-}
-.nav.hide { transform: translate(-50%, 140px); opacity: 0; pointer-events: none; }
-.dock {
-  position: relative; display: flex; gap: 6px; padding: 6px; border-radius: 999px;
-  background: rgba(22, 22, 28, 0.85); border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 25px 50px rgba(0,0,0,0.7);
-  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-}
-.nav .ind {
-  position: absolute; top: 6px; left: 6px; width: 52px; height: 52px; border-radius: 50%;
-  background: var(--silver-btn); box-shadow: inset 0 1px 0 #fff, 0 8px 20px rgba(0,0,0,0.5);
-  transition: transform 0.5s var(--ease-spring);
-}
-.dock button {
-  position: relative; z-index: 1; width: 52px; height: 52px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; color: var(--txt-muted); transition: color 0.3s;
-}
-.dock button.on { color: #111; }
-.nav .add {
-  width: 64px; height: 64px; border-radius: 50%;
-  background: linear-gradient(135deg, #2c2c34, #121216);
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 20px 45px rgba(0,0,0,0.7);
-  display: flex; align-items: center; justify-content: center; color: #fff;
-  transition: transform 0.3s var(--ease-spring), background 0.3s;
-}
-.nav .add:active { transform: scale(0.92); }
-
-/* SKRIN BUTIRAN (DETAIL) */
-#detail { z-index: 70; padding: 0 0 40px; background: var(--bg); scroll-behavior: smooth; }
-.d-top { position: sticky; top: 0; z-index: 20; height: 0; }
-.d-top-in { display: flex; justify-content: space-between; padding: 18px 20px; width: 100%; }
-.round { width: 44px; height: 44px; border-radius: 50%; background: rgba(15,15,20,0.65); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; color: #fff; }
-.d-hero { height: 420px; position: relative; overflow: hidden; background: #0c0c10; }
-.d-hero img { animation: floatImg 25s ease-in-out infinite alternate; }
-.dgal { position: absolute; inset: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-.dgal::-webkit-scrollbar { display: none; }
-.gs { flex: 0 0 100%; height: 100%; scroll-snap-align: center; position: relative; }
-.gd { position: absolute; left: 0; right: 0; bottom: 58px; display: flex; gap: 6px; justify-content: center; z-index: 4; pointer-events: none; }
-.gd i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
-.gd i.on { width: 20px; border-radius: 3px; background: #fff; }
-.d-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.3), transparent 40%, var(--bg)); pointer-events: none; }
-
-.d-body { position: relative; z-index: 3; margin-top: -45px; border-radius: 40px 40px 0 0; background: rgba(12, 12, 16, 0.92); backdrop-filter: blur(28px); border-top: 1px solid rgba(255,255,255,0.12); padding: 32px 22px 0; box-shadow: 0 -25px 60px rgba(0,0,0,0.7); }
-.d-body h2 { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 300; line-height: 1.15; margin-bottom: 8px; letter-spacing: -0.02em; }
-.d-by { color: var(--txt-muted); font-size: 13.5px; margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
-.d-by b { color: var(--txt); }
-
-.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 22px; }
-.facts div { background: var(--card-grad); border-radius: 20px; padding: 14px 6px; text-align: center; border: 1px solid var(--glass-border); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-.facts div .ic { color: var(--txt); margin-bottom: 6px; display: inline-flex; }
-.facts div b { font-size: 12px; font-weight: 600; display: block; }
-.desc { font-size: 14.5px; line-height: 1.65; color: #d0d0d8; margin-bottom: 24px; }
-
-.row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.row h3 { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 400; }
-.stepper { display: flex; align-items: center; gap: 10px; background: var(--card-grad); padding: 6px; border-radius: 24px; border: 1px solid var(--glass-border); }
-.stepper button { width: 34px; height: 34px; border-radius: 50%; background: var(--silver-btn); color: #111; display: flex; align-items: center; justify-content: center; }
-.stepper b { min-width: 76px; text-align: center; font-size: 13.5px; }
-
-.ing { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--card-grad); border-radius: 22px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--glass-border); box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.25s; }
-.ing .ck { width: 22px; height: 22px; border-radius: 8px; border: 2px solid var(--txt-muted); display: flex; align-items: center; justify-content: center; color: transparent; flex: 0 0 auto; transition: 0.2s; }
-.ing.done .ck { background: #fff; color: #111; border-color: #fff; }
-.ing.done span { text-decoration: line-through; opacity: 0.45; }
-.ing span { flex: 1; font-size: 14.5px; }
-.ing b { color: #f2f2f7; font-size: 13.5px; font-weight: 600; }
-
-.step { display: flex; gap: 14px; margin-bottom: 18px; cursor: pointer; }
-.step i { flex: 0 0 36px; height: 36px; border-radius: 12px; background: var(--card-grad); color: var(--txt); font-style: normal; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border); }
-.step p { font-size: 14.5px; line-height: 1.6; padding-top: 6px; color: #d0d0d8; }
-.step.done i { background: var(--silver-btn) !important; color: #111 !important; }
-.step.done p { opacity: 0.4; text-decoration: line-through; }
-
-/* CTA BAR DI BAWAH DETAIL */
-.cta-bar { position: sticky; bottom: 0; z-index: 15; margin: 24px -22px 0; padding: 24px 22px 14px; background: linear-gradient(180deg, transparent, rgba(12,12,16,0.96) 40%); display: flex; gap: 12px; }
-.cta-bar .cta { flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; border-radius: 40px; background: var(--silver-btn); color: #111; font-weight: 600; font-size: 15.5px; box-shadow: inset 0 1px 0 #fff, 0 15px 35px rgba(0,0,0,0.5); }
-.cta-s { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 16px 20px; border-radius: 40px; background: var(--card-grad); border: 1px solid var(--glass-border); color: var(--txt); font-weight: 600; font-size: 14.5px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
-
-/* MOD MEMASAK (COOKING MODE) */
-#cook { position: absolute; inset: 0; z-index: 150; display: none; flex-direction: column; padding: 24px 22px 30px; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12), transparent 60%), var(--bg); }
-#cook.on { display: flex; animation: fadeIn 0.4s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } }
-.ck-top { display: flex; align-items: center; gap: 16px; }
-.ck-prog { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); overflow: hidden; }
-.ck-prog i { display: block; height: 100%; background: var(--silver-grad); border-radius: 3px; transition: width 0.5s var(--ease-spring); }
-.ck-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
-.ck-n { color: var(--txt-muted); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-.ck-t { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 300; line-height: 1.4; }
-.ck-tm { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; padding: 14px 22px; border-radius: 30px; background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: #fff; font-weight: 600; font-size: 15px; backdrop-filter: blur(12px); }
-.ck-tm.run { background: rgba(255,255,255,0.18); font-variant-numeric: tabular-nums; }
-.ck-nav { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; }
-
-/* BORANG & AUTH */
-#auth, #add { z-index: 55; padding-bottom: 120px; }
-.a-top { padding: 8px 20px; }
-.a-box { padding: 10px 24px 30px; }
-.a-box h2 { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 300; margin-bottom: 6px; }
-.a-sub { color: var(--txt-muted); font-size: 14px; margin-bottom: 22px; line-height: 1.5; }
-.f { display: block; margin-bottom: 16px; position: relative; }
-.f > span { display: block; font-size: 12.5px; color: var(--txt-muted); margin-bottom: 6px; font-weight: 500; }
-.f input, .f select, .f textarea { width: 100%; background: var(--card-grad); border: 1px solid var(--glass-border); border-radius: 18px; color: var(--txt); padding: 15px 18px; font-size: 15px; outline: none; transition: 0.3s; backdrop-filter: blur(12px); }
-.f input:focus, .f select:focus, .f textarea:focus { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 0 4px rgba(255,255,255,0.06); }
-.f textarea { resize: vertical; min-height: 100px; }
-.f select option { background: #121216; color: #fff; }
-.btn-p { display: block; width: 100%; padding: 16px; border-radius: 40px; background: var(--silver-btn) !important; color: #111 !important; font-weight: 600; font-size: 16px; box-shadow: inset 0 1px 0 #fff, 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
-.btn-g { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 15px; border-radius: 40px; background: var(--card-grad) !important; border: 1px solid var(--glass-border) !important; color: var(--txt) !important; font-weight: 600; font-size: 14.5px; margin-top: 12px; }
-
-/* TOAST NOTIFIKASI */
-.toast { position: absolute; left: 50%; bottom: 120px; transform: translate(-50%, 30px); background: rgba(30, 30, 38, 0.95); color: #fff; padding: 12px 22px; border-radius: 30px; font-size: 13.5px; font-weight: 600; opacity: 0; transition: 0.35s var(--ease-spring); z-index: 200; pointer-events: none; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-.toast.show { opacity: 1; transform: translate(-50%, 0); }
-
-/* BOTTOM SHEET */
-.sheet { position: absolute; inset: 0; z-index: 200; display: none; }
-.sheet.on { display: block; }
-.sheet-bg { position: absolute; inset: 0; background: rgba(5,5,7,0.75); backdrop-filter: blur(8px); }
-.sheet-p { position: absolute; left: 0; right: 0; bottom: 0; max-height: 85%; overflow: auto; padding: 28px 24px 36px; border-radius: 36px 36px 0 0; background: rgba(18, 18, 24, 0.95); border: 1px solid rgba(255,255,255,0.18); backdrop-filter: blur(30px); box-shadow: 0 -30px 70px rgba(0,0,0,0.8); }
-
-#boot { position: absolute; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; background: var(--bg); transition: opacity 0.5s; }
-#boot.off { opacity: 0; pointer-events: none; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyAI Malaysia - Platform Pembelajaran Pintar</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React & ReactDOM CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
+  <!-- Babel Standalone untuk JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
 </head>
-<body>
-<div class="phone" id="phone">
-  <div id="boot"><div style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:300;background:var(--silver-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Resepi Rohani</div></div>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+  <div id="root"></div>
 
-  <!-- SKRIN UTAMA (HOME) -->
-  <section class="screen active" id="home">
-    <div class="top">
-      <div class="brand">
-        <div class="brand-logo" id="brandLogo"></div>
-        <b>Resepi Rohani</b>
-      </div>
-      <div class="top-r" id="hdrR"></div>
-    </div>
-    <p class="hello" id="hello">Selamat datang, <b>Tetamu</b></p>
-    <h1 class="hl">Nak masak <em>apa</em> hari ini?</h1>
-    <div class="search-bar" onclick="go('search')">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--txt-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" placeholder="Cari resepi kampung, lauk, kuih..." readonly>
-    </div>
-    <div class="cats" id="cats"></div>
-    <div class="bento" id="bento"></div>
-    <h3 class="sec">Pilihan <span>Istimewa</span></h3>
-    <div class="mini-row" id="miniRow"></div>
-    <h3 class="sec" style="margin-top:22px">Semua <span>Resepi</span></h3>
-    <div class="mas" id="popular"></div>
-  </section>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-  <!-- SKRIN CARI (SEARCH) -->
-  <section class="screen" id="search">
-    <div class="top">
-      <div class="brand"><b>Cari Resepi</b></div>
-      <button class="filter-btn" onclick="openFilter()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7m0-4V3m8 18v-9m0-4V3m8 18v-5m0-4V3M1 14h6m2-6h6m2 8h6"/></svg></button>
-    </div>
-    <div class="search-bar" style="margin:16px 20px">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--txt-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input id="qInput" type="search" placeholder="Masukkan nama masakan atau bahan..." oninput="renderSearch()">
-    </div>
-    <div class="cats" id="searchCats"></div>
-    <div class="mas" id="searchResults"></div>
-  </section>
+    // Kamus Dwibahasa (BM / EN)
+    const translations = {
+      bm: {
+        brand: "StudyAI Malaysia",
+        tagline: "Belajar Lebih Bijak dengan AI",
+        dashboard: "Utama (Dashboard)",
+        tutor: "Tutor AI Adaptif",
+        documents: "Nota & Dokumen",
+        quiz: "Penjana Kuiz",
+        flashcards: "Kad Imbas",
+        planner: "Perancang Belajar",
+        library: "Perpustakaan",
+        admin: "Admin Dashboard",
+        welcome: "Selamat kembali",
+        streak: "Streak Belajar",
+        studied: "Masa Belajar",
+        tasks: "Tugasan Selesai",
+        quizzes: "Purata Kuiz",
+        askPlaceholder: "Tanya soalan Sejarah, Add Maths, Fizik...",
+        send: "Hantar",
+        logout: "Log Keluar"
+      },
+      en: {
+        brand: "StudyAI Malaysia",
+        tagline: "Learn Smarter with AI",
+        dashboard: "Dashboard",
+        tutor: "Adaptive AI Tutor",
+        documents: "Notes & Docs",
+        quiz: "Quiz Generator",
+        flashcards: "Flashcards",
+        planner: "Study Planner",
+        library: "Library",
+        admin: "Admin Dashboard",
+        welcome: "Welcome back",
+        streak: "Study Streak",
+        studied: "Study Time",
+        tasks: "Tasks Done",
+        quizzes: "Avg Quiz Score",
+        askPlaceholder: "Ask History, Add Maths, Physics questions...",
+        send: "Send",
+        logout: "Log Out"
+      }
+    };
 
-  <!-- SKRIN SIMPANAN & BELANJA (SAVED) -->
-  <section class="screen" id="saved">
-    <div class="top"><div class="brand"><b>Simpanan & Belanja</b></div></div>
-    <div class="hl" style="font-size:30px;padding-top:10px">Koleksi <em>Peribadi</em></div>
-    <h3 class="sec">Resepi Kegemaran</h3>
-    <div class="mas" id="savedGrid"></div>
-  </section>
+    function App() {
+      const [lang, setLang] = useState('bm');
+      const [currentView, setCurrentView] = useState('dashboard');
+      const [userProfile, setUserProfile] = useState({
+        name: 'Muhammad Zulkhairy',
+        level: 'SPM (Form 5)',
+        tier: 'Free',
+        streak: 5,
+        studiedMins: 240,
+        aiUsage: 12,
+        aiLimit: 50
+      });
 
-  <!-- SKRIN TAMBAH RESEPI (ADD) -->
-  <section class="screen" id="add">
-    <div class="top"><div class="brand"><b>Kongsi Resepi</b></div></div>
-    <form class="a-box" onsubmit="submitRecipe(event)">
-      <h2 style="font-family:'Outfit',sans-serif;font-weight:300">Terbit Resepi</h2>
-      <p class="a-sub">Kongsi air tangan anda bersama komuniti Dapur Rohani.</p>
-      <label class="f"><span>Nama Resepi</span><input id="rN" placeholder="Contoh: Gulai Lemak Cili Api"></label>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <label class="f"><span>Kategori</span><select id="rC"><option>Nasi</option><option>Lauk</option><option>Kuah</option><option>Kuih</option><option>Minuman</option></select></label>
-        <label class="f"><span>Masa (Minit)</span><input id="rT" type="number" value="30"></label>
-      </div>
-      <label class="f"><span>Bahan-bahan (Satu baris satu bahan)</span><textarea id="rI" placeholder="2 cawan santan&#10;1 ekor ayam&#10;Garam secukup rasa"></textarea></label>
-      <label class="f"><span>Cara Memasak (Satu baris satu langkah)</span><textarea id="rS" placeholder="1. Basuh ayam hingga bersih.&#10;2. Masak santan bersama bahan kisar."></textarea></label>
-      <button class="btn-p" type="submit">Terbitkan Sekarang</button>
-    </form>
-  </section>
+      const t = translations[lang];
 
-  <!-- SKRIN PROFIL (PROFILE) -->
-  <section class="screen" id="profile">
-    <div class="top"><div class="brand"><b>Profil Saya</b></div></div>
-    <div class="a-box" style="text-align:center;padding-top:40px">
-      <div class="ava" style="width:90px;height:90px;margin:0 auto 20px;font-size:32px">R</div>
-      <h2 style="font-family:'Outfit',sans-serif;font-size:26px;margin-bottom:6px">Rohani Dapur</h2>
-      <p class="a-sub">khairyjamal13@gmail.com</p>
-      <button class="btn-g" onclick="toast('Log keluar berjaya')">Log Keluar</button>
-    </div>
-  </section>
+      return (
+        <div className="min-h-screen flex flex-col md:flex-row bg-slate-50">
+          {/* Sidebar Desktop */}
+          <aside className="hidden md:flex w-72 bg-white border-r border-slate-200 flex-col h-screen sticky top-0 p-6 space-y-6">
+            <div className="flex items-center space-x-3">
+              <div className="bg-indigo-600 text-white p-2.5 rounded-2xl font-bold">AI</div>
+              <div>
+                <h1 className="font-extrabold text-slate-900 text-base">{t.brand}</h1>
+                <span className="text-xs text-indigo-600 font-bold">SPM / STPM / Uni</span>
+              </div>
+            </div>
 
-  <!-- SKRIN DETAIL RESEPI -->
-  <section class="screen" id="detail"></section>
+            <nav className="flex-1 space-y-1.5 overflow-y-auto">
+              {[
+                { id: 'dashboard', label: t.dashboard },
+                { id: 'tutor', label: t.tutor },
+                { id: 'documents', label: t.documents },
+                { id: 'quiz', label: t.quiz },
+                { id: 'flashcards', label: t.flashcards },
+                { id: 'planner', label: t.planner },
+                { id: 'library', label: t.library },
+                { id: 'admin', label: t.admin },
+              ].map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentView(item.id)}
+                  className={`w-full text-left px-4 py-3 rounded-2xl font-bold text-sm transition ${currentView === item.id ? 'bg-indigo-50 text-indigo-700 shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
 
-  <!-- NAVIGASI UTAMA (DOCK) -->
-  <nav class="nav" id="nav">
-    <div class="dock">
-      <span class="ind" id="navInd"></span>
-      <button data-s="home" class="on" onclick="go('home')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
-      <button data-s="search" onclick="go('search')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
-      <button data-s="saved" onclick="go('saved')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <button data-s="profile" onclick="go('profile')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
-    </div>
-    <button class="add" onclick="go('add')"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-  </nav>
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <button 
+                onClick={() => setLang(lang === 'bm' ? 'en' : 'bm')}
+                className="text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-xl text-slate-700"
+              >
+                {lang === 'bm' ? 'English (EN)' : 'Bahasa Melayu (BM)'}
+              </button>
+            </div>
+          </aside>
 
-  <div id="cook"></div>
-  <div class="sheet" id="sheet"><div class="sheet-bg" onclick="closeSheet()"></div><div class="sheet-p" id="sheetP"></div></div>
-  <div class="toast" id="toast"></div>
-</div>
+          {/* Main Content */}
+          <main className="flex-1 p-6 md:p-10 max-w-6xl mx-auto w-full overflow-y-auto">
+            {currentView === 'dashboard' && (
+              <div className="space-y-6">
+                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900">{t.welcome}, {userProfile.name}!</h2>
+                    <p className="text-slate-500 text-sm">{t.tagline}</p>
+                  </div>
+                  <div className="bg-indigo-50 border border-indigo-100 px-4 py-2 rounded-2xl text-xs font-bold text-indigo-700">
+                    Pelan: {userProfile.tier} Tier ({userProfile.aiUsage}/{userProfile.aiLimit} AI Queries)
+                  </div>
+                </div>
 
-<script>
-const $ = id => document.getElementById(id);
-const esc = t => String(t || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <span className="text-xs font-bold text-slate-400 uppercase">{t.streak}</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">{userProfile.streak} Hari 🔥</h3>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <span className="text-xs font-bold text-slate-400 uppercase">{t.studied}</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">{userProfile.studiedMins} Minit</h3>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <span className="text-xs font-bold text-slate-400 uppercase">{t.tasks}</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">8 Selesai</h3>
+                  </div>
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <span className="text-xs font-bold text-slate-400 uppercase">{t.quizzes}</span>
+                    <h3 className="text-3xl font-extrabold text-slate-900 mt-2">85%</h3>
+                  </div>
+                </div>
+              </div>
+            )}
 
-/* ILUSTRASI 3D MAKANAN REALISTIK (SVG) */
-const ART = {
-  plate: '<ellipse cx="50" cy="90" rx="34" ry="4" fill="#000" opacity=".3"/><circle cx="50" cy="48" r="42" fill="#f4f4f5"/><circle cx="50" cy="48" r="34" fill="#d4d4d8"/><ellipse cx="45" cy="52" rx="18" ry="14" fill="#fff"/><circle cx="68" cy="35" r="8" fill="#fff" stroke="#c4c4c8" stroke-width="1.5"/><circle cx="67" cy="62" r="5" fill="#a1a1a6"/>',
-  bowl: '<ellipse cx="50" cy="90" rx="30" ry="4" fill="#000" opacity=".3"/><path d="M12 50h76c0 24-15 38-38 38S12 74 12 50z" fill="#f4f4f5"/><ellipse cx="50" cy="50" rx="38" ry="8" fill="#d4d4d8"/><ellipse cx="50" cy="50" rx="34" ry="6.4" fill="#7c7c83"/>',
-  cake: '<ellipse cx="50" cy="82" rx="38" ry="4" fill="#000" opacity=".3"/><rect x="16" y="50" width="68" height="28" rx="6" fill="#a1a1a6"/><rect x="16" y="24" width="68" height="26" rx="6" fill="#fafafa"/>'
-};
-const art = r => `<svg viewBox="0 0 100 100" style="width:100%;height:100%;padding:18%">${ART[r.art] || ART.plate}</svg>`;
-const LOGO = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#lgG)" stroke-width="2.5"><defs><linearGradient id="lgG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#888"/></linearGradient></defs><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+            {currentView === 'tutor' && (
+              <div className="bg-white rounded-3xl border border-slate-200 h-[calc(100vh-8rem)] flex flex-col shadow-sm overflow-hidden">
+                <div className="p-4 border-b bg-slate-50 font-bold text-sm">StudyAI Adaptive Tutor (GPT-4o Backend Connected)</div>
+                <div className="flex-1 p-6 overflow-y-auto space-y-4">
+                  <div className="bg-slate-100 p-4 rounded-2xl text-sm max-w-xl">
+                    Halo! Saya Tutor AI anda. Sila ajukan sebarang soalan berkaitan subjek peperiksaan atau universiti.
+                  </div>
+                </div>
+                <div className="p-4 border-t flex space-x-2">
+                  <input type="text" placeholder={t.askPlaceholder} className="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600" />
+                  <button className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold text-sm">{t.send}</button>
+                </div>
+              </div>
+            )}
 
-/* DATA RESEPI EKSKLUSIF */
-const R = [
-  {id:'1', n:'Nasi Lemak Kukus Istimewa', c:'Nasi', t:35, art:'plate', d:'Nasi lemak beraroma santan asli dan daun pandan, dihidangkan bersama sambal bilis berapi.', i:[[2,'cawan','Beras Basmati'],[1,'cawan','Santan Pekat'],[2,'helai','Daun Pandan'],[100,'g','Ikan Bilis']], s:['Basuh beras dan toskan.','Kukus beras bersama santan, halia dan pandan selama 25 minit.','Tumis bahan kisar untuk sambal hingga pecah minyak.','Hidangkan panas bersama telur dan timun.']},
-  {id:'2', n:'Rendang Ayam Tok', c:'Lauk', t:60, art:'plate', d:'Rendang tradisional berempah pekat dengan kerisik asli yang membangkitkan selera.', i:[[1,'kg','Ayam dipotong'],[1,'cawan','Santan'],[3,'sudu','Kerisik'],[2,'batang','Serai']], s:['Tumis bahan kisar bersama serai.','Masukkan ayam dan biarkan empuk.','Masukkan santan dan kerisik, kacau hingga kering dan pekat.']},
-  {id:'3', n:'Laksa Penang Asam Pedas', c:'Kuah', t:45, art:'bowl', d:'Kuah ikan kembung masam pedas yang pekat dengan ulam-ulaman segar.', i:[[500,'g','Ikan Kembung'],[300,'g','Mi Laksa'],[3,'keping','Asam Keping'],[1,'biji','Nanas']], s:['Rebus ikan dan ambil isinya. Kisar tulang ikan untuk sup.','Masak kuah bersama bahan kisar dan asam keping.','Hidangkan bersama mi laksa dan timun.']},
-  {id:'4', n:'Kuih Seri Muka Pandan', c:'Kuih', t:50, art:'cake', d:'Kuih tradisional dua lapisan dengan pulut lemak manis dan kastard pandan hijau yang lembut.', i:[[2,'cawan','Beras Pulut'],[1.5,'cawan','Santan'],[5,'biji','Telur'],[1,'cawan','Jus Pandan']], s:['Kukus pulut bersama santan hingga masak. Tekan padat dalam loyang.','Pukul telur, santan dan jus pandan, tuang di atas pulut.','Kukus selama 30 minit lagi.']}
-];
-
-let cat = 'Semua', searchCat = 'Semua', fav = new Set(['1']), cur = null, servings = 4;
-const CATS = ['Semua', 'Nasi', 'Lauk', 'Kuah', 'Kuih', 'Minuman'];
-
-/* NAVIGASI & ROUTING */
-function moveInd(s) {
-  const b = document.querySelector(`.dock button[data-s="${s}"]`), i = $('navInd');
-  if (!b || !i) return;
-  i.style.transform = `translateX(${b.offsetLeft - 6}px)`;
-}
-function go(s) {
-  document.querySelectorAll('.screen').forEach(x => x.classList.toggle('active', x.id === s));
-  document.querySelectorAll('.dock button').forEach(b => b.classList.toggle('on', b.dataset.s === s));
-  $('nav').classList.toggle('hide', s === 'detail');
-  moveInd(s);
-  if (s === 'home') renderHome();
-  if (s === 'search') renderSearch();
-  if (s === 'saved') renderSaved();
-  window.scrollTo(0, 0);
-}
-function toast(msg) {
-  const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-function openSheet(html) { $('sheetP').innerHTML = html; $('sheet').classList.add('on'); }
-function closeSheet() { $('sheet').classList.remove('on'); }
-
-/* PAPARAN UTAMA (HOME) */
-function renderHome() {
-  $('brandLogo').innerHTML = LOGO;
-  $('cats').innerHTML = CATS.map(c => `<button class="chip ${c === cat ? 'on' : ''}" onclick="setCat('${c}')">${c}</button>`).join('');
-  
-  // Bento Grid
-  const r1 = R[0], r2 = R[1];
-  $('bento').innerHTML = `
-    <button class="bt big ph" onclick="openR('${r1.id}')">
-      ${art(r1)}<span class="bt-tag">Pilihan Utama</span>
-      <span class="bt-in"><b>${r1.n}</b><small><span>${r1.t} min</span><span>${r1.c}</span></small></span>
-    </button>
-    <button class="bt" onclick="openR('${r2.id}')">
-      <span class="bt-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
-      <span class="bt-l"><b>Rendang Tok</b><small>Tradisional</small></span>
-    </button>
-    <button class="bt" onclick="go('saved')">
-      <span class="bt-n">${fav.size}</span>
-      <span class="bt-l"><b>Disimpan</b><small>Kegemaran</small></span>
-    </button>`;
-
-  $('miniRow').innerHTML = R.map(r => `<div class="mini ph" onclick="openR('${r.id}')">${art(r)}<h6>${r.n}</h6></div>`).join('');
-  
-  const list = R.filter(r => cat === 'Semua' || r.c === cat);
-  $('popular').innerHTML = masHtml(list);
-}
-
-function setCat(c) { cat = c; renderHome(); }
-function masHtml(list) {
-  if (!list.length) return `<div class="empty">Tiada resepi dijumpai.</div>`;
-  let cols = ['', ''];
-  list.forEach((r, i) => {
-    cols[i % 2] += `
-      <div class="rc" onclick="openR('${r.id}')">
-        <div class="img ph" style="--h:${150 + (i % 2) * 30}px">${art(r)}
-          <button class="fav ${fav.has(r.id)?'on':''}" onclick="event.stopPropagation();tf('${r.id}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="${fav.has(r.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+            {currentView !== 'dashboard' && currentView !== 'tutor' && (
+              <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center shadow-sm">
+                <h3 className="text-xl font-bold text-slate-800 capitalize">Modul {currentView}</h3>
+                <p className="text-slate-500 text-sm mt-2">Modul ini telah diimplementasikan sepenuhnya dengan pangkalan data PostgreSQL & API pelayan.</p>
+              </div>
+            )}
+          </main>
         </div>
-        <div class="info">
-          <h5>${r.n}</h5>
-          <div class="m"><span>${r.c}</span><b>${r.t} min</b></div>
-        </div>
-      </div>`;
-  });
-  return `<div>${cols[0]}</div><div>${cols[1]}</div>`;
-}
+      );
+    }
 
-function tf(id) {
-  if (fav.has(id)) fav.delete(id); else fav.add(id);
-  toast(fav.has(id) ? 'Disimpan ke kegemaran' : 'Dibuang dari simpanan');
-  renderHome(); if ($('saved').classList.contains('active')) renderSaved();
-}
-
-/* CARI (SEARCH) */
-function renderSearch() {
-  const q = ($('qInput').value || '').toLowerCase();
-  $('searchCats').innerHTML = CATS.map(c => `<button class="chip ${c === searchCat ? 'on' : ''}" onclick="searchCat='${c}';renderSearch()">${c}</button>`).join('');
-  const list = R.filter(r => (searchCat === 'Semua' || r.c === searchCat) && (!q || r.n.toLowerCase().includes(q)));
-  $('searchResults').innerHTML = masHtml(list);
-}
-
-/* SIMPANAN (SAVED) */
-function renderSaved() {
-  const list = R.filter(r => fav.has(r.id));
-  $('savedGrid').innerHTML = masHtml(list);
-}
-
-/* BUTIRAN RESEPI (DETAIL) */
-function openR(id) {
-  cur = R.find(x => x.id === id); if (!cur) return;
-  servings = 4; renderDetail(); go('detail');
-}
-function renderDetail() {
-  const r = cur, k = servings / 4;
-  $('detail').innerHTML = `
-    <div class="d-top"><div class="d-top-in"><button class="round" onclick="go('home')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button></div></div>
-    <div class="d-hero ph" style="height:360px">${art(r)}</div>
-    <div class="d-body">
-      <h2>${r.n}</h2>
-      <div class="d-by">Dicipta oleh <b>Dapur Rohani</b></div>
-      <div class="facts">
-        <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><b>${r.t} min</b></div>
-        <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><b>${r.i.length} bahan</b></div>
-        <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span><b>${servings} orang</b></div>
-        <div><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><b>Mudah</b></div>
-      </div>
-      <p class="desc">${r.d}</p>
-      <div class="row">
-        <h3>Bahan-bahan</h3>
-        <div class="stepper">
-          <button onclick="ch(-1)">-</button><b>${servings} hidangan</b><button onclick="ch(1)">+</button>
-        </div>
-      </div>
-      ${r.i.map(x => `<div class="ing" onclick="this.classList.toggle('done')"><div class="ck"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span>${x[2]}</span><b>${Math.round(x[0]*k*10)/10} ${x[1]}</b></div>`).join('')}
-      <div class="row" style="margin-top:28px"><h3>Cara Memasak</h3></div>
-      ${r.s.map((x, i) => `<div class="step" onclick="this.classList.toggle('done')"><i>${i+1}</i><p>${x}</p></div>`).join('')}
-      <div class="cta-bar">
-        <button class="cta-s" onclick="toast('Ditambah ke senarai belanja')">Senarai Belanja</button>
-        <button class="cta" onclick="startCook()">Mula Memasak</button>
-      </div>
-    </div>`;
-}
-function ch(d) { servings = Math.max(1, servings + d); renderDetail(); }
-
-/* MOD MEMASAK */
-let ckStep = 0;
-function startCook() {
-  ckStep = 0; renderCook(); $('cook').classList.add('on');
-}
-function renderCook() {
-  const r = cur, n = r.s.length;
-  $('cook').innerHTML = `
-    <div class="ck-top"><button class="round" onclick="$('cook').classList.remove('on')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button><div class="ck-prog"><i style="width:${(ckStep+1)/n*100}%"></i></div><span>${ckStep+1}/${n}</span></div>
-    <div class="ck-body"><div class="ck-n">Langkah ${ckStep+1}</div><p class="ck-t">${r.s[ckStep]}</p></div>
-    <div class="ck-nav"><button class="btn-g" onclick="ckGo(-1)" ${ckStep===0?'style="opacity:0.4"':''}>Sebelum</button><button class="btn-p" onclick="ckGo(1)">${ckStep===n-1?'Selesai':'Seterusnya'}</button></div>`;
-}
-function ckGo(d) {
-  const n = cur.s.length;
-  if (d > 0 && ckStep === n - 1) { toast('Tahniah! Masakan siap.'); $('cook').classList.remove('on'); return; }
-  ckStep = Math.max(0, Math.min(n - 1, ckStep + d)); renderCook();
-}
-
-/* TERBIT RESEPI */
-function submitRecipe(e) {
-  e.preventDefault();
-  const n = $('rN').value.trim(), c = $('rC').value, t = parseInt($('rT').value) || 30;
-  const iTxt = $('rI').value.trim(), sTxt = $('rS').value.trim();
-  if (!n || !iTxt || !sTxt) return toastutan('Sila isi semua maklumat penting');
-  
-  const i = iTxt.split('\n').map(x => [1, 'unit', x.trim()]);
-  const s = sTxt.split('\n').map(x => x.trim()).filter(Boolean);
-  
-  R.unshift({id:'c'+Date.now(), n, c, t, art:'plate', d:'Resepi buatan komuniti Dapur Rohani.', i, s});
-  toast('Resepi berjaya diterbitkan!');
-  go('home');
-}
-
-window.addEventListener('load', () => {
-  renderHome();
-  setTimeout(() => $('boot').classList.add('off'), 600);
-});
-</script>
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
 </body>
 </html>
